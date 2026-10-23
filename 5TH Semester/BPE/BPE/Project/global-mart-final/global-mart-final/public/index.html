@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Mart | Enterprise Resource Planning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* LANDING PAGE SPECIFIC OVERRIDES */
+        body.landing-body { 
+            background: #f8fafc; 
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* 1. Transparent/Glass Navbar to match modern style */
+        .landing-navbar {
+            position: absolute; /* Floats on top of Hero */
+            top: 0; left: 0; width: 100%;
+            padding: 20px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 10;
+            color: white; /* Text is white to contrast with Blue Hero */
+        }
+        
+        .brand-logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
+        
+        /* 2. Enhanced Hero Section */
+        .landing-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%);
+            color: white;
+            padding: 140px 20px 80px; /* Extra top padding for navbar */
+            text-align: center;
+            clip-path: ellipse(150% 100% at 50% 0%); /* Curved bottom */
+            margin-bottom: 50px;
+        }
+        
+        .landing-hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 15px; }
+        .landing-hero p { font-size: 1.2rem; color: #94a3b8; max-width: 600px; margin: 0 auto; }
+
+        /* 3. Cards Container */
+        .portal-grid {
+            display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;
+            margin-top: -80px; /* Pulls cards up into the Hero */
+            padding-bottom: 50px;
+        }
+
+        .portal-card {
+            background: white; width: 320px; padding: 40px;
+            border-radius: 20px; text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: 0.3s ease; border: 1px solid #f1f5f9;
+        }
+        .portal-card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25); }
+
+        .p-icon {
+            width: 80px; height: 80px; border-radius: 50%;
+            display: grid; place-items: center; font-size: 30px;
+            margin: 0 auto 20px;
+        }
+        .icon-blue { background: #dbeafe; color: #2563eb; }
+        .icon-dark { background: #f1f5f9; color: #475569; }
+        .icon-red { background: #fee2e2; color: #dc2626; }
+
+        .btn-enter {
+            margin-top: 20px; padding: 12px 25px; border-radius: 30px;
+            border: none; font-weight: 600; cursor: pointer; transition: 0.2s;
+            width: 100%; display: block;
+        }
+        .btn-blue { background: #2563eb; color: white; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3); }
+        .btn-blue:hover { background: #1d4ed8; }
+        .btn-outline { background: transparent; border: 2px solid #e2e8f0; color: #475569; }
+        .btn-outline:hover { border-color: #cbd5e1; background: #f8fafc; }
+        
+        /* Status Dot */
+        .status-pill {
+            background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px;
+            font-size: 0.85rem; display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(5px);
+        }
+        .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 10px #4ade80; }
+
+        /* Login/Signup Modal Fixes */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; width: 400px; max-width: 90%; max-height: 90vh; overflow-y: auto; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; }
+        .close { position: absolute; top: 20px; right: 25px; font-size: 24px; cursor: pointer; color: #94a3b8; }
+        .close:hover { color: #0f172a; }
+        .login-input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #e2e8f0; border-radius: 10px; background: #f8fafc; outline: none; font-family: inherit; box-sizing: border-box; }
+        .login-input:focus { border-color: #2563eb; background: white; }
+        .login-input select { cursor: pointer; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body class="landing-body">
+
+    <nav class="landing-navbar">
+        <div class="brand-logo">
+            <i class="fa-solid fa-layer-group"></i> Global Mart
+        </div>
+        <div class="status-pill">
+            <span class="dot"></span> Systems Online
+        </div>
+    </nav>
+
+    <header class="landing-hero">
+        <h1>Unified Enterprise Portal</h1>
+        <p>Seamlessly integrating Sales, Operations, and Human Resources into one powerful ecosystem.</p>
+    </header>
+
+    <div class="portal-grid">
+        
+        <div class="portal-card" onclick="openLogin('customer')">
+            <div class="p-icon icon-blue"><i class="fa-solid fa-bag-shopping"></i></div>
+            <h3>Customer Zone</h3>
+            <p style="color:#64748b; font-size:0.9rem;">Shop Catalog, Track Orders & Returns</p>
+            <button class="btn-enter btn-outline"><i class="fa-solid fa-lock"></i> Customer Login</button>
+        </div>
+
+        <div class="portal-card" onclick="openLogin('operations')">
+            <div class="p-icon icon-dark"><i class="fa-solid fa-boxes-packing"></i></div>
+            <h3>Operations</h3>
+            <p style="color:#64748b; font-size:0.9rem;">Warehouse, POS, Logistics & IT</p>
+            <button class="btn-enter btn-outline"><i class="fa-solid fa-lock"></i> Staff Login</button>
+        </div>
+
+        <div class="portal-card" onclick="openLogin('admin')">
+            <div class="p-icon icon-red"><i class="fa-solid fa-user-shield"></i></div>
+            <h3>HQ Administration</h3>
+            <p style="color:#64748b; font-size:0.9rem;">Finance, HR, Marketing & BI</p>
+            <button class="btn-enter btn-outline"><i class="fa-solid fa-lock"></i> Admin Login</button>
+        </div>
+
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLogin()">&times;</span>
+            <div style="font-size: 40px; color: #2563eb; margin-bottom: 10px;">
+                <i class="fa-solid fa-fingerprint"></i>
+            </div>
+            <h2 id="modal-title" style="margin-bottom: 20px;">Secure Login</h2>
+            
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <input type="text" id="username" class="login-input" placeholder="Username" required>
+                <input type="password" id="password" class="login-input" placeholder="Password" required>
+                <button type="submit" class="btn-enter btn-blue" style="margin-top: 20px;">Login</button>
+            </form>
+            <p id="login-error" style="color: #ef4444; display: none; margin-top: 15px; font-weight: 600;">
+                <i class="fa-solid fa-circle-exclamation"></i> <span id="error-message">Access Denied</span>
+            </p>
+            <p style="margin-top: 15px; color: #64748b; font-size: 0.9rem;">
+                Don't have an account? 
+                <a href="#" onclick="showSignup(); return false;" style="color: #2563eb; font-weight: 600;">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSignup()">&times;</span>
+            <div style="font-size: 40px; color: #10b981; margin-bottom: 10px;">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <h2 style="margin-bottom: 20px;">Create Account</h2>
+            
+            <form id="signup-form" onsubmit="handleSignup(event)">
+                <input type="text" id="signup-username" class="login-input" placeholder="Username *" required>
+                <input type="email" id="signup-email" class="login-input" placeholder="Email Address *" required>
+                <input type="password" id="signup-password" class="login-input" placeholder="Password *" required minlength="6">
+                <input type="text" id="signup-name" class="login-input" placeholder="Full Name">
+                <input type="tel" id="signup-phone" class="login-input" placeholder="Phone Number">
+                <select id="signup-role" class="login-input" required>
+                    <option value="">Select Role *</option>
+                    <option value="customer">Customer</option>
+                    <option value="admin">Admin</option>
+                    <option value="operations">Operations</option>
+                </select>
+                <button type="submit" class="btn-enter btn-blue" style="margin-top: 20px; background: #10b981;">
+                    <i class="fa-solid fa-user-plus"></i> Create Account
+                </button>
+            </form>
+            <p id="signup-error" style="color: #ef4444; display: none; margin-top: 15px; font-weight: 600;">
+                <i class="fa-solid fa-circle-exclamation"></i> <span id="signup-error-message"></span>
+            </p>
+            <p style="margin-top: 15px; color: #64748b; font-size: 0.9rem;">
+                Already have an account? 
+                <a href="#" onclick="showLogin(); return false;" style="color: #2563eb; font-weight: 600;">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>Global Mart</span>
+                    </div>
+                    <p class="footer-description">
+                        Your trusted partner for enterprise resource planning. 
+                        Seamlessly integrating sales, operations, and human resources.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="social-icon" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="social-icon" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="#" class="social-icon" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-column">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="customer.html"><i class="fa-solid fa-chevron-right"></i> Customer Portal</a></li>
+                        <li><a href="#" onclick="openLogin('operations'); return false;"><i class="fa-solid fa-chevron-right"></i> Operations</a></li>
+                        <li><a href="#" onclick="openLogin('admin'); return false;"><i class="fa-solid fa-chevron-right"></i> Administration</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Careers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="footer-column">
+                    <h4 class="footer-title">Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> E-Commerce</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Inventory Management</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Order Fulfillment</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Customer Support</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Commercial Leasing</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-column">
+                    <h4 class="footer-title">Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>123 Business Street<br>Commerce City, CC 12345</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-phone"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>info@globalmart.com</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-clock"></i>
+                            <span>Mon - Fri: 9:00 AM - 6:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2026 Global Mart Inc. All rights reserved.</p>
+                    <div class="footer-legal">
+                        <a href="#">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="#">Terms of Service</a>
+                        <span>|</span>
+                        <a href="#">Cookie Policy</a>
+                        <span>|</span>
+                        <span style="color: #4ade80;">
+                            <i class="fa-solid fa-shield-check"></i> Secure Connection (TLS 1.3)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const loginModal = document.getElementById('login-modal');
+            const signupModal = document.getElementById('signup-modal');
+            if (event.target == loginModal) {
+                closeLogin();
+            }
+            if (event.target == signupModal) {
+                closeSignup();
+            }
+        }
+    </script>
+</body>
+</html>

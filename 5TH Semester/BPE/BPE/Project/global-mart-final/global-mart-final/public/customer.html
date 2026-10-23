@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Mart | Shop & Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="customer-body">
+
+    <nav class="store-navbar">
+        <div class="nav-left">
+            <div class="brand-logo">
+                <i class="fa-solid fa-layer-group"></i> Global Mart
+            </div>
+            <div class="nav-links-desktop">
+                <a onclick="switchTab('shop')" class="active-link">Store</a>
+                <a onclick="switchTab('orders')">My Orders</a>
+                <a onclick="switchTab('services')">Services</a>
+            </div>
+        </div>
+        
+        <div class="nav-right">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass" style="color:#94a3b8"></i>
+                <input type="text" placeholder="Search products..." onkeyup="searchProducts(this.value)">
+            </div>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-badge" id="cart-count">0</span>
+            </div>
+            <a href="#" onclick="logout(); return false;" class="logout-link" style="color:#ef4444; margin-left:10px; cursor: pointer;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <div id="shop-view" class="view-section active-view">
+        
+        <header class="store-hero">
+            <div class="hero-content">
+                <span class="pill">New Arrivals</span>
+                <h1>Next Gen Collection</h1>
+                <p>Upgrade your lifestyle with our premium selection. Free shipping on orders over $50.</p>
+                <button class="btn-cta" onclick="filterProducts('Electronics')">Shop Electronics</button>
+            </div>
+            <div class="hero-image">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </div>
+        </header>
+
+        <div class="category-bar">
+            <button class="cat-btn active" onclick="filterProducts('All')">All</button>
+            <button class="cat-btn" onclick="filterProducts('Electronics')"><i class="fa-solid fa-plug"></i> Electronics</button>
+            <button class="cat-btn" onclick="filterProducts('Fashion')"><i class="fa-solid fa-shirt"></i> Fashion</button>
+            <button class="cat-btn" onclick="filterProducts('Home')"><i class="fa-solid fa-couch"></i> Home</button>
+            <button class="cat-btn" onclick="filterProducts('Groceries')"><i class="fa-solid fa-carrot"></i> Groceries</button>
+            <button class="cat-btn" onclick="filterProducts('Sports')"><i class="fa-solid fa-basketball"></i> Sports</button>
+            <button class="cat-btn" onclick="filterProducts('Beauty')"><i class="fa-solid fa-spray-can"></i> Beauty</button>
+        </div>
+
+        <div class="container">
+            <h2 class="section-title" style="margin-bottom:20px; font-weight:800; color:#0f172a;">Featured Products</h2>
+            
+            <div id="product-grid" class="store-grid">
+                <div style="text-align:center; padding:50px; color:#94a3b8; width:100%;">
+                    <i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Loading Inventory...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="orders-view" class="view-section hidden">
+        <div class="container container-narrow">
+            <h2 class="section-title">My Order History</h2>
+            <p style="color:#64748b; margin-bottom:30px;">Track shipments or request a return (RMA).</p>
+            <div id="my-order-list" class="order-list">
+                </div>
+        </div>
+    </div>
+
+    <div id="services-view" class="view-section hidden">
+        <div class="container container-narrow">
+            <h2 class="section-title">Customer Services</h2>
+            
+            <div class="service-grid">
+                <div class="service-card">
+                    <div class="s-icon icon-blue"><i class="fa-solid fa-headset"></i></div>
+                    <h3>Help Center</h3>
+                    <p style="color:#64748b; margin-bottom:15px;">Report issues or ask questions.</p>
+                    <form onsubmit="handleSupport(event)">
+                        <select id="support-type" class="store-input">
+                            <option>General Inquiry</option>
+                            <option>Billing Issue</option>
+                            <option>Report Defect</option>
+                        </select>
+                        <textarea id="support-desc" class="store-input" rows="2" placeholder="Describe issue..."></textarea>
+                        <button type="submit" class="btn-add" style="background:#0f172a; color:white;">Submit Ticket</button>
+                    </form>
+                </div>
+
+                <div class="service-card">
+                    <div class="s-icon" style="background:#f3e8ff; color:#9333ea;"><i class="fa-solid fa-store"></i></div>
+                    <h3>Commercial Leasing</h3>
+                    <p style="color:#64748b; margin-bottom:15px;">Partner with Global Mart. Apply for retail space.</p>
+                    <form onsubmit="handleLeasing(event)">
+                        <input type="text" class="store-input" placeholder="Business Name">
+                        <input type="number" class="store-input" placeholder="Sq Ft Required">
+                        <button onclick="showToast('Application Submitted to Leasing Dept')" type="button" class="btn-add" style="background:white; border:1px solid #e2e8f0; color:#0f172a;">Apply Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header" style="padding-bottom:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+            <h3>Your Cart</h3>
+            <button onclick="toggleCart()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
+        </div>
+        <div id="cart-items-container" class="cart-items">
+            </div>
+        <div class="cart-footer">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2rem; margin-bottom:15px;">
+                <span>Total</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button onclick="checkout()" class="btn-checkout">Checkout Now</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"><i class="fa-solid fa-circle-check"></i> Action Successful</div>
+
+    <!-- Payment Success Modal -->
+    <div id="payment-success-modal" class="modal">
+        <div class="modal-content payment-success-content">
+            <div class="success-animation">
+                <div class="success-checkmark">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+            </div>
+            <h2 style="color: #10b981; margin: 20px 0 10px 0;">Payment Successful!</h2>
+            <p style="color: #64748b; margin-bottom: 30px;">Your order has been placed successfully</p>
+            
+            <div class="order-details-box">
+                <div class="order-detail-row">
+                    <span>Order ID:</span>
+                    <strong id="success-order-id">-</strong>
+                </div>
+                <div class="order-detail-row">
+                    <span>Total Amount:</span>
+                    <strong id="success-total">-</strong>
+                </div>
+                <div class="order-detail-row">
+                    <span>Payment Method:</span>
+                    <strong id="success-payment-method">-</strong>
+                </div>
+            </div>
+
+            <p style="color: #64748b; font-size: 0.9rem; margin: 20px 0;">
+                A confirmation email has been sent to your email address.
+            </p>
+
+            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                <button onclick="closePaymentSuccess()" class="btn-enter btn-outline" style="flex: 1;">
+                    Continue Shopping
+                </button>
+                <button onclick="viewOrderHistory()" class="btn-enter btn-blue" style="flex: 1;">
+                    <i class="fa-solid fa-receipt"></i> View Orders
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>Global Mart</span>
+                    </div>
+                    <p class="footer-description">
+                        Shop the latest collection of electronics, fashion, home goods and more. 
+                        Fast shipping, easy returns, secure checkout.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="social-icon" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="social-icon" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-title">Customer Service</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="switchTab('services'); return false;"><i class="fa-solid fa-chevron-right"></i> Help Center</a></li>
+                        <li><a href="#" onclick="switchTab('orders'); return false;"><i class="fa-solid fa-chevron-right"></i> Track Order</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Shipping Info</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Returns & Exchanges</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-title">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Careers</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Store Locations</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Commercial Leasing</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-title">Contact Info</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fa-solid fa-phone"></i>
+                            <span>1-800-GLOBAL-MART</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>support@globalmart.com</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-clock"></i>
+                            <span>24/7 Customer Support</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2026 Global Mart Inc. All rights reserved.</p>
+                    <div class="footer-legal">
+                        <a href="#">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="#">Terms & Conditions</a>
+                        <span>|</span>
+                        <span style="color: #4ade80;">
+                            <i class="fa-solid fa-shield-check"></i> Secure Shopping
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content checkout-modal-content">
+            <span class="close" onclick="closeCheckoutModal()">&times;</span>
+            <div style="font-size: 40px; color: #2563eb; margin-bottom: 10px;">
+                <i class="fa-solid fa-shopping-cart"></i>
+            </div>
+            <h2 style="margin-bottom: 20px;">Complete Your Order</h2>
+            <p style="color: #64748b; margin-bottom: 25px;">Please provide your details to proceed with checkout</p>
+            
+            <form id="checkout-form" onsubmit="processCheckout(event)">
+                <!-- Customer Details Section -->
+                <div class="checkout-section">
+                    <h3 class="section-title-small">
+                        <i class="fa-solid fa-user"></i> Customer Information
+                    </h3>
+                    <input type="text" id="customer-name" class="login-input" placeholder="Full Name *" required>
+                    <input type="email" id="customer-email" class="login-input" placeholder="Email Address *" required>
+                    <input type="tel" id="customer-phone" class="login-input" placeholder="Phone Number *" required>
+                    <textarea id="customer-address" class="login-input" rows="3" placeholder="Delivery Address *" required style="resize: vertical; min-height: 80px;"></textarea>
+                </div>
+
+                <!-- Payment Method Section -->
+                <div class="checkout-section">
+                    <h3 class="section-title-small">
+                        <i class="fa-solid fa-credit-card"></i> Payment Method
+                    </h3>
+                    <div class="payment-methods">
+                        <label class="payment-method-card" onclick="selectPaymentMethod('card')">
+                            <input type="radio" name="payment-method" value="card" checked required>
+                            <div class="payment-method-content">
+                                <i class="fa-solid fa-credit-card"></i>
+                                <span>Credit/Debit Card</span>
+                            </div>
+                        </label>
+                        <label class="payment-method-card" onclick="selectPaymentMethod('paypal')">
+                            <input type="radio" name="payment-method" value="paypal">
+                            <div class="payment-method-content">
+                                <i class="fa-brands fa-paypal"></i>
+                                <span>PayPal</span>
+                            </div>
+                        </label>
+                        <label class="payment-method-card" onclick="selectPaymentMethod('cod')">
+                            <input type="radio" name="payment-method" value="cod">
+                            <div class="payment-method-content">
+                                <i class="fa-solid fa-money-bill"></i>
+                                <span>Cash on Delivery</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Card Details (shown when card is selected) -->
+                    <div id="card-details" class="card-details-form">
+                        <input type="text" id="card-number" class="login-input" placeholder="Card Number *" maxlength="19" oninput="formatCardNumber(this)">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                            <input type="text" id="card-expiry" class="login-input" placeholder="MM/YY *" maxlength="5" oninput="formatExpiry(this)">
+                            <input type="text" id="card-cvv" class="login-input" placeholder="CVV *" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        </div>
+                        <input type="text" id="card-name" class="login-input" placeholder="Cardholder Name *">
+                        <div class="card-icons">
+                            <i class="fa-brands fa-cc-visa"></i>
+                            <i class="fa-brands fa-cc-mastercard"></i>
+                            <i class="fa-brands fa-cc-amex"></i>
+                            <i class="fa-brands fa-cc-discover"></i>
+                        </div>
+                    </div>
+
+                    <!-- PayPal Details (shown when PayPal is selected) -->
+                    <div id="paypal-details" class="payment-details-form" style="display: none;">
+                        <div class="info-box">
+                            <i class="fa-solid fa-info-circle"></i>
+                            <span>You will be redirected to PayPal to complete your payment</span>
+                        </div>
+                    </div>
+
+                    <!-- COD Details (shown when COD is selected) -->
+                    <div id="cod-details" class="payment-details-form" style="display: none;">
+                        <div class="info-box success">
+                            <i class="fa-solid fa-check-circle"></i>
+                            <span>Pay cash when your order arrives. Additional charges may apply.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="checkout-section">
+                    <h3 class="section-title-small">
+                        <i class="fa-solid fa-receipt"></i> Order Summary
+                    </h3>
+                    <div class="order-summary-box">
+                        <div class="summary-row">
+                            <span style="color: #64748b;">Items:</span>
+                            <span id="checkout-items-count" style="font-weight: 600;">0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span style="color: #64748b;">Subtotal:</span>
+                            <span id="checkout-subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span style="color: #64748b;">Shipping:</span>
+                            <span id="checkout-shipping">Free</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row total-row">
+                            <span style="font-size: 1.1rem;">Total:</span>
+                            <span id="checkout-total-amount" style="font-size: 1.3rem; color: #2563eb;">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Badge -->
+                <div class="security-badge">
+                    <i class="fa-solid fa-shield-check"></i>
+                    <span>Your payment information is secure and encrypted</span>
+                </div>
+                
+                <button type="submit" class="btn-enter btn-blue" id="submit-payment-btn">
+                    <i class="fa-solid fa-lock"></i> Complete Payment
+                </button>
+                <button type="button" onclick="closeCheckoutModal()" class="btn-enter btn-outline" style="margin-top: 10px;">
+                    Cancel
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Init logic
+        loadProducts();
+        if(window.location.hash === '#orders') switchTab('orders');
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Play Predictor</title>
+</head>
+<body>
+    <h2>Will We Play Today?</h2>
+    <form method="POST" action="/predict">
+        <label for="day">Day:</label>
+        <select name="day">
+            <option value="Sunny">Sunny</option>
+            <option value="Windy">Windy</option>
+        </select><br><br>
+
+        <label for="temperature">Temperature:</label>
+        <select name="temperature">
+            <option value="Cool">Cool</option>
+            <option value="Hot">Hot</option>
+        </select><br><br>
+
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if prediction_text %}
+        <h3>{{ prediction_text }}</h3>
+    {% endif %}
+</body>
+</html>

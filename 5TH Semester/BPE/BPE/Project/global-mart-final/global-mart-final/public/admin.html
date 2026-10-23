@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Mart | Shop & Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="customer-body">
+
+    <nav class="store-navbar">
+        <div class="nav-left">
+            <div class="brand-logo">
+                <i class="fa-solid fa-layer-group"></i> Global Mart
+            </div>
+            <div class="nav-links-desktop">
+                <a onclick="switchTab('shop')" class="active-link">Store</a>
+                <a onclick="switchTab('orders')">My Orders</a>
+                <a onclick="switchTab('services')">Services</a>
+            </div>
+        </div>
+        
+        <div class="nav-right">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search for products..." onkeyup="searchProducts(this.value)">
+            </div>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-badge" id="cart-count">0</span>
+            </div>
+            <a href="#" onclick="logout(); return false;" class="logout-link" style="color:#ef4444; cursor: pointer;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <div id="shop-view" class="view-section active-view">
+        
+        <header class="store-hero">
+            <div class="hero-content">
+                <span class="pill">New Arrivals</span>
+                <h1>Next Gen Tech Collection</h1>
+                <p>Upgrade your workspace with our latest gadgets. Free shipping on orders over $50.</p>
+                <button class="btn-cta" onclick="filterProducts('Electronics')">Shop Electronics</button>
+            </div>
+            <div class="hero-image">
+                <i class="fa-solid fa-laptop-code"></i>
+            </div>
+        </header>
+
+        <div class="category-bar">
+            <button class="cat-btn active" onclick="filterProducts('All')">All</button>
+            <button class="cat-btn" onclick="filterProducts('Electronics')"><i class="fa-solid fa-mobile-screen"></i> Electronics</button>
+            <button class="cat-btn" onclick="filterProducts('Fashion')"><i class="fa-solid fa-shirt"></i> Fashion</button>
+            <button class="cat-btn" onclick="filterProducts('Home')"><i class="fa-solid fa-couch"></i> Home</button>
+            <button class="cat-btn" onclick="filterProducts('Groceries')"><i class="fa-solid fa-carrot"></i> Groceries</button>
+        </div>
+
+        <div class="container">
+            <h2 class="section-title">Featured Products</h2>
+            <div id="product-grid" class="store-grid">
+                <div class="loading-state">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Loading Inventory...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="orders-view" class="view-section hidden">
+        <div class="container container-narrow">
+            <h2 class="section-title">My Order History</h2>
+            <p style="color:#64748b; margin-bottom:30px;">Track shipments or request a return (RMA).</p>
+            <div id="my-order-list" class="order-list">
+                </div>
+        </div>
+    </div>
+
+    <div id="services-view" class="view-section hidden">
+        <div class="container container-narrow">
+            <h2 class="section-title">Customer Services</h2>
+            
+            <div class="service-grid">
+                <div class="service-card">
+                    <div class="s-icon blue"><i class="fa-solid fa-headset"></i></div>
+                    <h3>Help Center</h3>
+                    <p>Report issues or ask questions.</p>
+                    <div class="form-group">
+                        <select id="support-type" class="store-input">
+                            <option>General Inquiry</option>
+                            <option>Billing Issue</option>
+                            <option>Report Defect</option>
+                        </select>
+                        <textarea id="support-desc" class="store-input" rows="2" placeholder="Describe issue..."></textarea>
+                        <button onclick="handleSupport(event)" class="btn-primary full-width">Submit Ticket</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="s-icon purple"><i class="fa-solid fa-store"></i></div>
+                    <h3>Commercial Leasing</h3>
+                    <p>Apply for retail space in our malls.</p>
+                    <div class="form-group">
+                        <input type="text" class="store-input" placeholder="Business Name">
+                        <button onclick="showToast('Application Submitted to Leasing Dept')" class="btn-outline full-width">Apply Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button onclick="toggleCart()">&times;</button>
+        </div>
+        <div id="cart-items-container" class="cart-body">
+            </div>
+        <div class="cart-footer">
+            <div class="total-row">
+                <span>Total</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button onclick="checkout()" class="btn-checkout">Checkout Now</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"><i class="fa-solid fa-circle-check"></i> Action Successful</div>
+
+    <script src="app.js"></script>
+    <script>loadProducts();</script>
+</body>
+</html>

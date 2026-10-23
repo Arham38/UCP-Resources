@@ -1,0 +1,201 @@
+Age,Workclass,Education,MaritalStatus,Occupation,Relationship,Race,Gender,CapitalGain,CapitalLoss,HoursPerWeek,NativeCountry,Income
+56,Self-emp,Bachelors,Single,Sales,Husband,Asian,Male,2983,2444,45,Pakistan,<=50K
+46,Government,Masters,Single,Clerical,Not-in-family,White,Male,4278,3560,22,Pakistan,<=50K
+32,Self-emp,High School,Married,Clerical,Wife,Black,Female,7126,38,33,UK,<=50K
+60,Government,Bachelors,Married,Sales,Wife,White,Female,8230,3342,30,USA,<=50K
+25,Private,Masters,Divorced,Tech,Not-in-family,White,Female,7694,886,37,USA,<=50K
+38,Private,Bachelors,Married,Sales,Not-in-family,Black,Male,6640,2844,31,UK,<=50K
+56,Private,High School,Divorced,Tech,Wife,Black,Female,5468,2204,42,USA,>50K
+36,Private,Bachelors,Married,Sales,Wife,Black,Female,920,1098,31,Pakistan,<=50K
+40,Government,Bachelors,Single,Sales,Husband,Asian,Male,7564,2931,32,UK,<=50K
+28,Private,Bachelors,Divorced,Clerical,Wife,White,Female,8684,1823,44,UK,<=50K
+28,Self-emp,Bachelors,Divorced,Tech,Wife,White,Female,9323,3201,38,USA,<=50K
+41,Self-emp,High School,Single,Tech,Not-in-family,Asian,Male,8502,1710,55,UK,>50K
+53,Self-emp,Bachelors,Divorced,Clerical,Wife,Black,Male,8930,973,27,USA,<=50K
+57,Government,Bachelors,Divorced,Clerical,Husband,Asian,Male,3241,3155,48,USA,>50K
+41,Private,Masters,Married,Clerical,Wife,Asian,Female,545,3093,51,USA,<=50K
+20,Private,Bachelors,Divorced,Clerical,Not-in-family,Asian,Female,4346,3530,37,USA,<=50K
+39,Private,Masters,Single,Tech,Not-in-family,White,Female,9996,1562,25,USA,<=50K
+19,Government,High School,Married,Tech,Wife,Asian,Male,3810,3778,37,UK,<=50K
+41,Self-emp,High School,Married,Sales,Not-in-family,White,Male,7206,2896,38,Pakistan,<=50K
+61,Self-emp,High School,Single,Sales,Husband,White,Female,9005,3453,41,Pakistan,>50K
+47,Private,High School,Single,Clerical,Husband,White,Female,2032,2795,56,UK,<=50K
+55,Self-emp,Masters,Married,Clerical,Wife,Black,Male,8436,3511,51,UK,>50K
+19,Self-emp,Bachelors,Divorced,Clerical,Wife,White,Male,271,3675,22,Pakistan,<=50K
+38,Government,High School,Married,Sales,Wife,White,Male,3511,988,47,Pakistan,>50K
+50,Government,Bachelors,Single,Sales,Not-in-family,Black,Male,1771,20,29,Pakistan,<=50K
+29,Government,Masters,Married,Sales,Husband,White,Female,9454,2350,54,Pakistan,<=50K
+39,Government,Masters,Single,Sales,Husband,Asian,Male,4361,868,48,Pakistan,>50K
+61,Private,Masters,Married,Sales,Not-in-family,Asian,Female,7069,83,34,USA,<=50K
+42,Government,High School,Divorced,Sales,Husband,White,Female,920,3845,52,UK,<=50K
+44,Self-emp,Bachelors,Married,Sales,Wife,Black,Female,8190,1682,26,USA,<=50K
+59,Private,Bachelors,Married,Clerical,Wife,Asian,Male,3430,1976,31,Pakistan,<=50K
+45,Self-emp,Bachelors,Single,Clerical,Wife,Black,Male,4435,3524,49,Pakistan,>50K
+33,Self-emp,Masters,Single,Clerical,Husband,Black,Male,3760,1410,40,Pakistan,<=50K
+32,Self-emp,High School,Single,Clerical,Wife,Asian,Male,2050,1530,50,USA,<=50K
+64,Government,Masters,Married,Sales,Not-in-family,Black,Female,1165,3328,43,USA,<=50K
+61,Government,Masters,Divorced,Tech,Not-in-family,Asian,Male,8567,569,39,Pakistan,<=50K
+20,Private,Bachelors,Single,Sales,Husband,Black,Male,2033,3963,56,USA,<=50K
+54,Private,Masters,Single,Tech,Not-in-family,Asian,Female,6467,933,23,USA,<=50K
+24,Government,Bachelors,Married,Clerical,Not-in-family,White,Male,145,3598,47,Pakistan,<=50K
+38,Self-emp,High School,Single,Sales,Husband,Asian,Female,4388,3233,39,USA,<=50K
+26,Private,Bachelors,Divorced,Clerical,Wife,Asian,Female,7832,1980,43,UK,<=50K
+56,Government,High School,Divorced,Sales,Wife,Asian,Female,8623,3234,51,UK,>50K
+35,Government,Bachelors,Single,Clerical,Wife,Asian,Female,8896,1855,55,UK,>50K
+21,Government,Masters,Single,Tech,Husband,Black,Female,8173,3056,53,UK,<=50K
+42,Self-emp,Masters,Married,Tech,Not-in-family,White,Female,2632,792,55,Pakistan,<=50K
+31,Government,High School,Divorced,Tech,Wife,Asian,Female,4494,791,21,Pakistan,<=50K
+26,Government,High School,Divorced,Sales,Wife,Black,Female,8056,3595,34,Pakistan,<=50K
+43,Government,High School,Single,Tech,Husband,White,Male,7511,1809,53,UK,>50K
+19,Government,Bachelors,Married,Sales,Wife,White,Male,9155,1294,55,UK,<=50K
+37,Private,Bachelors,Divorced,Tech,Husband,White,Male,1828,2539,25,USA,<=50K
+45,Private,High School,Divorced,Tech,Not-in-family,White,Male,9130,2255,58,USA,>50K
+64,Government,Masters,Married,Sales,Husband,Asian,Female,4805,3610,31,UK,<=50K
+24,Self-emp,Bachelors,Married,Sales,Husband,Asian,Male,806,1607,22,UK,<=50K
+61,Private,Bachelors,Divorced,Tech,Husband,Black,Female,9655,1083,37,UK,<=50K
+25,Government,Bachelors,Divorced,Sales,Husband,Black,Male,7486,2477,59,UK,<=50K
+64,Private,High School,Married,Tech,Not-in-family,Black,Male,8202,984,40,USA,<=50K
+52,Private,High School,Divorced,Sales,Not-in-family,White,Male,1868,1680,34,UK,<=50K
+31,Self-emp,High School,Single,Clerical,Wife,White,Female,7878,3676,52,USA,>50K
+34,Government,High School,Single,Clerical,Not-in-family,Asian,Male,5690,3380,54,UK,>50K
+53,Government,High School,Married,Clerical,Not-in-family,White,Female,7827,519,45,UK,>50K
+57,Self-emp,Masters,Married,Clerical,Wife,White,Female,5429,590,27,UK,<=50K
+21,Self-emp,Masters,Married,Clerical,Not-in-family,White,Male,9076,1050,55,USA,<=50K
+19,Government,High School,Single,Tech,Husband,Black,Male,3564,1709,49,USA,<=50K
+23,Government,Bachelors,Divorced,Clerical,Husband,Black,Male,1389,3633,42,Pakistan,<=50K
+59,Self-emp,High School,Single,Clerical,Wife,Asian,Female,7274,2035,33,UK,<=50K
+21,Private,Masters,Divorced,Clerical,Wife,White,Male,824,2246,33,Pakistan,<=50K
+46,Private,Masters,Single,Clerical,Wife,White,Female,2265,2434,21,Pakistan,<=50K
+35,Self-emp,Bachelors,Divorced,Sales,Husband,Asian,Female,936,348,56,USA,<=50K
+43,Private,Masters,Single,Tech,Not-in-family,White,Male,6402,959,24,USA,<=50K
+61,Self-emp,High School,Married,Clerical,Husband,White,Male,3845,1963,57,Pakistan,>50K
+51,Private,Bachelors,Single,Clerical,Wife,Black,Female,1796,692,33,UK,<=50K
+27,Private,High School,Divorced,Clerical,Not-in-family,Asian,Female,8245,1559,58,USA,<=50K
+53,Government,High School,Single,Tech,Not-in-family,Asian,Female,7214,3899,44,UK,>50K
+31,Government,Bachelors,Single,Sales,Husband,Asian,Male,726,377,39,UK,<=50K
+48,Private,High School,Single,Tech,Wife,Asian,Female,2736,2946,21,Pakistan,<=50K
+32,Private,Masters,Married,Sales,Husband,Black,Male,1913,2963,58,Pakistan,<=50K
+25,Government,High School,Single,Clerical,Not-in-family,Black,Female,9788,3629,25,Pakistan,<=50K
+31,Government,Bachelors,Married,Clerical,Husband,White,Female,7657,526,36,Pakistan,<=50K
+40,Government,Bachelors,Married,Tech,Husband,White,Male,2466,3224,44,USA,<=50K
+57,Self-emp,Bachelors,Single,Tech,Wife,White,Female,9041,2781,47,USA,>50K
+38,Private,High School,Single,Sales,Wife,White,Male,7312,2253,21,Pakistan,<=50K
+33,Government,Bachelors,Single,Sales,Not-in-family,Black,Male,8194,2502,54,USA,>50K
+62,Private,Bachelors,Divorced,Tech,Husband,Asian,Female,7906,3344,56,Pakistan,>50K
+35,Self-emp,High School,Single,Sales,Husband,Black,Male,4876,3965,24,UK,<=50K
+64,Self-emp,Masters,Married,Tech,Husband,White,Male,7287,1259,20,UK,<=50K
+41,Government,High School,Single,Sales,Not-in-family,Black,Female,892,1875,59,UK,<=50K
+43,Self-emp,Bachelors,Divorced,Tech,Not-in-family,Asian,Male,4675,1763,31,Pakistan,<=50K
+42,Private,Bachelors,Single,Tech,Wife,Asian,Male,1933,520,55,UK,<=50K
+62,Government,High School,Divorced,Tech,Wife,Black,Male,1380,1701,42,USA,<=50K
+58,Private,Masters,Divorced,Sales,Wife,Black,Female,1290,1016,50,UK,<=50K
+46,Private,Bachelors,Single,Sales,Husband,Black,Male,1640,3003,30,UK,<=50K
+32,Self-emp,Bachelors,Married,Sales,Husband,White,Female,7490,3902,29,UK,<=50K
+62,Self-emp,Bachelors,Divorced,Tech,Wife,Black,Female,9179,2773,22,USA,<=50K
+18,Self-emp,High School,Single,Sales,Husband,Black,Male,1218,1013,33,Pakistan,<=50K
+42,Self-emp,Bachelors,Single,Sales,Wife,Black,Male,5016,2548,35,USA,<=50K
+24,Self-emp,Masters,Married,Tech,Not-in-family,Asian,Male,6881,116,29,Pakistan,<=50K
+26,Government,Bachelors,Divorced,Clerical,Wife,Asian,Female,9547,2433,48,Pakistan,<=50K
+41,Private,Bachelors,Divorced,Tech,Not-in-family,White,Male,9752,1367,29,UK,<=50K
+18,Private,Masters,Single,Sales,Husband,White,Male,9610,583,31,Pakistan,<=50K
+61,Private,Bachelors,Single,Tech,Wife,Asian,Male,954,394,49,USA,<=50K
+25,Private,High School,Married,Clerical,Husband,Asian,Male,9175,1087,20,USA,<=50K
+41,Self-emp,High School,Married,Tech,Not-in-family,Asian,Male,7291,3788,24,Pakistan,<=50K
+28,Private,High School,Divorced,Sales,Not-in-family,Black,Female,974,2768,39,UK,<=50K
+34,Government,Masters,Divorced,Clerical,Not-in-family,Black,Female,4133,71,27,UK,<=50K
+25,Government,Bachelors,Single,Sales,Husband,Asian,Male,5370,3860,31,USA,<=50K
+52,Private,High School,Divorced,Clerical,Husband,Black,Male,3972,273,20,UK,<=50K
+52,Private,Masters,Married,Clerical,Husband,Black,Male,5295,2013,39,Pakistan,<=50K
+50,Government,Bachelors,Married,Tech,Husband,White,Male,9105,1343,47,Pakistan,>50K
+22,Government,Masters,Single,Tech,Not-in-family,Asian,Female,8228,337,56,USA,<=50K
+59,Self-emp,High School,Married,Sales,Not-in-family,Asian,Male,9903,1389,56,Pakistan,>50K
+56,Government,High School,Married,Tech,Wife,Black,Female,3020,3566,31,USA,<=50K
+58,Self-emp,High School,Married,Tech,Wife,Asian,Female,8987,606,56,Pakistan,>50K
+45,Self-emp,Masters,Married,Clerical,Husband,White,Male,4036,165,47,USA,>50K
+24,Self-emp,Masters,Single,Tech,Not-in-family,White,Female,5068,1567,34,UK,<=50K
+26,Self-emp,High School,Single,Clerical,Not-in-family,White,Female,5233,2058,25,Pakistan,<=50K
+25,Self-emp,Masters,Divorced,Clerical,Not-in-family,Asian,Female,9516,1324,39,Pakistan,<=50K
+29,Private,High School,Married,Clerical,Wife,Asian,Female,317,728,33,USA,<=50K
+51,Government,High School,Divorced,Sales,Wife,Asian,Male,2396,2848,21,USA,<=50K
+50,Self-emp,Bachelors,Single,Sales,Not-in-family,Asian,Male,2162,2043,28,Pakistan,<=50K
+40,Government,Masters,Single,Sales,Not-in-family,Asian,Female,2745,101,56,USA,<=50K
+41,Government,High School,Single,Clerical,Not-in-family,White,Male,1591,3496,39,Pakistan,<=50K
+54,Self-emp,High School,Single,Sales,Wife,Black,Male,6183,1415,45,UK,>50K
+52,Private,Masters,Single,Sales,Not-in-family,White,Male,3930,778,48,USA,>50K
+61,Self-emp,Bachelors,Single,Tech,Not-in-family,Asian,Male,1312,213,20,Pakistan,<=50K
+57,Private,Bachelors,Single,Sales,Husband,White,Male,9477,3762,54,UK,>50K
+39,Government,High School,Married,Sales,Husband,Asian,Female,4311,1111,25,UK,<=50K
+44,Private,Masters,Divorced,Clerical,Wife,Asian,Male,7314,1576,56,Pakistan,>50K
+52,Private,Bachelors,Single,Clerical,Not-in-family,White,Male,2383,2448,24,USA,<=50K
+18,Private,Masters,Married,Clerical,Not-in-family,Asian,Male,3239,2635,52,Pakistan,<=50K
+52,Government,Masters,Married,Clerical,Husband,Black,Male,2139,2936,33,UK,<=50K
+54,Government,High School,Divorced,Clerical,Wife,Asian,Female,1704,3117,31,Pakistan,<=50K
+64,Private,Bachelors,Single,Clerical,Husband,Black,Female,6924,1695,39,USA,<=50K
+31,Private,High School,Divorced,Sales,Husband,Black,Female,362,3534,43,UK,<=50K
+20,Self-emp,Bachelors,Single,Clerical,Husband,Asian,Female,2604,591,53,Pakistan,<=50K
+18,Private,Bachelors,Married,Clerical,Husband,White,Male,9908,1333,44,USA,<=50K
+22,Self-emp,Bachelors,Married,Tech,Not-in-family,Black,Female,4286,1109,48,UK,<=50K
+43,Private,Bachelors,Married,Sales,Not-in-family,White,Male,3738,2139,58,USA,>50K
+31,Self-emp,Bachelors,Married,Sales,Husband,Black,Male,2469,3731,50,UK,<=50K
+56,Government,Masters,Divorced,Sales,Wife,Asian,Male,4795,2720,42,Pakistan,>50K
+44,Private,High School,Single,Clerical,Wife,Asian,Male,6150,713,57,USA,>50K
+26,Private,Masters,Single,Clerical,Wife,Black,Male,556,935,39,UK,<=50K
+32,Private,Bachelors,Divorced,Clerical,Wife,Asian,Female,9017,1951,42,USA,>50K
+32,Private,High School,Single,Tech,Husband,Black,Female,2808,241,35,USA,<=50K
+43,Self-emp,Bachelors,Married,Clerical,Not-in-family,Asian,Female,5150,2043,27,Pakistan,<=50K
+59,Private,High School,Single,Tech,Wife,White,Female,7561,3936,40,USA,<=50K
+30,Government,Masters,Married,Sales,Husband,Asian,Male,2719,1,20,UK,<=50K
+49,Government,High School,Divorced,Clerical,Wife,White,Female,6506,2272,27,UK,<=50K
+56,Private,High School,Single,Tech,Wife,Asian,Male,3741,2848,48,UK,>50K
+49,Government,High School,Divorced,Tech,Husband,White,Female,9766,1768,51,UK,>50K
+21,Private,High School,Single,Clerical,Not-in-family,Asian,Male,3998,1949,57,Pakistan,<=50K
+47,Private,High School,Married,Sales,Not-in-family,White,Male,2403,2636,24,USA,<=50K
+54,Government,Bachelors,Divorced,Sales,Husband,Black,Female,8780,2163,41,Pakistan,>50K
+40,Private,High School,Single,Sales,Not-in-family,Black,Male,9739,3737,53,USA,>50K
+56,Government,High School,Married,Tech,Husband,White,Male,294,917,20,USA,<=50K
+62,Self-emp,Masters,Divorced,Tech,Husband,Asian,Female,5343,3174,45,USA,>50K
+32,Private,High School,Divorced,Tech,Husband,White,Male,9882,2241,29,Pakistan,<=50K
+60,Self-emp,Masters,Single,Tech,Not-in-family,Asian,Female,1136,3237,49,USA,<=50K
+46,Government,Bachelors,Single,Sales,Husband,Black,Female,2064,2918,37,Pakistan,<=50K
+53,Self-emp,High School,Single,Clerical,Wife,Asian,Female,7009,89,36,UK,<=50K
+30,Self-emp,Masters,Married,Tech,Not-in-family,Black,Male,4543,1709,45,UK,<=50K
+49,Government,Masters,Single,Tech,Not-in-family,Asian,Male,1007,2169,27,USA,<=50K
+24,Self-emp,Bachelors,Divorced,Sales,Not-in-family,Asian,Male,5445,142,59,Pakistan,<=50K
+39,Self-emp,High School,Divorced,Clerical,Not-in-family,Asian,Female,5352,3041,31,UK,<=50K
+45,Government,High School,Single,Clerical,Wife,White,Male,9439,105,46,Pakistan,<=50K
+19,Self-emp,Masters,Single,Sales,Not-in-family,White,Female,1435,886,27,Pakistan,>50K
+59,Government,High School,Divorced,Sales,Not-in-family,Black,Female,571,427,44,USA,<=50K
+62,Self-emp,Masters,Married,Clerical,Husband,Black,Male,2382,1328,23,UK,<=50K
+23,Government,High School,Single,Tech,Not-in-family,White,Female,9437,1895,52,USA,<=50K
+45,Government,Masters,Single,Clerical,Wife,Black,Male,5084,1994,20,USA,<=50K
+45,Self-emp,High School,Divorced,Sales,Wife,White,Male,277,316,38,UK,<=50K
+61,Self-emp,Bachelors,Single,Tech,Wife,Asian,Male,7059,1986,50,UK,<=50K
+61,Self-emp,High School,Married,Tech,Wife,Black,Male,1887,634,35,Pakistan,>50K
+37,Private,High School,Divorced,Sales,Not-in-family,Black,Male,1265,1925,33,UK,<=50K
+47,Private,Bachelors,Single,Sales,Not-in-family,White,Female,7491,2056,24,Pakistan,<=50K
+28,Private,High School,Divorced,Sales,Wife,Black,Female,1040,2821,45,Pakistan,<=50K
+45,Government,Bachelors,Single,Clerical,Wife,Black,Female,9109,3144,47,Pakistan,<=50K
+42,Self-emp,High School,Single,Clerical,Not-in-family,Asian,Male,8073,3430,21,UK,>50K
+56,Government,Masters,Single,Tech,Wife,Black,Male,9077,2270,25,USA,<=50K
+50,Private,Masters,Married,Sales,Husband,Asian,Male,2752,1439,28,Pakistan,<=50K
+18,Self-emp,High School,Married,Tech,Wife,White,Female,8213,552,52,USA,<=50K
+44,Government,High School,Divorced,Tech,Wife,Black,Male,4569,3441,44,USA,<=50K
+30,Self-emp,High School,Single,Tech,Husband,Asian,Female,6353,715,32,UK,>50K
+58,Government,Masters,Single,Tech,Husband,White,Female,2353,1287,28,USA,<=50K
+20,Self-emp,High School,Married,Sales,Not-in-family,Black,Male,7437,3911,32,USA,<=50K
+56,Private,Masters,Single,Tech,Not-in-family,White,Male,4799,1713,50,UK,<=50K
+23,Private,Bachelors,Married,Sales,Husband,Black,Female,686,1883,30,Pakistan,>50K
+25,Self-emp,Masters,Single,Sales,Husband,White,Male,8476,3389,23,USA,<=50K
+44,Government,Masters,Divorced,Clerical,Not-in-family,White,Female,4811,1107,53,UK,<=50K
+26,Private,Bachelors,Single,Sales,Wife,Asian,Male,8954,1341,57,USA,>50K
+54,Private,Masters,Single,Clerical,Husband,White,Male,5346,110,23,USA,<=50K
+50,Private,High School,Married,Sales,Not-in-family,Black,Female,5043,250,57,Pakistan,<=50K
+59,Self-emp,High School,Single,Sales,Wife,Black,Male,2428,2430,38,USA,>50K
+61,Self-emp,Masters,Single,Sales,Husband,Asian,Female,5126,2054,25,UK,<=50K
+41,Government,High School,Married,Clerical,Wife,Black,Male,8220,458,53,USA,<=50K
+32,Government,Masters,Divorced,Clerical,Not-in-family,Black,Female,9098,1107,37,Pakistan,>50K
+49,Government,High School,Divorced,Tech,Husband,Black,Female,7813,207,32,Pakistan,<=50K
+49,Self-emp,High School,Married,Clerical,Wife,White,Male,9645,899,42,UK,<=50K
+41,Self-emp,Masters,Married,Clerical,Husband,White,Female,3356,3461,38,Pakistan,>50K
+58,Government,High School,Married,Clerical,Wife,Black,Male,8707,3385,30,USA,<=50K
+29,Government,Masters,Married,Clerical,Not-in-family,Asian,Male,7266,21,20,Pakistan,<=50K

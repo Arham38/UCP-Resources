@@ -1,0 +1,120 @@
+<!-- simplified version -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Income Predictor</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .box {
+      background: #1c1c1c;
+      padding: 20px;
+      border-radius: 10px;
+      width: 400px;
+    }
+
+    input, select {
+      width: 100%;
+      margin: 6px 0;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #5b8dee;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Income Predictor</h2>
+
+  <form action="/predict" method="POST">
+    <input type="number" name="age" placeholder="Age" required>
+
+    <select name="gender">
+      <option>Male</option>
+      <option>Female</option>
+    </select>
+
+    <select name="workclass">
+      <option>Private</option>
+      <option>Self-emp</option>
+      <option>Government</option>
+    </select>
+
+    <select name="education">
+      <option>High School</option>
+      <option>Bachelors</option>
+      <option>Masters</option>
+    </select>
+
+    <select name="marital">
+      <option>Single</option>
+      <option>Married</option>
+      <option>Divorced</option>
+    </select>
+
+    <select name="occupation">
+      <option>Sales</option>
+      <option>Clerical</option>
+      <option>Tech</option>
+    </select>
+
+    <select name="relationship">
+      <option>Husband</option>
+      <option>Wife</option>
+      <option>Not-in-family</option>
+    </select>
+
+    <select name="race">
+      <option>White</option>
+      <option>Black</option>
+      <option>Asian</option>
+    </select>
+
+    <select name="country">
+      <option>USA</option>
+      <option>UK</option>
+      <option>Pakistan</option>
+    </select>
+
+    <input type="number" name="capital_gain" placeholder="Capital Gain" required>
+    <input type="number" name="capital_loss" placeholder="Capital Loss" required>
+    <input type="number" name="hours_per_week" placeholder="Hours per Week" required>
+
+    <button type="submit">Predict</button>
+  </form>
+
+  {% if result %}
+    <div class="result">Result: {{ result }}</div>
+  {% endif %}
+
+  {% if error %}
+    <div class="result">{{ error }}</div>
+  {% endif %}
+</div>
+
+</body>
+</html>

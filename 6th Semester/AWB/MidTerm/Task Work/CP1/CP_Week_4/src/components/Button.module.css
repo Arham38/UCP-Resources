@@ -1,0 +1,10 @@
+.primaryBtn {
+  background-color: rgb(45, 5, 5);
+  color: white;
+  color: green;
+  padding: 10px 20px;
+  border: none;
+}
+.primaryBtn:hover {
+  background-color: darkgreen;
+}

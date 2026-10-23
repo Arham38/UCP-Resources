@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Git Visual Guide (English)</title>
+<style>
+:root{
+--text-primary:#1f1e1d;--text-secondary:#5f5e5a;--text-muted:#8a8880;
+--text-accent:#185FA5;--text-danger:#A32D2D;--text-warning:#854F0B;--text-success:#3B6D11;
+--bg-accent:#E6F1FB;--bg-danger:#FCEBEB;--bg-warning:#FAEEDA;--bg-success:#EAF3DE;
+--border:rgba(0,0,0,.12);--border-strong:rgba(0,0,0,.25);--border-stronger:rgba(0,0,0,.4);--border-accent:#85B7EB;
+--surface-0:#f7f6f2;--surface-1:#f1efe8;--surface-2:#ffffff;
+--font-sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+--font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+:root{
+--text-primary:#f1efe8;--text-secondary:#b4b2a9;--text-muted:#888780;
+--text-accent:#85B7EB;--text-danger:#F09595;--text-warning:#FAC775;--text-success:#97C459;
+--bg-accent:#0C447C;--bg-danger:#791F1F;--bg-warning:#633806;--bg-success:#27500A;
+--border:rgba(255,255,255,.14);--border-strong:rgba(255,255,255,.28);--border-stronger:rgba(255,255,255,.45);--border-accent:#378ADD;
+--surface-0:#1f1e1d;--surface-1:#2c2c2a;--surface-2:#262624;
+}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--text-primary);font-family:var(--font-sans);line-height:1.6}
+main{max-width:720px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:22px;font-weight:500;margin:0 0 4px}
+h2{font-size:18px;font-weight:500;margin:36px 0 8px}
+h3{font-size:15px;font-weight:500;margin:20px 0 6px}
+p{font-size:14px;margin:0 0 10px}
+.sub{color:var(--text-secondary);font-size:14px;margin:0 0 18px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-secondary);margin:0 0 14px}
+.legend span i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+button{font:inherit;font-size:14px;color:var(--text-primary);background:transparent;border:.5px solid var(--border-strong);border-radius:8px;padding:7px 14px;cursor:pointer}
+button:hover{background:var(--surface-1)}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.4;cursor:default}
+.tb{font-size:13px;padding:6px 12px}
+.tb.on{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}
+.cm,.lb{transition:transform .7s cubic-bezier(.4,0,.2,1),opacity .4s}
+@keyframes pop{0%{transform:scale(.2);opacity:0}70%{transform:scale(1.25);opacity:1}100%{transform:scale(1)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:.95}50%{opacity:.25}}
+.pp{animation:pop .5s ease-out;transform-origin:0 0}
+.eg{animation:fade .5s ease-out}
+.hlr{animation:pulse 1.1s ease-in-out infinite}
+.cl{font-family:var(--font-mono);font-size:12px;padding:2px 10px;white-space:pre}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 12px}
+th,td{text-align:left;padding:7px 10px;border-bottom:.5px solid var(--border);vertical-align:top}
+th{font-weight:500;color:var(--text-secondary);background:var(--surface-1)}
+pre{background:var(--surface-1);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;overflow-x:auto;margin:6px 0 12px}
+code{font-family:var(--font-mono);font-size:12.5px;background:var(--surface-1);padding:1px 5px;border-radius:4px}
+.tip{background:var(--bg-warning);color:var(--text-warning);border-radius:8px;padding:8px 12px;font-size:13px;margin:8px 0 12px}
+</style>
+</head>
+<body>
+<main>
+<h1>Git Visual Guide</h1>
+<p class="sub">Git Flow, fast-forward, three-way merge, rebase, squash merge and merge conflicts, explained step by step with animation.</p>
+<div class="legend">
+<span><i style="background:#378ADD"></i>main</span>
+<span><i style="background:#1D9E75"></i>develop</span>
+<span><i style="background:#7F77DD"></i>feature</span>
+<span><i style="background:#BA7517"></i>release</span>
+<span><i style="background:#D85A30"></i>hotfix</span>
+<span>Thick ring = merge commit</span>
+<span>Dotted = old commit</span>
+</div>
+<div id="tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px"></div>
+<div id="intro" style="font-size:13px;color:var(--text-secondary);margin:0 0 6px"></div>
+<svg id="svg" width="100%" viewBox="0 0 680 330" role="img" aria-label="Git commit graph">
+<g id="lanes"></g><g id="edges"></g><g id="cs"></g><g id="ls"></g>
+</svg>
+<div style="background:var(--surface-2);border:.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-top:8px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<span id="ctr" style="font-size:12px;color:var(--text-secondary)"></span>
+<span id="dots" style="display:flex;gap:5px"></span>
+</div>
+<div id="ttl" style="font-size:16px;font-weight:500;margin-bottom:8px"></div>
+<div id="cmd" style="background:var(--surface-1);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;margin-bottom:10px;overflow-x:auto"></div>
+<div id="note" style="font-size:14px;line-height:1.65"></div>
+<div id="warn" style="display:none;background:var(--bg-warning);color:var(--text-warning);border-radius:8px;padding:8px 12px;font-size:13px;margin-top:10px;line-height:1.55"></div>
+<div id="code" style="display:none;margin-top:10px;border:.5px solid var(--border);border-radius:8px;overflow:hidden"></div>
+<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+<button id="prev">&larr; Previous</button>
+<button id="next">Next &rarr;</button>
+<button id="play">&#9654; Auto play</button>
+<button id="reset">&#8635; Restart</button>
+</div>
+</div>
+
+<h2>1. Git Flow and branch naming</h2>
+<p>Git Flow is a workflow where every kind of work lives on a branch of a fixed type.</p>
+<table>
+<tr><th>Branch</th><th>Created from</th><th>Merged into</th><th>Naming</th></tr>
+<tr><td><code>main</code></td><td>n/a</td><td>n/a</td><td>stable, tagged code only</td></tr>
+<tr><td><code>develop</code></td><td><code>main</code></td><td><code>main</code> (through a release)</td><td>one long-lived branch</td></tr>
+<tr><td><code>feature/*</code></td><td><code>develop</code></td><td><code>develop</code></td><td><code>feature/login</code>, <code>feature/PAY-42-checkout</code></td></tr>
+<tr><td><code>release/*</code></td><td><code>develop</code></td><td><code>main</code> and <code>develop</code></td><td><code>release/1.1.0</code></td></tr>
+<tr><td><code>hotfix/*</code></td><td><code>main</code></td><td><code>main</code> and <code>develop</code></td><td><code>hotfix/payment-crash</code></td></tr>
+</table>
+<p>Naming rules: use lowercase, separate words with <code>-</code>, and put the ticket number in the name if you have one.</p>
+<pre>git checkout -b develop main
+git checkout -b feature/login develop
+git checkout develop &amp;&amp; git merge --no-ff feature/login
+git checkout -b release/1.1 develop
+git checkout main &amp;&amp; git merge --no-ff release/1.1 &amp;&amp; git tag v1.1
+git checkout -b hotfix/crash main</pre>
+
+<h2>2. Merge operations</h2>
+<table>
+<tr><th></th><th>Fast-forward</th><th>Three-way merge</th></tr>
+<tr><td>When</td><td>main has not moved; the feature is directly ahead of it</td><td>both branches have new commits (they diverged)</td></tr>
+<tr><td>New commit</td><td>none, the pointer just moves forward</td><td>a merge commit is created</td></tr>
+<tr><td>What Git looks at</td><td>two points</td><td>three points: common ancestor and both tips</td></tr>
+<tr><td>History shape</td><td>straight line</td><td>diamond</td></tr>
+</table>
+<pre>git merge feature            # fast-forward if possible, otherwise three-way
+git merge --no-ff feature    # always create a merge commit
+git merge --ff-only feature  # fast-forward only, otherwise refuse</pre>
+
+<h2>3. Linear history and clean history</h2>
+<p>Linear history means <code>git log --graph</code> shows one straight line, with no diamonds or crossing lines. Clean history means every commit has a clear purpose, so there are no "wip" or "fix typo" commits. Rebase and squash (below) are how you get both.</p>
+<pre>git config --global pull.rebase true   # rebase instead of merging on pull
+git merge --ff-only feature            # allow only straight-line merges</pre>
+
+<h2>4. History rewriting: rebase and squash</h2>
+<p>Rebase replays your branch's commits on top of a new base. Commit IDs change (f1 becomes f1').</p>
+<pre>git checkout feature
+git rebase main              # replay feature on top of main
+git checkout main
+git merge feature            # now a plain fast-forward</pre>
+<p>Squash combines several commits into one.</p>
+<pre>git merge --squash feature &amp;&amp; git commit -m "Add login feature"   # way 1
+git rebase -i HEAD~4                                               # way 2 (pick / squash)</pre>
+<p>The difference: rebase keeps every commit separate, squash makes them all one.</p>
+<div class="tip">Golden rule: never rebase or squash a branch that has been pushed and that others are using. If you must, use <code>git push --force-with-lease</code>, never plain <code>--force</code>, because it will not overwrite work you have not seen.</div>
+
+<h2>5. Merge conflict</h2>
+<p>A conflict happens when both branches changed the same line of the same file. Git cannot decide which version is right, so it stops and asks you.</p>
+<pre>git merge feature            # CONFLICT
+git status                   # look for "both modified" files
+# open the file, remove &lt;&lt;&lt;&lt;&lt;&lt;&lt;  =======  &gt;&gt;&gt;&gt;&gt;&gt;&gt;, write the final line
+git add index.html           # tell Git it is resolved
+git commit                   # or: git merge --continue</pre>
+<p>If you panic, <code>git merge --abort</code> returns everything to the state before the merge. During a rebase, use <code>git rebase --continue</code> or <code>git rebase --abort</code>.</p>
+</main>
+<script>
+const BL='#378ADD',TL='#1D9E75',PU='#7F77DD',AM='#BA7517',CO='#D85A30';
+const S={
+flow:{name:'Git Flow',intro:'Scenario: a team is building a shopping app called "ShopEasy". Every kind of work gets its own branch with its own role.',
+lanes:[{n:'main',c:BL},{n:'hotfix',c:CO},{n:'release',c:AM},{n:'develop',c:TL},{n:'feature',c:PU}],
+bc:{main:BL,develop:TL,'feature/login':PU,'release/1.1':AM,'hotfix/crash':CO},
+C:{m1:{x:0,l:0,t:'v1.0',p:[]},f1:{x:1,l:4,t:'f1',p:['m1']},f2:{x:2,l:4,t:'f2',p:['f1']},d1:{x:3,l:3,t:'M',p:['m1','f2']},r1:{x:4,l:2,t:'r1',p:['d1']},m2:{x:5,l:0,t:'v1.1',p:['m1','r1']},d2:{x:5,l:3,t:'M',p:['d1','r1']},h1:{x:6,l:1,t:'fix',p:['m2']},m3:{x:7,l:0,t:'v1.2',p:['m2','h1']},d3:{x:7,l:3,t:'M',p:['d2','h1']}},
+steps:[
+{title:'main: stable code only',cmd:['$ git commit -m "Release 1.0"','$ git tag v1.0'],note:'The main branch holds only production-ready code, the version users are running. Every release gets a tag.',ids:'m1',tips:{main:'m1'}},
+{title:'Create the develop branch',cmd:['$ git checkout -b develop main'],note:'develop is the integration branch where day-to-day work collects. Right now both branches point at the same commit.',ids:'m1',tips:{main:'m1',develop:'m1'}},
+{title:'Feature branch: new work',cmd:['$ git checkout -b feature/login develop','$ git commit -m "Login form"','$ git commit -m "Login API"'],note:'Each new feature gets its own branch, cut from develop. Unfinished work never breaks develop.',ids:'m1 f1 f2',tips:{main:'m1',develop:'m1','feature/login':'f2'}},
+{title:'Merge the feature into develop',cmd:['$ git checkout develop','$ git merge --no-ff feature/login','$ git branch -d feature/login'],note:'Once the feature is done, merge it into develop. --no-ff creates a merge commit (M) so the feature stays visible as a group in history. Then delete the branch.',ids:'m1 f1 f2 d1',tips:{main:'m1',develop:'d1'}},
+{title:'Release branch: testing and polish',cmd:['$ git checkout -b release/1.1 develop','$ git commit -m "Version bump, bug fixes"'],note:'Before a release, only bug fixes go on a separate branch. Meanwhile develop can keep receiving new features.',ids:'m1 f1 f2 d1 r1',tips:{main:'m1',develop:'d1','release/1.1':'r1'}},
+{title:'Release goes into main and develop',cmd:['$ git checkout main','$ git merge --no-ff release/1.1','$ git tag v1.1','$ git checkout develop','$ git merge --no-ff release/1.1'],note:'The release goes into main (it is live now) and back into develop, so the release bug fixes exist in both.',ids:'m1 f1 f2 d1 r1 m2 d2',tips:{main:'m2',develop:'d2'}},
+{title:'Hotfix: emergency bug in production',cmd:['$ git checkout -b hotfix/crash main','$ git commit -m "Fix crash"'],note:'The live app is crashing! A hotfix branches straight from main, because develop still has unfinished work.',ids:'m1 f1 f2 d1 r1 m2 d2 h1',tips:{main:'m2',develop:'d2','hotfix/crash':'h1'}},
+{title:'Hotfix goes into main and develop',cmd:['$ git checkout main','$ git merge --no-ff hotfix/crash','$ git tag v1.2','$ git checkout develop','$ git merge --no-ff hotfix/crash'],note:'The hotfix lands in main (users get the fix) and in develop (so the bug does not return in the next release). That is the full Git Flow cycle.',ids:'m1 f1 f2 d1 r1 m2 d2 h1 m3 d3',tips:{main:'m3',develop:'d3'}}
+]},
+ff:{name:'Fast-forward',intro:'Scenario: you branched a feature off main, and nobody touched main in the meantime.',
+lanes:[{n:'main',c:BL},{n:'feature',c:PU}],bc:{main:BL,feature:PU},
+C:{m1:{x:0,l:0,t:'m1',p:[]},m2:{x:1,l:0,t:'m2',p:['m1']},f1:{x:2,l:1,t:'f1',p:['m2']},f2:{x:3,l:1,t:'f2',p:['f1']}},
+steps:[
+{title:'Start: 2 commits on main',cmd:['$ git log --oneline','> m2 Add header','> m1 First commit'],note:'main has two commits. This is where we branch off.',ids:'m1 m2',tips:{main:'m2'}},
+{title:'Work on the feature branch',cmd:['$ git checkout -b feature','$ git commit -m "f1"','$ git commit -m "f2"'],note:'Two commits on feature. The key point: main has not moved. That is the condition for a fast-forward.',ids:'m1 m2 f1 f2',tips:{main:'m2',feature:'f2'}},
+{title:'Merge: only the pointer moves',cmd:['$ git checkout main','$ git merge feature','> Updating m2..f2','> Fast-forward'],note:'Git creates no new commit. The main label simply slides forward to f2, and the history stays a straight line.',ids:'m1 m2 f1 f2',tips:{main:'f2',feature:'f2'},lane:{f1:0,f2:0}},
+{title:'Cleanup: delete the feature branch',cmd:['$ git branch -d feature'],note:'You no longer need the feature branch. Deleting it removes only the label, not the commits. Result: linear, clean history.',ids:'m1 m2 f1 f2',tips:{main:'f2'},lane:{f1:0,f2:0}}
+]},
+three:{name:'Three-way merge',intro:'Scenario: you were working on a feature, and meanwhile a new commit landed on main too.',
+lanes:[{n:'main',c:BL},{n:'feature',c:PU}],bc:{main:BL,feature:PU},
+C:{m1:{x:0,l:0,t:'m1',p:[]},f1:{x:1,l:1,t:'f1',p:['m1']},f2:{x:2,l:1,t:'f2',p:['f1']},m2:{x:3,l:0,t:'m2',p:['m1']},M:{x:4,l:0,t:'M',p:['m2','f2']}},
+steps:[
+{title:'Start: one common commit',cmd:['$ git log --oneline','> m1 First commit'],note:'Both branches will grow from this m1. It is called the common ancestor.',ids:'m1',tips:{main:'m1'}},
+{title:'Work on the feature branch',cmd:['$ git checkout -b feature','$ git commit -m "f1"','$ git commit -m "f2"'],note:'Two commits on feature.',ids:'m1 f1 f2',tips:{main:'m1',feature:'f2'}},
+{title:'main moved ahead too',cmd:['$ git checkout main','$ git commit -m "Hotfix on main"'],note:'The branches have now diverged. A fast-forward is impossible, because main is not directly behind f2.',ids:'m1 f1 f2 m2',tips:{main:'m2',feature:'f2'}},
+{title:'Git looks at three points',cmd:['$ git merge feature'],note:'The three glowing commits: m1 (common ancestor), m2 (tip of main), f2 (tip of feature). Git compares all three to combine the changes from both sides.',ids:'m1 f1 f2 m2',hl:'m1 m2 f2',tips:{main:'m2',feature:'f2'}},
+{title:'A merge commit is created',cmd:['$ git merge feature','> Merge made by the \'ort\' strategy.'],note:'The new commit M has two parents (m2 and f2). Both histories are preserved, but the graph now has a diamond shape.',ids:'m1 f1 f2 m2 M',tips:{main:'M',feature:'f2'}}
+]},
+rebase:{name:'Rebase',intro:'Scenario: you want a straight (linear) history, with no merge commit.',
+lanes:[{n:'main',c:BL},{n:'feature',c:PU}],bc:{main:BL,feature:PU},
+C:{m1:{x:0,l:0,t:'m1',p:[]},m2:{x:1,l:0,t:'m2',p:['m1']},m3:{x:2,l:0,t:'m3',p:['m2']},f1:{x:1,l:1,t:'f1',p:['m1']},f2:{x:2,l:1,t:'f2',p:['f1']},g1:{x:3,l:1,t:"f1'",p:['m3']},g2:{x:4,l:1,t:"f2'",p:['g1']}},
+steps:[
+{title:'Start: main moved ahead',cmd:['$ git log --oneline --graph --all'],note:'feature branched off m1, and main has since gained m2 and m3. A plain merge would create a merge commit.',ids:'m1 m2 m3 f1 f2',tips:{main:'m3',feature:'f2'}},
+{title:'git rebase main',cmd:['$ git checkout feature','$ git rebase main','> Successfully rebased and updated refs/heads/feature.'],note:'Git picks up the feature commits and replays them on top of main\'s new tip (m3). The new commits f1\' and f2\' have new IDs. The old dotted commits are now abandoned.',warn:'Rebase rewrites history (commit IDs change). Do not rebase a branch that is already pushed and used by others. If you must: git push --force-with-lease.',ids:'m1 m2 m3 f1 f2 g1 g2',old:'f1 f2',tips:{main:'m3',feature:'g2'}},
+{title:'Now a fast-forward merge',cmd:['$ git checkout main','$ git merge feature','> Fast-forward'],note:'feature now sits directly on top of main, so the merge only moves the pointer. No merge commit, one perfectly straight line: linear history.',ids:'m1 m2 m3 g1 g2',tips:{main:'g2',feature:'g2'},lane:{g1:0,g2:0}}
+]},
+squash:{name:'Squash merge',intro:'Scenario: the feature has 4 messy commits ("wip", "fix typo"...). You want one clean commit on main.',
+lanes:[{n:'main',c:BL},{n:'feature',c:PU}],bc:{main:BL,feature:PU},
+C:{m1:{x:0,l:0,t:'m1',p:[]},m2:{x:1,l:0,t:'m2',p:['m1']},c1:{x:1,l:1,t:'c1',p:['m1']},c2:{x:2,l:1,t:'c2',p:['c1']},c3:{x:3,l:1,t:'c3',p:['c2']},c4:{x:4,l:1,t:'c4',p:['c3']},s:{x:5,l:0,t:'S',p:['m2']}},
+steps:[
+{title:'Start: messy commits on feature',cmd:['$ git log --oneline feature'],code:[{t:'c4 oops fix',k:'p'},{t:'c3 wip 2',k:'p'},{t:'c2 fix typo',k:'p'},{t:'c1 wip',k:'p'}],note:'These tiny commits would clutter the history of main. We will combine them into one.',ids:'m1 m2 c1 c2 c3 c4',tips:{main:'m2',feature:'c4'}},
+{title:'git merge --squash',cmd:['$ git checkout main','$ git merge --squash feature','> Squash commit -- not updating HEAD'],note:'All the changes from the four commits are now in the staging area, but no commit exists yet. The glowing commits are being folded into one.',ids:'m1 m2 c1 c2 c3 c4',hl:'c1 c2 c3 c4',tips:{main:'m2',feature:'c4'}},
+{title:'Create one clean commit',cmd:['$ git commit -m "Add login feature"','$ git branch -D feature'],note:'Four commits became one commit, S. Its only parent is m2, with no link back to feature. The dotted commits are now on no branch (-D is capital because Git does not see the branch as "merged").',ids:'m1 m2 s c1 c2 c3 c4',old:'c1 c2 c3 c4',tips:{main:'s'}},
+{title:'Another way: interactive rebase',cmd:['$ git rebase -i HEAD~4'],code:[{t:'pick c1 wip',k:'ok'},{t:'squash c2 fix typo',k:'o'},{t:'squash c3 wip 2',k:'o'},{t:'squash c4 oops fix',k:'o'}],note:'To squash on the branch itself, keep pick on the first commit and write squash on the rest in the editor. Then write the new commit message.',ids:'m1 m2 s c1 c2 c3 c4',old:'c1 c2 c3 c4',tips:{main:'s'}}
+]},
+conflict:{name:'Merge conflict',intro:'Scenario: two people changed the same line of index.html differently.',
+lanes:[{n:'main',c:BL},{n:'feature',c:PU}],bc:{main:BL,feature:PU},
+C:{m1:{x:0,l:0,t:'m1',p:[]},m2:{x:1,l:0,t:'m2',p:['m1']},f1:{x:1,l:1,t:'f1',p:['m1']},M:{x:3,l:0,t:'M',p:['m2','f1']}},
+steps:[
+{title:'Both changed the same line',cmd:['# on main:','$ git commit -m "Change title"','# on feature:','$ git commit -m "New greeting"'],codeTitle:'index.html, line 5',code:[{t:'main    : <h1>Welcome</h1>',k:'a'},{t:'feature : <h1>Hello User</h1>',k:'t'}],note:'The two changes live on separate branches. There is no problem until you merge.',ids:'m1 m2 f1',tips:{main:'m2',feature:'f1'}},
+{title:'Merge: CONFLICT!',cmd:['$ git merge feature','> CONFLICT (content): Merge conflict in index.html','> Automatic merge failed; fix conflicts and then commit the result.'],codeTitle:'index.html (Git inserted markers)',code:[{t:'<<<<<<< HEAD',k:'m'},{t:'<h1>Welcome</h1>',k:'a'},{t:'=======',k:'m'},{t:'<h1>Hello User</h1>',k:'t'},{t:'>>>>>>> feature',k:'m'}],note:'Git sees two different versions of one line and cannot decide, so the merge stopped (the red "?" commit). Above === is your version (main), below it is the feature version. Do not panic: git merge --abort puts everything back as it was.',ids:'m1 m2 f1 M',conflict:'M',tips:{main:'m2',feature:'f1'}},
+{title:'Decide and fix it yourself',cmd:['# edit the file: remove markers, write the final line','$ git add index.html','$ git status','> All conflicts fixed but you are still merging.'],codeTitle:'index.html (resolved)',code:[{t:'<h1>Welcome, User</h1>',k:'ok'}],note:'Delete the <<<<<<<, ======= and >>>>>>> lines and write the final line (a mix of both, or just one). Then git add tells Git the conflict is resolved.',ids:'m1 m2 f1 M',conflict:'M',tips:{main:'m2',feature:'f1'}},
+{title:'Merge commit complete',cmd:['$ git commit','# or: git merge --continue'],note:'With the conflict resolved, the merge commit M exists, and main now contains both people\'s work.',ids:'m1 m2 f1 M',tips:{main:'M',feature:'f1'}}
+]}
+};
+const NS='http://www.w3.org/2000/svg',X0=100,DX=66,Y0=70,DY=52;
+const $=id=>document.getElementById(id);
+const svg=$('svg'),lanesG=$('lanes'),edgesG=$('edges'),cG=$('cs'),lG=$('ls');
+let cur='flow',step=0,nodes={},lnodes={},prevIds=new Set(),et=null,timer=null;
+function mk(tag,a,p){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function laneY(l){return Y0+l*DY}
+function build(){
+const sc=S[cur];clearInterval(timer);timer=null;setPlay(false);
+svg.setAttribute('viewBox','0 0 680 '+(Y0+(sc.lanes.length-1)*DY+40));
+[lanesG,edgesG,cG,lG].forEach(g=>g.innerHTML='');
+nodes={};lnodes={};prevIds=new Set();step=0;
+sc.lanes.forEach((ln,i)=>{
+mk('line',{x1:70,x2:660,y1:laneY(i),y2:laneY(i),stroke:'var(--border)','stroke-width':.5,'stroke-dasharray':'2 4'},lanesG);
+const t=mk('text',{x:8,y:laneY(i)+4,fill:ln.c,'font-size':12,'font-weight':500},lanesG);t.textContent=ln.n;
+});
+$('intro').textContent=sc.intro;
+document.querySelectorAll('.tb').forEach(b=>b.classList.toggle('on',b.dataset.k===cur));
+$('dots').innerHTML=sc.steps.map(()=>'<span style="width:8px;height:8px;border-radius:50%;background:var(--border-strong)"></span>').join('');
+render(0);
+}
+function render(delay){
+const sc=S[cur],st=sc.steps[step];
+const ids=new Set(st.ids.split(' ')),old=new Set((st.old||'').split(' ').filter(Boolean)),hl=new Set((st.hl||'').split(' ').filter(Boolean));
+const lane=id=>(st.lane&&st.lane[id]!=null)?st.lane[id]:sc.C[id].l;
+const P=id=>({x:X0+sc.C[id].x*DX,y:laneY(lane(id))});
+const colOf=id=>sc.lanes[sc.C[id].l].c;
+for(const id in sc.C){
+const c=sc.C[id];let n=nodes[id];
+if(!n){
+const o=mk('g',{class:'cm'},cG);const i=mk('g',{},o);
+const h=mk('circle',{r:20,fill:'none',stroke:'#EF9F27','stroke-width':3,class:'hlr'},i);
+const ci=mk('circle',{r:14},i);
+const tx=mk('text',{'text-anchor':'middle','dominant-baseline':'central','font-size':11,'font-weight':500},i);
+const tt=mk('title',{},o);tt.textContent=id;
+const p0=P(id);o.style.transform='translate('+p0.x+'px,'+p0.y+'px)';o.style.opacity=0;
+n=nodes[id]={o,i,h,ci,tx};
+}
+const show=ids.has(id),p=P(id),isOld=old.has(id),isConf=st.conflict===id,col=colOf(id),merge=c.p.length>1;
+n.o.style.transform='translate('+p.x+'px,'+p.y+'px)';
+n.o.style.opacity=show?1:0;
+n.ci.style.fill=isOld?'var(--surface-2)':(isConf?'var(--bg-danger)':col);
+n.ci.style.stroke=isConf?'#E24B4A':(merge&&!isOld?'var(--text-primary)':col);
+n.ci.setAttribute('stroke-width',isConf?2.5:(merge?2.5:1.5));
+n.ci.setAttribute('stroke-dasharray',(isOld||isConf)?'4 3':'0');
+n.ci.style.opacity=isOld?.65:1;
+n.tx.style.fill=isOld?col:(isConf?'#E24B4A':'#fff');
+n.tx.textContent=isConf?'?':c.t;
+n.h.style.opacity=hl.has(id)?1:0;
+if(show&&!prevIds.has(id)){n.i.classList.remove('pp');void n.i.getBoundingClientRect();n.i.classList.add('pp')}
+}
+const tips=st.tips||{},stack={};
+for(const name in lnodes)lnodes[name].o.style.opacity=0;
+for(const name in tips){
+let ln=lnodes[name];
+const id=tips[name],p=P(id);
+if(!ln){
+const w=name.length*6.6+18;
+const o=mk('g',{class:'lb'},lG);
+mk('rect',{x:-w/2,y:-9,width:w,height:18,rx:9,fill:sc.bc[name]||BL},o);
+const t=mk('text',{'text-anchor':'middle','dominant-baseline':'central','font-size':11,'font-weight':500,fill:'#fff'},o);t.textContent=name;
+o.style.transform='translate('+p.x+'px,'+(p.y-30)+'px)';o.style.opacity=0;
+ln=lnodes[name]={o};
+}
+const k=stack[id]||0;stack[id]=k+1;
+ln.o.style.transform='translate('+p.x+'px,'+(p.y-30-k*21)+'px)';
+ln.o.style.opacity=1;
+}
+clearTimeout(et);edgesG.innerHTML='';
+const drawEdges=()=>{
+edgesG.innerHTML='';
+ids.forEach(id=>{
+sc.C[id].p.forEach((pid,k)=>{
+if(!ids.has(pid))return;
+const a=P(pid),b=P(id);
+const col=k===0?colOf(id):colOf(pid);
+const dashed=old.has(id)||st.conflict===id;
+const d=a.y===b.y?'M'+a.x+' '+a.y+'L'+b.x+' '+b.y:'M'+a.x+' '+a.y+'C'+(a.x+(b.x-a.x)/2)+' '+a.y+' '+(a.x+(b.x-a.x)/2)+' '+b.y+' '+b.x+' '+b.y;
+mk('path',{d,fill:'none',stroke:st.conflict===id?'#E24B4A':col,'stroke-width':2.5,'stroke-linecap':'round','stroke-dasharray':dashed?'5 4':'0',opacity:old.has(id)?.5:1,class:'eg'},edgesG);
+});
+});
+};
+if(delay){et=setTimeout(drawEdges,delay)}else drawEdges();
+prevIds=ids;
+$('ctr').textContent='Step '+(step+1)+' / '+sc.steps.length;
+$('ttl').textContent=st.title;
+$('cmd').innerHTML=st.cmd.map(l=>{
+if(l[0]==='#')return '<div style="color:var(--text-muted)">'+esc(l)+'</div>';
+if(l[0]==='>')return '<div style="color:var(--text-secondary);padding-left:14px">'+esc(l.slice(2))+'</div>';
+let s=esc(l.slice(2));
+s=s.replace(/^git (\S+)/,'<span style="color:var(--text-accent)">git <b style="font-weight:500">$1</b></span>');
+return '<div><span style="color:var(--text-muted)">$ </span>'+s+'</div>';
+}).join('');
+$('note').textContent=st.note;
+const w=$('warn');w.style.display=st.warn?'block':'none';w.textContent=st.warn||'';
+const cd=$('code');
+if(st.code){
+const kc={m:['var(--bg-danger)','var(--text-danger)'],a:['var(--bg-accent)','var(--text-accent)'],t:['var(--bg-warning)','var(--text-warning)'],ok:['var(--bg-success)','var(--text-success)'],o:['var(--bg-success)','var(--text-success)'],p:['transparent','var(--text-primary)']};
+cd.style.display='block';
+cd.innerHTML=(st.codeTitle?'<div style="font-size:12px;color:var(--text-secondary);padding:6px 10px;background:var(--surface-1);border-bottom:.5px solid var(--border)">'+esc(st.codeTitle)+'</div>':'')+st.code.map(r=>'<div class="cl" style="background:'+kc[r.k][0]+';color:'+kc[r.k][1]+'">'+esc(r.t)+'</div>').join('');
+}else{cd.style.display='none';cd.innerHTML=''}
+[...$('dots').children].forEach((d,i)=>{d.style.background=i===step?'var(--text-accent)':(i<step?'var(--border-stronger)':'var(--border-strong)')});
+$('prev').disabled=step===0;
+$('next').disabled=step===sc.steps.length-1;
+}
+function go(d){const n=S[cur].steps.length;const s=Math.max(0,Math.min(n-1,step+d));if(s===step)return;step=s;render(650)}
+function setPlay(on){$('play').innerHTML=on?'&#10074;&#10074; Pause':'&#9654; Auto play'}
+$('prev').onclick=()=>{go(-1)};
+$('next').onclick=()=>{go(1)};
+$('reset').onclick=()=>{build()};
+$('play').onclick=()=>{
+if(timer){clearInterval(timer);timer=null;setPlay(false);return}
+if(step===S[cur].steps.length-1){step=0;render(0)}
+setPlay(true);
+timer=setInterval(()=>{
+if(step>=S[cur].steps.length-1){clearInterval(timer);timer=null;setPlay(false);return}
+go(1);
+},3800);
+};
+Object.keys(S).forEach(k=>{
+const b=document.createElement('button');b.className='tb';b.dataset.k=k;b.textContent=S[k].name;
+b.onclick=()=>{cur=k;build()};$('tabs').appendChild(b);
+});
+build();
+</script>
+</body>
+</html>

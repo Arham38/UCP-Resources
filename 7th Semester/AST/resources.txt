@@ -1,0 +1,199 @@
+Spotting a conflict with the no-external-sources rule.
+Spotting a conflict with the no-external-sources rule.
+Before I search, one thing to check. Earlier you said your teacher wants the notes made without outside material. Your outline’s own reference list includes the official Selenium documentation, so I’ll start with that and then look for tutorials.
+
+Searched the web, read 3 pages, 3 failed
+Results
+
+selenium webdriver with java for beginners
+practice-test-automation-school.teachable.com
+
+practice-test-automation-school.teachable.com
+practice-test-automation-school.teachable.com
+
+the complete selenium webdriver course with testng java
+www.udemy.com
+
+learn selenium webdriverjavatestng framework from scratch
+www.udemy.com
+
+selenium webdriver course with java for beginners with java
+www.udemy.com
+
+What you'll learn:
+www.classcentral.com
+
+www.udemy.com
+www.udemy.com
+
+starting with selenium webdriver
+practicetestautomation.com
+
+selenium webdriver tutorial java
+testautomationu.applitools.com
+
+testng tutorial
+www.udemy.com
+Results
+
+metrics-sub.duckdns.org
+metrics-sub.duckdns.org
+
+DEV Community
+dev.to
+
+xpath and css selectors in selenium a comprehensive java guide e93da0f45116
+medium.com
+
+locators xpath css tools
+www.udemy.com
+
+A Practical Guide to Mastering XPath in Selenium
+blog.scrappey.com
+
+roeuhhhnvnakhvsbsuqi.supabase.co
+roeuhhhnvnakhvsbsuqi.supabase.co
+
+0% found this document useful (0 votes)
+www.scribd.com
+
+Xpath Vs CSS Selector in Java
+proxy-dev.blitzz.co
+css selectors a locator in selenium
+backup.hollywoodcamerawork.com
+Results
+
+0% found this document useful (0 votes)
+www.scribd.com
+
+0% found this document useful (0 votes)
+www.scribd.com
+
+0% found this document useful (0 votes)
+www.scribd.com
+
+Complete RoadMap to Master Selenium WebDriver for Automation Interviews in 2025
+in.linkedin.com
+
+0% found this document useful (0 votes)
+www.scribd.com
+
+Selenium Webdriver Practical Guide
+lugbs.linux.it
+
+0% found this document useful (0 votes)
+www.scribd.com
+
+0% found this document useful (0 votes)
+www.scribd.com
+
+Table of contents
+webscraping.ai
+Results
+1. Welcome to TestNG
+testng.org
+
+tessl.io
+tessl.io
+
+android.googlesource.com
+android.googlesource.com
+
+0% found this document useful (0 votes)
+www.scribd.com
+
+android.googlesource.com
+android.googlesource.com
+
+android.googlesource.com
+android.googlesource.com
+
+0% found this document useful (0 votes)
+www.scribd.com
+
+2765 lines
+os.unplugged.com
+
+TestNG Annotations Tutorial
+testomat.io
+Locating stable official documentation links for Selenium.
+Results
+
+Learn Selenium Automation with Java - FULL COURSE
+www.youtube.com
+
+Selenium Java Full Course
+www.youtube.com
+
+Selenium WebDriver Tutorials - By Naveen AutomationLabs
+www.youtube.com
+
+Selenium Webdriver Tutorial Step by Step - YouTube
+www.youtube.com
+
+Selenium Webdriver with Java Complete Course
+www.youtube.com
+
+Selenium WebDriver Tutorial In 3 Hours⏰| Complete Selenium Tutorial for Beginners - YouTube
+www.youtube.com
+
+Selenium WebDriver with Java Tutorial - YouTube
+www.youtube.com
+
+Selenium WebDriver Java: The 40-Minute Masterclass - YouTube
+www.youtube.com
+
+Selenium with Java full Course
+www.youtube.com
+
+Selenium Tutorial For Beginners
+www.youtube.com
+Results
+
+XPath vs CSS Selector in Selenium WebDriver
+www.youtube.com
+
+Master XPath & CSS Selector
+www.youtube.com
+
+How To Identify Locators (Xpath, ID, CSS) in Selenium WebDriver - YouTube
+www.youtube.com
+
+XPath-CSS Selectors-SelectorsHub-XPath Tutorial-CSS Selectors Tutorial-SelectorsHub Tutorial-Css - YouTube
+www.youtube.com
+
+Get Your Page Element Locator (XPath/CSS) In Just One Click Without Using ChromeDevTools/HTML DOM - YouTube
+www.youtube.com
+
+Selenium Locators - Part 2 |XPath Locator
+www.youtube.com
+
+Different Locators in WebDriver (ID,Xpath,CSSSelector etc) - Selenium WebDriver Session 3 - YouTube
+www.youtube.com
+
+How to Use XPath and CSS Selectors in Selenium to Extract Text Easily - YouTube
+www.youtube.com
+
+Session 24 - Selenium with Java
+www.youtube.com
+
+Differences between Xpath and CssSelector In Selenium WebDriver - YouTube
+www.youtube.com
+Request
+https://www.selenium.dev/documentation/webdriver/elements/locators/
+
+Error
+You've hit your session limit · resets 2:50am (Asia/Karachi)
+
+Request
+https://www.selenium.dev/documentation/webdriver/interactions/windows/
+
+Error
+You've hit your session limit · resets 2:50am (Asia/Karachi)
+
+Request
+https://www.selenium.dev/documentation/webdriver/waits/
+
+Error
+You've hit your session limit · resets 2:50am (Asia/Karachi)
+

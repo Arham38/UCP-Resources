@@ -1,0 +1,73 @@
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, Flask!"
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+-----------------------------------------------
+
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, Flask!"
+
+@app.route('/contact')
+def contact():
+    return "Contact us at: contact@example.com"
+
+@app.route('/about')
+def about():
+    return "about"
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+-------------------------------------------------
+
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index1.html')   # Flask automatically looks in /templates/
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+-----------------------------------------------
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index1.html')   # Flask automatically looks in /templates/
+
+@app.route('/user/<name>')
+def user(name):
+    return f"Hello, {name}!"
+
+if __name__ == '__main__':
+    app.run(debug=True)
+----------------------------------------------
+
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/hello/<name>')
+def hello(name):
+    return render_template('hello.html', name=name)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+

@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# System and Editor files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp
+
+# Files exceeding GitHub 100MB limit
+6th Semester/AWB/MidTerm/Project/ParhLo.zip

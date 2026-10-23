@@ -1,0 +1,205 @@
+PROJECT FUNCTIONALITY OVERVIEW
+Full Fledged MERN Stack Learning Management System
+
+This project is a complete Learning Management System built with a MERN stack architecture.
+It supports students, instructors, and administrators with role-based dashboards, course
+management, lesson delivery, quizzes, progress tracking, notifications, and
+real-time communication.
+
+1. PUBLIC WEBSITE FEATURES
+
+- Home page for introducing the LMS platform.
+- About page for platform information.
+- Contact page for user inquiries.
+- Public courses page for browsing available courses.
+- Course detail page for viewing course information before enrollment.
+- User registration page.
+- User login page.
+- Protected routing so authenticated users access only permitted areas.
+- Role-based routing for student, instructor, and admin users.
+- Light mode and dark mode UI support with saved theme preference.
+
+2. AUTHENTICATION AND USER MANAGEMENT
+
+- User registration and login.
+- Authenticated sessions using backend auth APIs.
+- Role-based access control for students, instructors, and admins.
+- Protected dashboard routes.
+- Logout support.
+- Profile page for student account information.
+- Admin user management area.
+- Backend auth rate limiting to reduce brute-force attempts.
+
+3. STUDENT FEATURES
+
+- Student dashboard with learning statistics.
+- View enrolled courses.
+- Open course learning area.
+- Play course lessons through a lesson player.
+- Track lesson and course progress.
+- Take quizzes for enrolled courses.
+- View quiz-related pages from the student dashboard.
+- Access course chat for learning communication.
+- Update or view student profile details.
+- Receive notifications.
+
+4. INSTRUCTOR FEATURES
+
+- Instructor dashboard with course and lesson statistics.
+- Create new courses.
+- Manage instructor-owned courses.
+- Upload course lessons.
+- Add course content including uploaded files/media.
+- View published course counts and lesson counts.
+- Manage course materials through instructor dashboard routes.
+
+5. ADMIN FEATURES
+
+- Admin dashboard with platform statistics.
+- Manage users.
+- Manage courses across the platform.
+- View analytics such as users, courses, revenue, and average course price.
+- Access protected admin-only routes.
+- Monitor overall LMS activity from dashboard cards and analytics pages.
+
+6. COURSE MANAGEMENT
+
+- Create courses.
+- Browse all courses.
+- View course details.
+- Display course images/thumbnails.
+- Show course instructor name.
+- Show course price.
+- Enroll in courses.
+- Continue learning after enrollment.
+- Edit or delete courses where actions are enabled.
+- Backend course APIs for course CRUD operations.
+- Static upload serving for course assets.
+
+7. LESSON MANAGEMENT AND LEARNING PLAYER
+
+- Upload lessons from instructor dashboard.
+- Store lesson data in backend models.
+- Serve uploaded lesson files from the backend.
+- Student lesson player supports course learning routes.
+- Course lesson progress can be tracked.
+- Direct lesson route support using course ID and lesson ID.
+
+8. ENROLLMENT SYSTEM
+
+- Students can enroll in courses.
+- Enrollment APIs connect students to courses.
+- Student dashboard and My Courses page use enrollment data.
+- Enrolled courses can show progress and continue-learning actions.
+
+9. QUIZ SYSTEM
+
+- Quiz routes and backend quiz controller support quiz operations.
+- Students can access quizzes by course.
+- Quiz pages support answering course quizzes.
+- Quiz results can be connected to progress and student performance.
+- Instructor quiz assignment pages exist in the project structure.
+
+10. PROGRESS TRACKING
+
+- Backend progress APIs track learning progress.
+- Student dashboard shows completed and in-progress counts.
+- Average progress can be calculated and displayed.
+- Course cards can show progress bars.
+- Progress states support low, medium, and high visual levels.
+
+11. NOTIFICATIONS
+
+- Notification backend routes and controller are included.
+- Navbar includes a notification dropdown.
+- Users can receive platform or course-related notifications.
+- Notification UI supports alerts and status messages.
+
+12. REAL-TIME CHAT
+
+- Socket.io is configured on the backend.
+- Chat socket module is attached to the server.
+- Course chat page exists for student communication.
+- Real-time events can be emitted through the Express app's Socket.io instance.
+
+13. UI AND DESIGN SYSTEM FEATURES
+
+- Professional LMS color system using TailwindCSS.
+- Light mode and dark mode palettes.
+- CSS variables for backgrounds, text, cards, borders, sidebar, navbar, and buttons.
+- Reusable Navbar with dark mode toggle.
+- Reusable Sidebar for dashboards.
+- Dashboard card component for statistics.
+- Course card component for course listings.
+- Badge component for statuses such as Enrolled, Completed, In Progress, Upcoming, and Overdue.
+- Button component for Primary, Secondary, Success, Danger, Ghost, and Disabled states.
+- Alert component for Success, Warning, Error, and Info messages.
+- Progress bar component with low, medium, and high color levels.
+- Data table component with header, alternating rows, hover, selected row, and borders.
+- Form input component with labels, placeholder, focus ring, hint text, and error state.
+- Modal/dialog component with overlay, header, body, footer, and close button.
+- Student profile card component with avatar, role badge, stats, and actions.
+
+14. BACKEND INFRASTRUCTURE
+
+- Express.js backend server.
+- MongoDB database connection.
+- Models for User, Course, Lesson, Enrollment, Progress, Quiz, Notification, and Message.
+- API routes for auth, courses, enrollments, admin, lessons, notifications, quizzes, and progress.
+- Helmet security headers.
+- CORS support with credentials.
+- Cookie parsing.
+- JSON and URL-encoded request parsing.
+- Static file serving for uploaded assets.
+- Request logging with Morgan and Winston.
+- Global rate limiting.
+- Stricter auth rate limiting.
+- Health check endpoint.
+- Global error handler.
+- Socket.io setup for real-time features.
+
+15. FRONTEND INFRASTRUCTURE
+
+- React frontend powered by Vite.
+- React Router based navigation.
+- Lazy-loaded pages for better performance.
+- Redux store setup.
+- Auth context.
+- Theme context.
+- Socket context.
+- Toast notification support.
+- Error boundary wrapper.
+- Bootstrap support retained alongside TailwindCSS.
+- TailwindCSS configured with custom LMS color palette and dark mode class strategy.
+
+16. MAIN USER ROLES
+
+- Student:
+  Browse courses, enroll, learn lessons, take quizzes, track progress, chat, and manage profile.
+
+- Instructor:
+  Create courses, manage courses, upload lessons, and view instructor dashboard statistics.
+
+- Admin:
+  Manage users, manage courses, view analytics, and monitor platform-wide statistics.
+
+17. SECURITY AND ACCESS CONTROL
+
+- Protected frontend routes.
+- Role-specific route guards.
+- Backend rate limiting.
+- Security headers through Helmet.
+- CORS configured for frontend/backend communication.
+- Central error handling for API failures.
+
+18. WHAT THE PROJECT CAN BE USED FOR
+
+- Running an online learning platform.
+- Managing students, instructors, and admins.
+- Publishing and selling courses.
+- Delivering lessons and course materials.
+- Tracking student learning progress.
+- Running course quizzes.
+- Supporting real-time course communication.
+- Showing analytics for LMS administration.
+- Demonstrating a full MERN stack LMS for academic or portfolio purposes.

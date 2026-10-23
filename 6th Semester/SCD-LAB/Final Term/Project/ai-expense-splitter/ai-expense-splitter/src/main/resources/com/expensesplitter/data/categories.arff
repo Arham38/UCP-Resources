@@ -1,0 +1,74 @@
+% ──────────────────────────────────────────────────────────────────────
+% Weka Training Data — Expense Category Prediction (Naive Bayes)
+% Used by: MLCategoryPredictor.java
+% Student: Muhammad Arham | L1F23BSSE0372
+% ──────────────────────────────────────────────────────────────────────
+
+@RELATION expense_categories
+
+@ATTRIBUTE keyword {food,foods,grocery,groceries,meal,dinner,lunch,breakfast,pizza,burger,rice,bread,milk,snack,restaurant,coffee,sandwich,sushi,bakery,uber,taxi,petrol,fuel,flight,bus,ticket,train,hotel,parking,metro,electricity,electric,bill,internet,wifi,gas,rent,water,phone,insurance,heating,netflix,cinema,movie,spotify,concert,game,games,music,theater,clothes,shoes,amazon,shopping,mall,medicine,doctor,gym,fee,watch,electronics,jewelry}
+@ATTRIBUTE category {Food,Travel,Utilities,Entertainment,Shopping,Other}
+
+@DATA
+food,Food
+foods,Food
+grocery,Food
+groceries,Food
+meal,Food
+dinner,Food
+lunch,Food
+breakfast,Food
+pizza,Food
+burger,Food
+rice,Food
+bread,Food
+milk,Food
+snack,Food
+restaurant,Food
+coffee,Food
+sandwich,Food
+sushi,Food
+bakery,Food
+uber,Travel
+taxi,Travel
+petrol,Travel
+fuel,Travel
+flight,Travel
+bus,Travel
+ticket,Travel
+train,Travel
+hotel,Travel
+parking,Travel
+metro,Travel
+electricity,Utilities
+electric,Utilities
+bill,Utilities
+internet,Utilities
+wifi,Utilities
+gas,Utilities
+rent,Utilities
+water,Utilities
+phone,Utilities
+insurance,Utilities
+heating,Utilities
+netflix,Entertainment
+cinema,Entertainment
+movie,Entertainment
+spotify,Entertainment
+concert,Entertainment
+game,Entertainment
+games,Entertainment
+music,Entertainment
+theater,Entertainment
+clothes,Shopping
+shoes,Shopping
+amazon,Shopping
+shopping,Shopping
+mall,Shopping
+medicine,Other
+doctor,Other
+gym,Other
+fee,Other
+watch,Shopping
+electronics,Shopping
+jewelry,Shopping

@@ -1,0 +1,566 @@
+/* ═══════════════════════════════════════════════════════════════
+   LMS Design System - Modern Color Palette
+   Inspired by leading LMS platforms (Udemy, Coursera, edX)
+   Theme is driven by:
+     • data-bs-theme="dark|light"  on <html>  (Bootstrap 5)
+     • .theme-dark / .theme-light  on <html>  (custom CSS)
+   Both are set by ThemeContext.
+═══════════════════════════════════════════════════════════════ */
+
+/* ─── CSS Custom Properties (Light Mode - Modern LMS Colors) ─── */
+:root {
+  /* Primary Brand Colors */
+  --lms-primary:      #5624d0;  /* Deep Purple - Professional & Modern */
+  --lms-primary-dark: #401b9c;  /* Darker Purple for hover states */
+  --lms-primary-light: #7c4dff; /* Lighter Purple for accents */
+  
+  /* Secondary Colors */
+  --lms-secondary:    #1c1d1f;  /* Almost Black - Professional */
+  --lms-accent:       #ec5252;  /* Vibrant Red - Call to Action */
+  --lms-accent-hover: #d63031;  /* Darker Red for hover */
+  --lms-success:      #13ce66;  /* Fresh Green - Success states */
+  --lms-warning:      #ffc107;  /* Amber - Warnings */
+  --lms-danger:       #f44336;  /* Red - Errors */
+  --lms-info:         #00bcd4;  /* Cyan - Information */
+  
+  /* Background Colors */
+  --lms-bg:           #f7f9fa;  /* Light Gray - Main background */
+  --lms-surface:      #ffffff;  /* White - Cards & surfaces */
+  --lms-surface-alt:  #f5f5f5;  /* Alternate surface */
+  
+  /* Border & Divider Colors */
+  --lms-border:       #d1d7dc;  /* Light Gray - Borders */
+  --lms-border-light: #e8e8e8;  /* Very Light Gray */
+  --lms-divider:      #e0e0e0;  /* Dividers */
+  
+  /* Text Colors */
+  --lms-text:         #1c1d1f;  /* Primary text */
+  --lms-text-secondary: #6a6f73; /* Secondary text */
+  --lms-text-muted:   #9ca3af;  /* Muted text */
+  --lms-text-light:   #b4b4b4;  /* Light text */
+  
+  /* Shadows */
+  --lms-shadow-sm:    0 2px 4px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --lms-shadow:       0 2px 8px rgba(0,0,0,.1), 0 4px 12px rgba(0,0,0,.05);
+  --lms-shadow-md:    0 4px 16px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.08);
+  --lms-shadow-lg:    0 8px 32px rgba(0,0,0,.15), 0 12px 48px rgba(0,0,0,.1);
+  
+  /* Gradients */
+  --lms-gradient-primary: linear-gradient(135deg, #5624d0 0%, #7c4dff 100%);
+  --lms-gradient-accent:  linear-gradient(135deg, #ec5252 0%, #ff6b6b 100%);
+  --lms-gradient-success: linear-gradient(135deg, #13ce66 0%, #00d084 100%);
+  
+  /* Typography */
+  --font-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --font-heading: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  
+  /* Spacing & Sizing */
+  --border-radius-sm: 4px;
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  
+  /* Transition speed for theme switch */
+  --theme-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Dark Theme Overrides (Modern Dark Mode) ──────────────── */
+:root.theme-dark,
+[data-bs-theme="dark"] {
+  /* Primary Colors (slightly adjusted for dark mode) */
+  --lms-primary:      #7c4dff;
+  --lms-primary-dark: #9575ff;
+  --lms-primary-light: #b39dff;
+  
+  /* Background Colors */
+  --lms-bg:           #0f0f0f;  /* Very Dark - Main background */
+  --lms-surface:      #1c1d1f;  /* Dark Gray - Cards */
+  --lms-surface-alt:  #2d2f31;  /* Lighter Dark Gray */
+  
+  /* Border Colors */
+  --lms-border:       #3e4143;  /* Medium Gray */
+  --lms-border-light: #2d2f31;
+  --lms-divider:      #3e4143;
+  
+  /* Text Colors */
+  --lms-text:         #f7f9fa;  /* Almost White */
+  --lms-text-secondary: #c0c4c7; /* Light Gray */
+  --lms-text-muted:   #9ca3af;
+  --lms-text-light:   #6a6f73;
+  
+  /* Shadows (darker for dark mode) */
+  --lms-shadow-sm:    0 2px 4px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+  --lms-shadow:       0 2px 8px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.3);
+  --lms-shadow-md:    0 4px 16px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.4);
+  --lms-shadow-lg:    0 8px 32px rgba(0,0,0,.6), 0 12px 48px rgba(0,0,0,.5);
+  
+  /* Accent Colors (adjusted for dark mode) */
+  --lms-accent:       #ff6b6b;
+  --lms-accent-hover: #ff5252;
+  --lms-success:      #00d084;
+}
+
+/* ─── Base ───────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Smooth theme transitions on everything except images/videos */
+  transition:
+    background-color var(--theme-transition),
+    color var(--theme-transition);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-base);
+  background-color: var(--lms-bg);
+  color: var(--lms-text);
+  min-height: 100vh;
+}
+
+/* Prevent transition flash on images */
+img, video, svg {
+  transition: none !important;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+}
+
+/* ─── Smooth transitions for themed elements ─────────────────── */
+.card,
+.form-control,
+.form-select,
+.btn,
+.navbar,
+.dropdown-menu,
+.list-group-item,
+.table,
+.badge,
+.alert,
+.modal-content,
+.offcanvas {
+  transition:
+    background-color var(--theme-transition),
+    border-color var(--theme-transition),
+    color var(--theme-transition),
+    box-shadow var(--theme-transition);
+}
+
+/* ─── Bootstrap overrides (Modern LMS Style) ────────────────── */
+.btn-primary {
+  background: var(--lms-gradient-primary);
+  border: none;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 8px rgba(86, 36, 208, 0.25);
+  transition: all 0.2s ease;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background: linear-gradient(135deg, #401b9c 0%, #5624d0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(86, 36, 208, 0.35);
+}
+
+.btn-accent {
+  background: var(--lms-gradient-accent);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 8px rgba(236, 82, 82, 0.25);
+  transition: all 0.2s ease;
+}
+.btn-accent:hover {
+  background: linear-gradient(135deg, #d63031 0%, #ec5252 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(236, 82, 82, 0.35);
+  color: #fff;
+}
+
+.btn-success {
+  background: var(--lms-gradient-success);
+  border: none;
+  font-weight: 600;
+}
+
+.btn-outline-primary {
+  border-color: var(--lms-primary);
+  color: var(--lms-primary);
+  font-weight: 600;
+}
+.btn-outline-primary:hover {
+  background-color: var(--lms-primary);
+  border-color: var(--lms-primary);
+  color: #fff;
+}
+
+.bg-secondary  { background-color: var(--lms-secondary) !important; }
+.bg-background { background-color: var(--lms-bg) !important; }
+.text-primary  { color: var(--lms-primary) !important; }
+.text-accent   { color: var(--lms-accent) !important; }
+
+/* Badge Styles */
+.badge {
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+.badge.bg-primary {
+  background: var(--lms-gradient-primary) !important;
+}
+.badge.bg-success {
+  background-color: var(--lms-success) !important;
+}
+.badge.bg-danger {
+  background-color: var(--lms-danger) !important;
+}
+.badge.bg-warning {
+  background-color: var(--lms-warning) !important;
+  color: #000 !important;
+}
+
+/* ─── Navbar (Modern LMS Style) ─────────────────────────────── */
+.navbar {
+  box-shadow: var(--lms-shadow);
+  background-color: var(--lms-surface) !important;
+  border-bottom: 1px solid var(--lms-border);
+  padding: 12px 0;
+}
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  background: var(--lms-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.nav-link {
+  font-weight: 500;
+  color: var(--lms-text) !important;
+  transition: color 0.2s ease;
+}
+.nav-link:hover {
+  color: var(--lms-primary) !important;
+}
+.nav-link.text-white {
+  color: #fff !important;
+}
+.nav-link.text-white:hover {
+  opacity: 0.85;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────── */
+.footer {
+  background-color: var(--lms-secondary);
+  color: #94a3b8;
+  margin-top: auto;
+}
+.footer-link            { color: #94a3b8; text-decoration: none; }
+.footer-link:hover      { color: #fff; }
+
+/* ─── Cards (Modern LMS Style) ──────────────────────────────── */
+.card {
+  background-color: var(--lms-surface);
+  border: 1px solid var(--lms-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--lms-shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  box-shadow: var(--lms-shadow-md);
+}
+
+.card-header {
+  background-color: var(--lms-surface);
+  border-bottom: 1px solid var(--lms-border);
+  font-weight: 600;
+  padding: 16px 20px;
+}
+
+.course-card {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--lms-border);
+}
+.course-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--lms-shadow-lg);
+  border-color: var(--lms-primary);
+}
+
+.course-card .card-img-top {
+  position: relative;
+  overflow: hidden;
+}
+
+.course-card .card-img-top::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.course-card:hover .card-img-top::after {
+  opacity: 1;
+}
+
+.stat-card {
+  border-radius: var(--border-radius-lg);
+  background: var(--lms-surface);
+  border: 1px solid var(--lms-border);
+  transition: all 0.3s ease;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--lms-shadow-md);
+}
+
+.category-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--border-radius-lg);
+}
+.category-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--lms-shadow-lg);
+}
+
+/* ─── Forms ──────────────────────────────────────────────────── */
+.form-control,
+.form-select {
+  background-color: var(--lms-surface);
+  border-color: var(--lms-border);
+  color: var(--lms-text);
+}
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--lms-surface);
+  color: var(--lms-text);
+  border-color: var(--lms-primary);
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+}
+.form-control::placeholder { color: var(--lms-text-muted); }
+
+/* ─── Tables ─────────────────────────────────────────────────── */
+.table {
+  color: var(--lms-text);
+  border-color: var(--lms-border);
+}
+.table-light th,
+.table-light td {
+  background-color: var(--lms-surface);
+  color: var(--lms-text);
+  border-color: var(--lms-border);
+}
+
+/* ─── Dropdowns ──────────────────────────────────────────────── */
+.dropdown-menu {
+  background-color: var(--lms-surface);
+  border-color: var(--lms-border);
+  box-shadow: var(--lms-shadow-md);
+}
+.dropdown-item         { color: var(--lms-text); }
+.dropdown-item:hover   { background-color: var(--lms-border); color: var(--lms-text); }
+
+/* ─── List groups ────────────────────────────────────────────── */
+.list-group-item {
+  background-color: var(--lms-surface);
+  border-color: var(--lms-border);
+  color: var(--lms-text);
+}
+.list-group-item.active {
+  background-color: var(--lms-primary);
+  border-color: var(--lms-primary);
+  color: #fff;
+}
+
+/* ─── Alerts ─────────────────────────────────────────────────── */
+[data-bs-theme="dark"] .alert-danger  { background-color: #3b1a1a; border-color: #7f1d1d; color: #fca5a5; }
+[data-bs-theme="dark"] .alert-success { background-color: #14291e; border-color: #166534; color: #86efac; }
+[data-bs-theme="dark"] .alert-info    { background-color: #0c2340; border-color: #1e40af; color: #93c5fd; }
+[data-bs-theme="dark"] .alert-warning { background-color: #2d1f00; border-color: #92400e; color: #fcd34d; }
+
+/* ─── Muted text ─────────────────────────────────────────────── */
+.text-muted { color: var(--lms-text-muted) !important; }
+
+/* ─── bg-light in dark mode ──────────────────────────────────── */
+[data-bs-theme="dark"] .bg-light,
+[data-bs-theme="dark"] .table-light {
+  background-color: #1e293b !important;
+  color: var(--lms-text) !important;
+}
+
+/* ─── Card header in dark mode ───────────────────────────────── */
+[data-bs-theme="dark"] .card-header {
+  background-color: #1e293b;
+  border-color: var(--lms-border);
+}
+
+/* ─── Input group text ───────────────────────────────────────── */
+[data-bs-theme="dark"] .input-group-text {
+  background-color: #334155;
+  border-color: #475569;
+  color: var(--lms-text);
+}
+
+/* ─── Borders ────────────────────────────────────────────────── */
+.border-bottom,
+.border-top,
+.border {
+  border-color: var(--lms-border) !important;
+}
+
+/* ─── Hero section (Modern LMS Style) ───────────────────────── */
+.hero-section {
+  background: var(--lms-gradient-primary);
+  color: #fff;
+  padding: 100px 0 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.3;
+}
+
+.hero-section h1 {
+  font-weight: 800;
+  font-size: 3.5rem;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  opacity: 0.95;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section .btn {
+  position: relative;
+  z-index: 1;
+  font-size: 1.1rem;
+  padding: 14px 32px;
+}
+
+.hero-section .btn-outline-light {
+  border: 2px solid rgba(255,255,255,0.8);
+  font-weight: 600;
+}
+
+.hero-section .btn-outline-light:hover {
+  background-color: rgba(255,255,255,0.15);
+  border-color: #fff;
+  color: #fff;
+}
+
+[data-bs-theme="dark"] .hero-section {
+  background: linear-gradient(135deg, #401b9c 0%, #5624d0 100%);
+}
+
+/* ─── CTA section ────────────────────────────────────────────── */
+.cta-section { background: linear-gradient(180deg, #e2e8f0 0%, #f1f5f9 100%); }
+[data-bs-theme="dark"] .cta-section {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+}
+
+/* ─── Sidebar ────────────────────────────────────────────────── */
+aside .nav-link.rounded:hover {
+  background-color: rgba(255,255,255,.1) !important;
+}
+.hover-bg-dark:hover { background-color: rgba(0,0,0,.2); }
+
+/* ─── Progress bars (Modern Style) ───────────────────────────── */
+.progress {
+  border-radius: 999px;
+  overflow: hidden;
+  background-color: var(--lms-border-light);
+  height: 8px;
+}
+.progress-bar {
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--lms-gradient-success);
+}
+.progress-bar.bg-primary {
+  background: var(--lms-gradient-primary) !important;
+}
+.progress-bar.bg-accent {
+  background: var(--lms-gradient-accent) !important;
+}
+.progress-bar.bg-success {
+  background: var(--lms-gradient-success) !important;
+}
+
+/* ─── Theme toggle button ────────────────────────────────────── */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.4);
+  background: transparent;
+  color: #fff;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.theme-toggle-btn:hover {
+  background-color: rgba(255,255,255,.15);
+  border-color: rgba(255,255,255,.7);
+}
+
+/* ─── Page enter animation ───────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter { animation: fadeInUp 0.3s ease forwards; }
+
+/* ─── Notification badge pulse ───────────────────────────────── */
+@keyframes badgePulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%       { transform: translate(-50%, -50%) scale(1.25); }
+}
+.badge.bg-danger { animation: badgePulse 2s infinite; }
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero-section { padding: 40px 0 60px; }
+  .hero-section h1 { font-size: 1.75rem; }
+}

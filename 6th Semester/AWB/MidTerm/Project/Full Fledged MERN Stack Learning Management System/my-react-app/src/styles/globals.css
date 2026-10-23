@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg-primary: 248 250 252;
+  --color-bg-secondary: 241 245 249;
+  --color-bg-muted: 226 232 240;
+  --color-text-primary: 15 23 42;
+  --color-text-secondary: 51 65 85;
+  --color-text-muted: 100 116 139;
+  --color-text-inverse: 255 255 255;
+  --color-border: 226 232 240;
+  --color-border-strong: 203 213 225;
+  --color-card: 255 255 255;
+  --color-surface-raised: 255 255 255;
+  --color-sidebar: 255 255 255;
+  --color-navbar: 255 255 255;
+  --color-btn-primary: 79 70 229;
+  --color-btn-hover: 67 56 202;
+  --color-focus: 99 102 241;
+}
+
+.dark,
+:root.theme-dark,
+[data-bs-theme="dark"] {
+  --color-bg-primary: 15 23 42;
+  --color-bg-secondary: 30 41 59;
+  --color-bg-muted: 51 65 85;
+  --color-text-primary: 226 232 240;
+  --color-text-secondary: 203 213 225;
+  --color-text-muted: 148 163 184;
+  --color-text-inverse: 15 23 42;
+  --color-border: 51 65 85;
+  --color-border-strong: 71 85 105;
+  --color-card: 30 41 59;
+  --color-surface-raised: 51 65 85;
+  --color-sidebar: 15 23 42;
+  --color-navbar: 15 23 42;
+  --color-btn-primary: 129 140 248;
+  --color-btn-hover: 165 180 252;
+  --color-focus: 129 140 248;
+}
+
+html {
+  color-scheme: light;
+}
+
+html.dark,
+html.theme-dark,
+html[data-bs-theme="dark"] {
+  color-scheme: dark;
+}
+
+.lms-theme-root {
+  min-height: 100vh;
+  background: rgb(var(--color-bg-primary));
+  color: rgb(var(--color-text-primary));
+}
+
+.lms-focus-ring {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.lms-focus-ring:focus-visible {
+  box-shadow: 0 0 0 3px rgb(var(--color-focus) / 0.35);
+}

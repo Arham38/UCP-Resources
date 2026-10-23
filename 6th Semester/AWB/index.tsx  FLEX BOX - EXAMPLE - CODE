@@ -1,0 +1,64 @@
+
+import { Text, View } from 'react-native'
+const index = () =>{
+ return(
+  <View
+   style={{
+    flex:1,
+    backgroundColor:"white",
+    flexDirection:"row",
+    justifyContent:"space-between"
+   }}
+  >
+   <View
+    style={{backgroundColor:"white", justifyContent:"space-between"}}
+   > 
+    <View
+     style={{
+      height:100,
+      width:100,
+      backgroundColor:"red"
+     }}
+    >
+      <Text>ONE</Text>
+    </View>
+
+    <View
+     style={{
+      height:100,
+      width:100,
+      backgroundColor:"blue"
+     }}
+    >
+      <Text>TWO</Text>
+    </View>
+    </View>
+
+    <View style={{backgroundColor:"white", justifyContent:"space-between"}}>
+    <View
+     style={{
+      height:100,
+      width:100,
+      backgroundColor:"brown"
+     }}
+    >
+      <Text>THREE</Text>
+    </View>
+ 
+    <View
+     style={{
+      height:100,
+      width:100,
+      backgroundColor:"green"
+     }}
+    >
+      <Text>FOUR</Text>
+    </View>
+    </View>
+
+  </View>
+    
+  )
+}
+
+export default index

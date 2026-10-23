@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Git Branching Basics (English)</title>
+<style>
+:root{
+--text-primary:#1f1e1d;--text-secondary:#5f5e5a;--text-muted:#8a8880;
+--text-accent:#185FA5;--text-danger:#A32D2D;--text-warning:#854F0B;--text-success:#3B6D11;
+--bg-accent:#E6F1FB;--bg-danger:#FCEBEB;--bg-warning:#FAEEDA;--bg-success:#EAF3DE;
+--border:rgba(0,0,0,.12);--border-strong:rgba(0,0,0,.25);--border-stronger:rgba(0,0,0,.4);--border-accent:#85B7EB;
+--surface-0:#f7f6f2;--surface-1:#f1efe8;--surface-2:#ffffff;
+--font-sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+--font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+:root{
+--text-primary:#f1efe8;--text-secondary:#b4b2a9;--text-muted:#888780;
+--text-accent:#85B7EB;--text-danger:#F09595;--text-warning:#FAC775;--text-success:#97C459;
+--bg-accent:#0C447C;--bg-danger:#791F1F;--bg-warning:#633806;--bg-success:#27500A;
+--border:rgba(255,255,255,.14);--border-strong:rgba(255,255,255,.28);--border-stronger:rgba(255,255,255,.45);--border-accent:#378ADD;
+--surface-0:#1f1e1d;--surface-1:#2c2c2a;--surface-2:#262624;
+}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--text-primary);font-family:var(--font-sans);line-height:1.6}
+main{max-width:720px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:22px;font-weight:500;margin:0 0 4px}
+h2{font-size:18px;font-weight:500;margin:36px 0 8px}
+p{font-size:14px;margin:0 0 10px}
+.sub{color:var(--text-secondary);font-size:14px;margin:0 0 18px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-secondary);margin:0 0 14px;align-items:center}
+.legend span i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.legend b{display:inline-block;font-weight:500;font-size:11px;padding:1px 7px;border-radius:4px;margin-right:5px}
+button{font:inherit;font-size:14px;color:var(--text-primary);background:transparent;border:.5px solid var(--border-strong);border-radius:8px;padding:7px 14px;cursor:pointer}
+button:hover{background:var(--surface-1)}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.4;cursor:default}
+.tb{font-size:13px;padding:6px 12px}
+.tb.on{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}
+.cm,.lb{transition:transform .7s cubic-bezier(.4,0,.2,1),opacity .4s}
+@keyframes pop{0%{transform:scale(.2);opacity:0}70%{transform:scale(1.25);opacity:1}100%{transform:scale(1)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.pp{animation:pop .5s ease-out;transform-origin:0 0}
+.eg{animation:fade .5s ease-out}
+.cl{font-family:var(--font-mono);font-size:12px;padding:2px 10px;white-space:pre}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 12px}
+th,td{text-align:left;padding:7px 10px;border-bottom:.5px solid var(--border);vertical-align:top}
+th{font-weight:500;color:var(--text-secondary);background:var(--surface-1)}
+pre{background:var(--surface-1);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;overflow-x:auto;margin:6px 0 12px}
+code{font-family:var(--font-mono);font-size:12.5px;background:var(--surface-1);padding:1px 5px;border-radius:4px}
+.tip{background:var(--bg-warning);color:var(--text-warning);border-radius:8px;padding:8px 12px;font-size:13px;margin:8px 0 12px}
+</style>
+</head>
+<body>
+<main>
+<h1>Git Branching Basics</h1>
+<p class="sub">Everything you need before Git Flow: what a branch is, HEAD, creating and switching branches, managing them, remotes, stash and detached HEAD, all animated step by step.</p>
+<div class="legend">
+<span><b style="background:var(--text-primary);color:var(--surface-2)">HEAD</b>where you are now</span>
+<span><b style="background:#378ADD;color:#fff">main</b>local branch</span>
+<span><b style="background:#888780;color:#fff">origin/main</b>remote branch</span>
+<span><b style="background:#E24B4A;color:#fff">HEAD</b>detached</span>
+</div>
+<div id="tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px"></div>
+<div id="intro" style="font-size:13px;color:var(--text-secondary);margin:0 0 6px"></div>
+<svg id="svg" width="100%" viewBox="0 0 680 330" role="img" aria-label="Git commit graph">
+<g id="lanes"></g><g id="edges"></g><g id="cs"></g><g id="ls"></g>
+</svg>
+<div style="background:var(--surface-2);border:.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-top:8px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<span id="ctr" style="font-size:12px;color:var(--text-secondary)"></span>
+<span id="dots" style="display:flex;gap:5px"></span>
+</div>
+<div id="ttl" style="font-size:16px;font-weight:500;margin-bottom:8px"></div>
+<div id="cmd" style="background:var(--surface-1);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;margin-bottom:10px;overflow-x:auto"></div>
+<div id="note" style="font-size:14px;line-height:1.65"></div>
+<div id="warn" style="display:none;background:var(--bg-warning);color:var(--text-warning);border-radius:8px;padding:8px 12px;font-size:13px;margin-top:10px;line-height:1.55"></div>
+<div id="code" style="display:none;margin-top:10px;border:.5px solid var(--border);border-radius:8px;overflow:hidden"></div>
+<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+<button id="prev">&larr; Previous</button>
+<button id="next">Next &rarr;</button>
+<button id="play">&#9654; Auto play</button>
+<button id="reset">&#8635; Restart</button>
+</div>
+</div>
+
+<h2>Cheat sheet</h2>
+<h3 style="font-size:15px;font-weight:500;margin:14px 0 6px">The three ideas</h3>
+<table>
+<tr><th>Term</th><th>What it is</th></tr>
+<tr><td>Commit</td><td>A snapshot of your project, linked to its parent commit.</td></tr>
+<tr><td>Branch</td><td>A movable label pointing at one commit. Creating one is instant because no files are copied.</td></tr>
+<tr><td>HEAD</td><td>Where you are now. New commits go onto the branch HEAD points at.</td></tr>
+</table>
+<h3 style="font-size:15px;font-weight:500;margin:14px 0 6px">Create and switch</h3>
+<pre>git branch feature          # create the label (you stay where you are)
+git switch feature          # move HEAD to it
+git switch -c feature       # create and switch in one go
+git checkout -b feature     # the older way to do the same
+git switch -                # jump back to the previous branch</pre>
+<h3 style="font-size:15px;font-weight:500;margin:14px 0 6px">List, rename, delete</h3>
+<pre>git branch                  # list local branches (* = current)
+git branch -v               # also show each branch's last commit
+git branch -a               # include remote branches
+git branch -m old new       # rename
+git branch -d feature       # safe delete (only if merged)
+git branch -D feature       # force delete (may lose work)</pre>
+<h3 style="font-size:15px;font-weight:500;margin:14px 0 6px">Remotes</h3>
+<pre>git clone &lt;url&gt;                 # copy a repo from the server
+git push -u origin feature      # publish a branch and link it (once)
+git fetch origin                # download news, change nothing of yours
+git pull                        # fetch + merge
+git pull --rebase               # fetch + rebase (straighter history)</pre>
+<h3 style="font-size:15px;font-weight:500;margin:14px 0 6px">Stash and detached HEAD</h3>
+<pre>git stash                   # shelve uncommitted work
+git stash pop               # bring it back
+git stash list              # see all stashes
+git switch --detach c2      # look at an old commit (detached HEAD)
+git switch -c experiment    # save work made while detached</pre>
+<div class="tip">Common mistakes: forgetting that <code>git branch name</code> does not switch to it, deleting an unmerged branch with <code>-D</code>, and committing in detached HEAD without creating a branch first.</div>
+</main>
+<script>
+const BL='#378ADD',TL='#1D9E75',PU='#7F77DD',AM='#BA7517',CO='#D85A30',GR='#888780';
+const S={
+what:{name:'1. What is a branch',intro:'The foundation first: commit, branch and HEAD. These three ideas are the heart of Git.',
+lanes:[{n:'main',c:BL}],bc:{main:BL},
+C:{c1:{x:0,l:0,t:'c1',p:[]},c2:{x:1,l:0,t:'c2',p:['c1']},c3:{x:2,l:0,t:'c3',p:['c2']}},
+steps:[
+{title:'First commit: a snapshot',cmd:['$ git init','$ git add .','$ git commit -m "First commit"'],note:'A commit is a snapshot of your project. With the first commit, Git automatically creates a branch, usually called main.',ids:'c1',tips:{main:'c1'},head:'main'},
+{title:'The branch moves with every commit',cmd:['$ git commit -m "Add header"','$ git commit -m "Add footer"'],note:'Every new commit links to the one before it (its parent). And watch the main label slide forward by itself on each commit. A branch is a label that points at a commit.',ids:'c1 c2 c3',tips:{main:'c3'},head:'main'},
+{title:'What is HEAD?',cmd:['$ git log --oneline --decorate','> c3 (HEAD -> main) Add footer','> c2 Add header','> c1 First commit'],note:'The black HEAD pill shows where you are right now. "HEAD -> main" means you are on the main branch. A new commit always goes onto the branch HEAD points at.',ids:'c1 c2 c3',tips:{main:'c3'},head:'main'},
+{title:'A branch is just a tiny file',cmd:['$ cat .git/refs/heads/main','> 3f2a9c1e8b...  (the ID of c3)'],note:'A branch is a file holding one commit ID. No files are copied, which is why creating a branch in Git is so fast and cheap. Remember: commit = snapshot, branch = label, HEAD = "you are here".',ids:'c1 c2 c3',tips:{main:'c3'},head:'main'}
+]},
+create:{name:'2. Create and switch',intro:'Scenario: you want to build a login page without touching main.',
+lanes:[{n:'main',c:BL},{n:'feature',c:PU}],bc:{main:BL,feature:PU},
+C:{c1:{x:0,l:0,t:'c1',p:[]},c2:{x:1,l:0,t:'c2',p:['c1']},f1:{x:2,l:1,t:'f1',p:['c2']},c3:{x:3,l:0,t:'c3',p:['c2']}},
+steps:[
+{title:'git branch: create a new label',cmd:['$ git branch feature'],note:'A new label, feature, now sits right where main is (c2). But notice: HEAD is still on main. Creating a branch does not move you onto it.',ids:'c1 c2',tips:{main:'c2',feature:'c2'},head:'main'},
+{title:'git switch: move HEAD',cmd:['$ git switch feature',"> Switched to branch 'feature'"],note:'HEAD is now on feature. The files in your folder are unchanged for now, because feature and main both point at c2.',ids:'c1 c2',tips:{main:'c2',feature:'c2'},head:'feature',codeTitle:'Working folder',code:[{t:'index.html',k:'p'},{t:'style.css',k:'p'}]},
+{title:'Commit on the feature branch',cmd:['$ git add login.html','$ git commit -m "Add login page"'],note:'Only feature moved forward (c2 to f1). main stays at c2, perfectly safe.',ids:'c1 c2 f1',tips:{main:'c2',feature:'f1'},head:'feature',codeTitle:'Working folder',code:[{t:'index.html',k:'p'},{t:'style.css',k:'p'},{t:'login.html   (new file)',k:'ok'}]},
+{title:'Switch back to main',cmd:['$ git switch main',"> Switched to branch 'main'"],note:'Here is the magic: the moment you switch, the files in your folder change. login.html disappears, but it is not lost. It is safe on the feature branch and comes back when you switch to it.',ids:'c1 c2 f1',tips:{main:'c2',feature:'f1'},head:'main',codeTitle:'Working folder',code:[{t:'index.html',k:'p'},{t:'style.css',k:'p'},{t:'login.html   (gone, safe on feature)',k:'m'}]},
+{title:'Work on main too',cmd:['$ git commit -m "Update homepage"'],note:'Now main made its own commit (c3). The two branches have diverged, each on its own path. You join them later with a merge.',ids:'c1 c2 f1 c3',tips:{main:'c3',feature:'f1'},head:'main'},
+{title:'Shortcuts to remember',cmd:['$ git switch -c feature'],code:[{t:'git branch X + git switch X   =  git switch -c X',k:'ok'},{t:'git checkout -b X              =  older way, same result',k:'p'},{t:'git switch -                   =  back to the previous branch',k:'p'}],note:'-c means create: make the branch and move onto it in one command. git switch is the newer, clearer command (Git 2.23+). git checkout is the older one that did too many jobs, which made it confusing.',ids:'c1 c2 f1 c3',tips:{main:'c3',feature:'f1'},head:'main'}
+]},
+manage:{name:'3. List, rename, delete',intro:'Scenario: several branches exist now. Time to learn how to look after them.',
+lanes:[{n:'main',c:BL},{n:'feature',c:PU},{n:'bugfix',c:CO}],bc:{main:BL,feature:PU,bugfix:CO,'fix-login':CO},
+C:{c1:{x:0,l:0,t:'c1',p:[]},c2:{x:1,l:0,t:'c2',p:['c1']},f1:{x:2,l:1,t:'f1',p:['c2']},b1:{x:2,l:2,t:'b1',p:['c2']}},
+steps:[
+{title:'git branch: list your branches',cmd:['$ git branch','>   bugfix','> * feature','>   main','$ git branch -v','$ git branch -a'],note:'The star (*) marks the branch HEAD is on. -v also shows each branch\'s last commit, and -a includes remote (server) branches.',ids:'c1 c2 f1 b1',tips:{main:'c2',feature:'f1',bugfix:'b1'},head:'feature'},
+{title:'git branch -m: rename',cmd:['$ git branch -m bugfix fix-login'],note:'-m means move/rename. Only the label\'s name changed, the commits are the same. If you are on the branch you want to rename, just give the new name: git branch -m new-name.',ids:'c1 c2 f1 b1',tips:{main:'c2',feature:'f1','fix-login':'b1'},head:'feature'},
+{title:'Merge the feature into main',cmd:['$ git switch main','$ git merge feature','> Fast-forward'],note:'main was sitting right at c2, so the merge just moves the pointer forward (a fast-forward). Now main and feature both point at f1.',ids:'c1 c2 f1 b1',tips:{main:'f1',feature:'f1','fix-login':'b1'},head:'main',lane:{f1:0}},
+{title:'git branch -d: delete a merged branch',cmd:['$ git branch -d feature','> Deleted branch feature'],note:'-d (lowercase) is the safe delete: it only removes a branch that has been merged. Notice that no commits were deleted, only the label. f1 is now part of main.',ids:'c1 c2 f1 b1',tips:{main:'f1','fix-login':'b1'},head:'main',lane:{f1:0}},
+{title:'-d refuses an unmerged branch',cmd:['$ git branch -d fix-login',"> error: the branch 'fix-login' is not fully merged.",'> If you are sure, run: git branch -D fix-login'],note:'b1 is not part of any other branch, so Git stops you: deleting it could lose your work.',ids:'c1 c2 f1 b1',tips:{main:'f1','fix-login':'b1'},head:'main',lane:{f1:0}},
+{title:'git branch -D: force delete',cmd:['$ git branch -D fix-login'],note:'Capital -D forces the delete. b1 is now on no branch (dotted). If you need it back, git reflog can still find it for a while.',warn:'Only use -D when you are sure you no longer need that branch\'s work.',ids:'c1 c2 f1 b1',old:'b1',tips:{main:'f1'},head:'main',lane:{f1:0}}
+]},
+remote:{name:'4. Remotes (push/pull)',intro:'Scenario: the code lives on GitHub. "origin" is the server\'s nickname, and origin/main (gray) is your local memory of the server\'s main branch.',
+lanes:[{n:'main',c:BL},{n:'feature',c:PU}],bc:{main:BL,feature:PU,'origin/main':GR,'origin/feature':GR},
+C:{c1:{x:0,l:0,t:'c1',p:[]},c2:{x:1,l:0,t:'c2',p:['c1']},f1:{x:2,l:1,t:'f1',p:['c2']},t1:{x:3,l:0,t:'t1',p:['c2']}},
+steps:[
+{title:'git clone: copy from the server',cmd:['$ git clone https://github.com/team/shopeasy.git','> Cloning into shopeasy...'],note:'Cloning brings the full history and origin/main to your computer. Your local main and origin/main start on the same commit.',ids:'c1 c2',tips:{main:'c2','origin/main':'c2'},head:'main'},
+{title:'Work on a local feature branch',cmd:['$ git switch -c feature','$ git commit -m "Add cart"'],note:'feature exists only on your computer for now. The server (origin) knows nothing about it.',ids:'c1 c2 f1',tips:{main:'c2','origin/main':'c2',feature:'f1'},head:'feature'},
+{title:'git push -u: send it to the server',cmd:['$ git push -u origin feature','> * [new branch]  feature -> feature'],note:'feature now exists on the server too (origin/feature). -u (upstream) links your branch to the server one, once. After that, plain git push and git pull are enough.',ids:'c1 c2 f1',tips:{main:'c2','origin/main':'c2',feature:'f1','origin/feature':'f1'},head:'feature'},
+{title:'git fetch: get the news, change nothing',cmd:['# a teammate pushed a commit to main on the server','$ git fetch origin','> c2..t1  main -> origin/main'],note:'fetch downloaded the new work and only moved origin/main forward. Your own main and feature were not touched, so fetch is always safe.',ids:'c1 c2 f1 t1',tips:{main:'c2','origin/main':'t1',feature:'f1','origin/feature':'f1'},head:'feature'},
+{title:'git pull = fetch + merge',cmd:['$ git switch main','$ git pull','> Fast-forward'],note:'pull fetches first, then merges into your branch. Your teammate\'s work is now in your main. For a straighter history, use git pull --rebase.',ids:'c1 c2 f1 t1',tips:{main:'t1','origin/main':'t1',feature:'f1','origin/feature':'f1'},head:'main'}
+]},
+trouble:{name:'5. Stash, detached HEAD',intro:'Two common problems: switching with unfinished work, and HEAD getting detached from any branch.',
+lanes:[{n:'main',c:BL},{n:'feature',c:PU},{n:'experiment',c:CO}],bc:{main:BL,feature:PU,experiment:CO},
+C:{c1:{x:0,l:0,t:'c1',p:[]},c2:{x:1,l:0,t:'c2',p:['c1']},c3:{x:2,l:0,t:'c3',p:['c2']},f1:{x:2,l:1,t:'f1',p:['c2']},d1:{x:3,l:2,t:'d1',p:['c2']}},
+steps:[
+{title:'Unfinished work blocks a switch',cmd:['# you edited index.html but did not commit','$ git switch feature','> error: Your local changes to index.html would be overwritten by checkout.','> Please commit your changes or stash them before you switch branches.'],codeTitle:'git status',code:[{t:'modified:   index.html',k:'t'}],note:'Git protects your unfinished work, so it refuses to switch. Three ways out: commit it, stash it, or discard the changes.',ids:'c1 c2 c3 f1',tips:{main:'c3',feature:'f1'},head:'main'},
+{title:'git stash: shelve the work',cmd:['$ git stash','> Saved working directory and index state','$ git switch feature'],codeTitle:'Working folder',code:[{t:'clean: no unfinished changes',k:'ok'}],note:'stash puts your unfinished changes in a safe place and cleans the folder. Now you can switch freely.',ids:'c1 c2 c3 f1',tips:{main:'c3',feature:'f1'},head:'feature'},
+{title:'Come back and git stash pop',cmd:['$ git switch main','$ git stash pop','> Dropped refs/stash@{0}'],codeTitle:'Working folder',code:[{t:'modified:   index.html   (your changes are back)',k:'t'}],note:'pop re-applies the shelved work to your folder and removes it from the stash. git stash list shows all your stashes.',ids:'c1 c2 c3 f1',tips:{main:'c3',feature:'f1'},head:'main'},
+{title:'Detached HEAD: no branch',cmd:['$ git switch --detach c2','> HEAD is now at c2 (detached HEAD)'],note:'The red HEAD is now on no branch, directly on commit c2. This is perfectly fine for looking at or testing an old commit. (The older command is git checkout c2.)',warn:'In detached HEAD, new commits are not held by any branch. The next step shows what that means.',ids:'c1 c2 c3 f1',tips:{main:'c3',feature:'f1'},head:'@c2'},
+{title:'Committing while detached',cmd:['$ git commit -m "experiment"'],note:'Commit d1 exists, but no branch label points at it. If you switch to another branch now, d1 disappears from view (git reflog can still find it).',warn:'If you like the experiment, save it. Otherwise it will be lost.',ids:'c1 c2 c3 f1 d1',tips:{main:'c3',feature:'f1'},head:'@d1'},
+{title:'Rescue it: create a branch',cmd:['$ git switch -c experiment'],note:'One command puts the experiment label on d1 and moves HEAD onto it. The work is safe now. Remember the cure for detached HEAD: git switch -c name.',ids:'c1 c2 c3 f1 d1',tips:{main:'c3',feature:'f1',experiment:'d1'},head:'experiment'}
+]}
+};
+const NS='http://www.w3.org/2000/svg',X0=100,DX=66,Y0=96,DY=60;
+const $=id=>document.getElementById(id);
+const svg=$('svg'),lanesG=$('lanes'),edgesG=$('edges'),cG=$('cs'),lG=$('ls');
+let cur='what',step=0,nodes={},lnodes={},hnode=null,prevIds=new Set(),et=null,timer=null;
+function mk(tag,a,p){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function laneY(l){return Y0+l*DY}
+function build(){
+const sc=S[cur];clearInterval(timer);timer=null;setPlay(false);
+svg.setAttribute('viewBox','0 0 680 '+(Y0+(sc.lanes.length-1)*DY+40));
+[lanesG,edgesG,cG,lG].forEach(g=>g.innerHTML='');
+nodes={};lnodes={};hnode=null;prevIds=new Set();step=0;
+sc.lanes.forEach((ln,i)=>{
+mk('line',{x1:70,x2:660,y1:laneY(i),y2:laneY(i),stroke:'var(--border)','stroke-width':.5,'stroke-dasharray':'2 4'},lanesG);
+const t=mk('text',{x:8,y:laneY(i)+4,fill:ln.c,'font-size':12,'font-weight':500},lanesG);t.textContent=ln.n;
+});
+$('intro').textContent=sc.intro;
+document.querySelectorAll('.tb').forEach(b=>b.classList.toggle('on',b.dataset.k===cur));
+$('dots').innerHTML=sc.steps.map(()=>'<span style="width:8px;height:8px;border-radius:50%;background:var(--border-strong)"></span>').join('');
+render(0);
+}
+function render(delay){
+const sc=S[cur],st=sc.steps[step];
+const ids=new Set(st.ids.split(' ')),old=new Set((st.old||'').split(' ').filter(Boolean));
+const lane=id=>(st.lane&&st.lane[id]!=null)?st.lane[id]:sc.C[id].l;
+const P=id=>({x:X0+sc.C[id].x*DX,y:laneY(lane(id))});
+const colOf=id=>sc.lanes[sc.C[id].l].c;
+for(const id in sc.C){
+const c=sc.C[id];let n=nodes[id];
+if(!n){
+const o=mk('g',{class:'cm'},cG);const i=mk('g',{},o);
+const ci=mk('circle',{r:14},i);
+const tx=mk('text',{'text-anchor':'middle','dominant-baseline':'central','font-size':11,'font-weight':500},i);
+const tt=mk('title',{},o);tt.textContent=id;
+const p0=P(id);o.style.transform='translate('+p0.x+'px,'+p0.y+'px)';o.style.opacity=0;
+n=nodes[id]={o,i,ci,tx};
+}
+const show=ids.has(id),p=P(id),isOld=old.has(id),col=colOf(id);
+n.o.style.transform='translate('+p.x+'px,'+p.y+'px)';
+n.o.style.opacity=show?1:0;
+n.ci.style.fill=isOld?'var(--surface-2)':col;
+n.ci.style.stroke=col;
+n.ci.setAttribute('stroke-width',1.5);
+n.ci.setAttribute('stroke-dasharray',isOld?'4 3':'0');
+n.ci.style.opacity=isOld?.65:1;
+n.tx.style.fill=isOld?col:'#fff';
+n.tx.textContent=c.t;
+if(show&&!prevIds.has(id)){n.i.classList.remove('pp');void n.i.getBoundingClientRect();n.i.classList.add('pp')}
+}
+const tips=st.tips||{},stack={};
+const hs=st.head||'';
+const detached=hs[0]==='@';
+const headBranch=(!detached&&hs&&tips[hs])?hs:null;
+const headCommit=detached?hs.slice(1):(headBranch?tips[headBranch]:null);
+let names=Object.keys(tips);
+if(headBranch)names=names.filter(n=>n!==headBranch).concat([headBranch]);
+for(const name in lnodes)lnodes[name].o.style.opacity=0;
+names.forEach(name=>{
+let ln=lnodes[name];
+const id=tips[name],p=P(id);
+if(!ln){
+const w=name.length*6.6+18;
+const o=mk('g',{class:'lb'},lG);
+mk('rect',{x:-w/2,y:-9,width:w,height:18,rx:9,fill:sc.bc[name]||BL},o);
+const t=mk('text',{'text-anchor':'middle','dominant-baseline':'central','font-size':11,'font-weight':500,fill:'#fff'},o);t.textContent=name;
+o.style.transform='translate('+p.x+'px,'+(p.y-30)+'px)';o.style.opacity=0;
+ln=lnodes[name]={o};
+}
+const k=stack[id]||0;stack[id]=k+1;
+ln.o.style.transform='translate('+p.x+'px,'+(p.y-30-k*21)+'px)';
+ln.o.style.opacity=1;
+});
+if(!hnode){
+const o=mk('g',{class:'lb'},lG);
+const r=mk('rect',{x:-24,y:-9,width:48,height:18,rx:4},o);
+const t=mk('text',{'text-anchor':'middle','dominant-baseline':'central','font-size':11,'font-weight':500},o);t.textContent='HEAD';
+const p0=headCommit?P(headCommit):{x:X0,y:Y0};
+o.style.transform='translate('+p0.x+'px,'+(p0.y-30)+'px)';o.style.opacity=0;
+hnode={o,r,t};
+}
+if(headCommit){
+const p=P(headCommit),k=stack[headCommit]||0;
+hnode.o.style.transform='translate('+p.x+'px,'+(p.y-30-k*21)+'px)';
+hnode.o.style.opacity=1;
+hnode.r.style.fill=detached?'#E24B4A':'var(--text-primary)';
+hnode.t.style.fill=detached?'#fff':'var(--surface-2)';
+}else hnode.o.style.opacity=0;
+clearTimeout(et);edgesG.innerHTML='';
+const drawEdges=()=>{
+edgesG.innerHTML='';
+ids.forEach(id=>{
+sc.C[id].p.forEach((pid,k)=>{
+if(!ids.has(pid))return;
+const a=P(pid),b=P(id);
+const col=k===0?colOf(id):colOf(pid);
+const d=a.y===b.y?'M'+a.x+' '+a.y+'L'+b.x+' '+b.y:'M'+a.x+' '+a.y+'C'+(a.x+(b.x-a.x)/2)+' '+a.y+' '+(a.x+(b.x-a.x)/2)+' '+b.y+' '+b.x+' '+b.y;
+mk('path',{d,fill:'none',stroke:col,'stroke-width':2.5,'stroke-linecap':'round','stroke-dasharray':old.has(id)?'5 4':'0',opacity:old.has(id)?.5:1,class:'eg'},edgesG);
+});
+});
+};
+if(delay){et=setTimeout(drawEdges,delay)}else drawEdges();
+prevIds=ids;
+$('ctr').textContent='Step '+(step+1)+' / '+sc.steps.length;
+$('ttl').textContent=st.title;
+$('cmd').innerHTML=st.cmd.map(l=>{
+if(l[0]==='#')return '<div style="color:var(--text-muted)">'+esc(l)+'</div>';
+if(l[0]==='>')return '<div style="color:var(--text-secondary);padding-left:14px;white-space:pre">'+esc(l.slice(2))+'</div>';
+let s=esc(l.slice(2));
+s=s.replace(/^git (\S+)/,'<span style="color:var(--text-accent)">git <b style="font-weight:500">$1</b></span>');
+return '<div><span style="color:var(--text-muted)">$ </span>'+s+'</div>';
+}).join('');
+$('note').textContent=st.note;
+const w=$('warn');w.style.display=st.warn?'block':'none';w.textContent=st.warn||'';
+const cd=$('code');
+if(st.code){
+const kc={m:['var(--bg-danger)','var(--text-danger)'],a:['var(--bg-accent)','var(--text-accent)'],t:['var(--bg-warning)','var(--text-warning)'],ok:['var(--bg-success)','var(--text-success)'],p:['transparent','var(--text-primary)']};
+cd.style.display='block';
+cd.innerHTML=(st.codeTitle?'<div style="font-size:12px;color:var(--text-secondary);padding:6px 10px;background:var(--surface-1);border-bottom:.5px solid var(--border)">'+esc(st.codeTitle)+'</div>':'')+st.code.map(r=>'<div class="cl" style="background:'+kc[r.k][0]+';color:'+kc[r.k][1]+'">'+esc(r.t)+'</div>').join('');
+}else{cd.style.display='none';cd.innerHTML=''}
+[...$('dots').children].forEach((d,i)=>{d.style.background=i===step?'var(--text-accent)':(i<step?'var(--border-stronger)':'var(--border-strong)')});
+$('prev').disabled=step===0;
+$('next').disabled=step===sc.steps.length-1;
+}
+function go(d){const n=S[cur].steps.length;const s=Math.max(0,Math.min(n-1,step+d));if(s===step)return;step=s;render(650)}
+function setPlay(on){$('play').innerHTML=on?'&#10074;&#10074; Pause':'&#9654; Auto play'}
+$('prev').onclick=()=>{go(-1)};
+$('next').onclick=()=>{go(1)};
+$('reset').onclick=()=>{build()};
+$('play').onclick=()=>{
+if(timer){clearInterval(timer);timer=null;setPlay(false);return}
+if(step===S[cur].steps.length-1){step=0;render(0)}
+setPlay(true);
+timer=setInterval(()=>{
+if(step>=S[cur].steps.length-1){clearInterval(timer);timer=null;setPlay(false);return}
+go(1);
+},3800);
+};
+Object.keys(S).forEach(k=>{
+const b=document.createElement('button');b.className='tb';b.dataset.k=k;b.textContent=S[k].name;
+b.onclick=()=>{cur=k;build()};$('tabs').appendChild(b);
+});
+build();
+</script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.app-shell.light {
+  background: linear-gradient(180deg, #f4f8ff 0%, #ffffff 45%, #eef4ff 100%);
+  color: #132238;
+}
+
+.app-shell.dark {
+  background: linear-gradient(180deg, #081120 0%, #0f172a 55%, #162338 100%);
+  color: #e5eefc;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.light .site-header,
+.light .site-footer {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.dark .site-header,
+.dark .site-footer {
+  background: rgba(8, 17, 32, 0.75);
+}
+
+.header-inner,
+.footer-inner,
+.page-shell {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.header-inner,
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.light .nav-link:hover,
+.light .active-link {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.dark .nav-link:hover,
+.dark .active-link {
+  background: rgba(37, 99, 235, 0.2);
+  color: #93c5fd;
+}
+
+.theme-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.1rem;
+  cursor: pointer;
+  background: #2563eb;
+  color: #ffffff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.theme-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);
+}
+
+.page-shell {
+  flex: 1;
+  padding: 3rem 0 4rem;
+}
+
+.hero-section,
+.employees-section {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.hero-section {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: stretch;
+}
+
+.hero-copy,
+.hero-panel,
+.employee-card {
+  border-radius: 24px;
+  padding: 1.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+}
+
+.light .hero-copy,
+.light .hero-panel,
+.light .employee-card {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.dark .hero-copy,
+.dark .hero-panel,
+.dark .employee-card {
+  background: rgba(15, 23, 42, 0.75);
+}
+
+.eyebrow {
+  margin: 0 0 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.82rem;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.hero-copy p,
+.section-heading p,
+.hero-panel li,
+.employee-details p,
+.site-footer p {
+  opacity: 0.88;
+}
+
+.hero-panel ul {
+  padding-left: 1.2rem;
+  margin-bottom: 0;
+}
+
+.section-heading {
+  max-width: 38rem;
+}
+
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.employee-card h3 {
+  margin-bottom: 0.25rem;
+}
+
+.employee-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin-bottom: 1rem;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.employee-role {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.employee-details span {
+  font-weight: 700;
+}
+
+.status-message {
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.error-message {
+  color: #dc2626;
+}
+
+.site-footer {
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+@media (max-width: 720px) {
+  .header-inner,
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+  }
+}

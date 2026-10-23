@@ -1,0 +1,43 @@
+{
+  "name": "slideiq",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@google/generative-ai": "latest",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@supabase/auth-helpers-nextjs": "latest",
+    "@supabase/auth-ui-react": "latest",
+    "@supabase/auth-ui-shared": "latest",
+    "@supabase/supabase-js": "latest",
+    "class-variance-authority": "latest",
+    "clsx": "latest",
+    "jszip": "latest",
+    "lucide-react": "latest",
+    "mongoose": "latest",
+    "next": "14",
+    "next-themes": "latest",
+    "openai": "^6.37.0",
+    "react": "18",
+    "react-dom": "18",
+    "sonner": "latest",
+    "tailwind-merge": "latest",
+    "tailwindcss-animate": "latest",
+    "typescript": "5"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "14",
+    "postcss": "latest",
+    "tailwindcss": "3"
+  }
+}

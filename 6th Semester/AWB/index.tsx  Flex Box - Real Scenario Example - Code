@@ -1,0 +1,223 @@
+import React from 'react';
+import {
+   Image,
+   StyleSheet,
+   Text,
+   View
+} from "react-native";
+
+
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Dashboard</Text>
+      </View>
+
+      {/* Profile Section */}
+      <View style={styles.profileSection}>
+        <Image
+          source={{
+            uri: "https://i.pravatar.cc/150?img=12",
+          }}
+          style={styles.profileImage}
+        />
+
+        <View>
+          <Text style={styles.name}>Zain Asghar</Text>
+
+          <Text style={styles.email}>zain@gmail.com</Text>
+        </View>
+      </View>
+
+      {/* Statistics Cards */}
+      <View style={styles.statsContainer}>
+        <View style={styles.card}>
+          <Text style={styles.cardNumber}>25</Text>
+
+          <Text style={styles.cardText}>Courses</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardNumber}>120</Text>
+
+          <Text style={styles.cardText}>Students</Text>
+        </View>
+      </View>
+
+      {/* Menu Section */}
+      <View style={styles.menuContainer}>
+        <View style={styles.menuBox}>
+          <Text style={styles.menuText}>Profile</Text>
+        </View>
+
+        <View style={styles.menuBox}>
+          <Text style={styles.menuText}>Attendance</Text>
+        </View>
+
+        <View style={styles.menuBox}>
+          <Text style={styles.menuText}>Results</Text>
+        </View>
+
+        <View style={styles.menuBox}>
+          <Text style={styles.menuText}>Settings</Text>
+        </View>
+      </View>
+
+      {/* Footer */}
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>React Native Flexbox Example</Text>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  /* Main Container */
+
+  container: {
+    flex: 1,
+    backgroundColor: "#f2f2f2",
+  },
+
+  /* Header */
+
+  header: {
+    flex: 1,
+
+    backgroundColor: "#3498db",
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  headerText: {
+    color: "white",
+    fontSize: 28,
+    fontWeight: "bold",
+  },
+
+  /* Profile Section */
+
+  profileSection: {
+    flex: 2,
+
+    flexDirection: "row",
+
+    alignItems: "center",
+
+    paddingHorizontal: 20,
+  },
+
+  profileImage: {
+    width: 80,
+    height: 80,
+
+    borderRadius: 40,
+
+    marginRight: 20,
+  },
+
+  name: {
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+
+  email: {
+    fontSize: 16,
+    color: "gray",
+  },
+
+  /* Statistics Cards */
+
+  statsContainer: {
+    flex: 2,
+
+    flexDirection: "row",
+
+    justifyContent: "space-evenly",
+
+    alignItems: "center",
+  },
+
+  card: {
+    width: 140,
+    height: 120,
+
+    backgroundColor: "white",
+
+    borderRadius: 15,
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  cardNumber: {
+    fontSize: 30,
+    fontWeight: "bold",
+
+    color: "#3498db",
+  },
+
+  cardText: {
+    fontSize: 18,
+    marginTop: 10,
+  },
+
+  /* Menu Section */
+
+  menuContainer: {
+    flex: 4,
+
+    flexDirection: "row",
+
+    flexWrap: "wrap",
+
+    justifyContent: "space-evenly",
+
+    alignItems: "center",
+
+    padding: 10,
+  },
+
+  menuBox: {
+    width: "40%",
+    height: 100,
+
+    backgroundColor: "#2ecc71",
+
+    borderRadius: 15,
+
+    margin: 10,
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  menuText: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+
+  /* Footer */
+
+  footer: {
+    flex: 1,
+
+    backgroundColor: "#34495e",
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  footerText: {
+    color: "white",
+    fontSize: 16,
+  },
+});
+
+export default App;

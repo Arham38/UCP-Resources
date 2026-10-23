@@ -1,0 +1,159 @@
+import React from 'react';
+import { ScrollView, Text, View } from 'react-native';
+
+const FlexboxScreen = () => {
+  return (
+    <ScrollView style={{ flex: 1, backgroundColor: '#eef2f5' }}>
+
+      {/* flexDirection: row */}
+      <Text style={{ margin: 10, fontSize: 18, fontWeight: 'bold' }}>
+        flexDirection: row
+      </Text>
+      <View style={{ flexDirection: 'row', margin: 10 }}>
+        <View style={{ width: 50, height: 50, backgroundColor: 'red', marginRight: 5 }} />
+        <View style={{ width: 50, height: 50, backgroundColor: 'green', marginRight: 5 }} />
+        <View style={{ width: 50, height: 50, backgroundColor: 'blue' }} />
+      </View>
+
+      {/* justifyContent */}
+      <Text style={{ margin: 10, fontSize: 18, fontWeight: 'bold' }}>
+        justifyContent: space-between
+      </Text>
+      <View style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin: 10,
+        backgroundColor: '#ddd',
+        padding: 10
+      }}>
+        <View style={{ width: 40, height: 40, backgroundColor: 'purple' }} />
+        <View style={{ width: 40, height: 40, backgroundColor: 'orange' }} />
+        <View style={{ width: 40, height: 40, backgroundColor: 'teal' }} />
+      </View>
+
+      {/* alignItems */}
+      <Text style={{ margin: 10, fontSize: 18, fontWeight: 'bold' }}>
+        alignItems: center
+      </Text>
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 100,
+        margin: 10,
+        backgroundColor: '#ccc'
+      }}>
+        <View style={{ width: 40, height: 40, backgroundColor: 'red' }} />
+        <View style={{ width: 40, height: 70, backgroundColor: 'green', marginHorizontal: 5 }} />
+        <View style={{ width: 40, height: 50, backgroundColor: 'blue' }} />
+      </View>
+
+      {/* alignSelf */}
+      <Text style={{ margin: 10, fontSize: 18, fontWeight: 'bold' }}>
+        alignSelf example
+      </Text>
+      <View style={{
+        flexDirection: 'row',
+        height: 100,
+        margin: 10,
+        backgroundColor: '#ddd'
+      }}>
+        <View style={{ width: 40, height: 40, backgroundColor: 'red' }} />
+        <View style={{
+          width: 40,
+          height: 40,
+          backgroundColor: 'green',
+          alignSelf: 'flex-end',
+          marginHorizontal: 5
+        }} />
+        <View style={{ width: 40, height: 40, backgroundColor: 'blue' }} />
+      </View>
+
+      {/* flexWrap */}
+      <Text style={{ margin: 10, fontSize: 18, fontWeight: 'bold' }}>
+        flexWrap: wrap
+      </Text>
+      <View style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        margin: 10
+      }}>
+        {[...Array(8)].map((_, i) => (
+          <View
+            key={i}
+            style={{
+              width: 70,
+              height: 70,
+              backgroundColor: i % 2 ? '#6c5ce7' : '#00b894',
+              margin: 5,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Text style={{ color: '#fff' }}>{i + 1}</Text>
+          </View>
+        ))}
+      </View>
+
+      {/* flex / flexGrow */}
+      <Text style={{ margin: 10, fontSize: 18, fontWeight: 'bold' }}>
+        flex & flexGrow
+      </Text>
+      <View style={{
+        flexDirection: 'row',
+        height: 80,
+        margin: 10
+      }}>
+        <View style={{ flex: 1, backgroundColor: 'red' }} />
+        <View style={{ flex: 2, backgroundColor: 'green' }} />
+        <View style={{ flex: 1, backgroundColor: 'blue' }} />
+      </View>
+
+      {/* flexBasis */}
+      <Text style={{ margin: 10, fontSize: 18, fontWeight: 'bold' }}>
+        flexBasis
+      </Text>
+      <View style={{
+        flexDirection: 'row',
+        margin: 10
+      }}>
+        <View style={{
+          flexBasis: 100,
+          height: 50,
+          backgroundColor: 'tomato',
+          marginRight: 5
+        }} />
+        <View style={{
+          flexBasis: 150,
+          height: 50,
+          backgroundColor: 'skyblue'
+        }} />
+      </View>
+
+      {/* flexShrink */}
+      <Text style={{ margin: 10, fontSize: 18, fontWeight: 'bold' }}>
+        flexShrink
+      </Text>
+      <View style={{
+        flexDirection: 'row',
+        margin: 10,
+        width: 200,
+        backgroundColor: '#ddd'
+      }}>
+        <View style={{
+          width: 150,
+          height: 50,
+          backgroundColor: 'red'
+        }} />
+        <View style={{
+          width: 150,
+          height: 50,
+          backgroundColor: 'green',
+          flexShrink: 1
+        }} />
+      </View>
+
+    </ScrollView>
+  );
+};
+
+export default FlexboxScreen;

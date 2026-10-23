@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCN Final Exam Master Guide — Dr. Nauman Mazhar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #161b27;
+    --surface2: #1e2535;
+    --border: #2a3245;
+    --accent: #3b82f6;
+    --accent2: #22d3ee;
+    --accent3: #a78bfa;
+    --danger: #f87171;
+    --success: #4ade80;
+    --warning: #fbbf24;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* NAV */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    background: rgba(15,17,23,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 0;
+    margin: 0 -1.5rem 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    z-index: 100;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .nav-bar a {
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 12px;
+    font-family: var(--mono);
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+  }
+  .nav-bar a:hover { color: var(--accent2); border-color: var(--border); background: var(--surface); }
+
+  /* HEADER */
+  .main-header {
+    margin-bottom: 2.5rem;
+    border-left: 3px solid var(--accent);
+    padding-left: 1.2rem;
+  }
+  .main-header .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .main-header h1 { font-size: 1.8rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
+  .main-header p { color: var(--text2); font-size: 14px; }
+
+  /* SECTION */
+  .section { margin-bottom: 3rem; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    min-width: fit-content;
+  }
+  .section-header h2 { font-size: 1.15rem; font-weight: 600; color: var(--text); }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--mono);
+    color: var(--accent2);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card p { color: var(--text); font-size: 14px; margin-bottom: 0.4rem; }
+  .card ul { padding-left: 1.3rem; }
+  .card li { font-size: 14px; color: var(--text); margin-bottom: 0.3rem; }
+
+  /* ALERT BOXES */
+  .alert {
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid;
+  }
+  .alert-danger { background: rgba(248,113,113,0.07); border-color: var(--danger); }
+  .alert-warning { background: rgba(251,191,36,0.07); border-color: var(--warning); }
+  .alert-success { background: rgba(74,222,128,0.07); border-color: var(--success); }
+  .alert-info { background: rgba(59,130,246,0.07); border-color: var(--accent); }
+  .alert-title { font-weight: 600; font-size: 13px; margin-bottom: 0.4rem; font-family: var(--mono); }
+  .alert-danger .alert-title { color: var(--danger); }
+  .alert-warning .alert-title { color: var(--warning); }
+  .alert-success .alert-title { color: var(--success); }
+  .alert-info .alert-title { color: var(--accent); }
+  .alert p, .alert li { font-size: 14px; color: var(--text); }
+  .alert ul { padding-left: 1.2rem; margin-top: 0.4rem; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 640px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* TOPIC BLOCKS */
+  .topic { 
+    background: var(--surface); 
+    border: 1px solid var(--border); 
+    border-radius: 8px; 
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+  .topic-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent3);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .topic p, .topic li { font-size: 13.5px; color: var(--text); }
+  .topic ul { padding-left: 1.2rem; }
+  .topic li { margin-bottom: 0.3rem; }
+
+  /* FORMULA BOX */
+  .formula {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 1rem;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent2);
+    margin: 0.6rem 0;
+    overflow-x: auto;
+  }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 0.8rem 0; }
+  th { background: var(--surface2); color: var(--accent2); font-family: var(--mono); font-size: 12px; padding: 8px 12px; text-align: left; border: 1px solid var(--border); }
+  td { padding: 7px 12px; border: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  tr:hover td { background: var(--surface); }
+
+  /* BADGES */
+  .badge { display: inline-block; font-size: 11px; font-family: var(--mono); padding: 2px 8px; border-radius: 4px; font-weight: 500; margin: 0 2px; }
+  .badge-red { background: rgba(248,113,113,0.15); color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
+  .badge-blue { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
+  .badge-green { background: rgba(74,222,128,0.15); color: var(--success); border: 1px solid rgba(74,222,128,0.3); }
+  .badge-yellow { background: rgba(251,191,36,0.15); color: var(--warning); border: 1px solid rgba(251,191,36,0.3); }
+  .badge-purple { background: rgba(167,139,250,0.15); color: var(--accent3); border: 1px solid rgba(167,139,250,0.3); }
+
+  /* STEP LIST */
+  .steps { list-style: none; padding: 0; }
+  .steps li {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 0.7rem;
+    font-size: 14px;
+  }
+  .steps .step-num {
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .steps .step-content { color: var(--text); }
+
+  /* MOCK Q */
+  .mock-q {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent3);
+    border-radius: 0 8px 8px 0;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 0.8rem;
+    font-size: 14px;
+  }
+  .mock-q-label { font-size: 11px; font-family: var(--mono); color: var(--accent3); margin-bottom: 0.4rem; }
+  .mock-q p { color: var(--text); }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  /* CODE */
+  code { font-family: var(--mono); font-size: 12px; color: var(--accent2); background: var(--surface2); padding: 1px 5px; border-radius: 3px; }
+
+  /* HIGHLIGHT */
+  .hl { color: var(--warning); font-weight: 600; }
+  .hl-red { color: var(--danger); font-weight: 600; }
+  .hl-green { color: var(--success); font-weight: 600; }
+  .hl-blue { color: #93c5fd; font-weight: 600; }
+
+  /* PATTERN TABLE */
+  .pattern-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .pattern-item:last-child { border-bottom: none; }
+  .pattern-icon { min-width: 32px; text-align: center; font-size: 18px; }
+  .pattern-text { flex: 1; }
+  .pattern-text strong { display: block; font-size: 13px; color: var(--text); margin-bottom: 0.2rem; }
+  .pattern-text span { font-size: 13px; color: var(--text2); }
+
+  /* WEEK BLOCK */
+  .week-block {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .week-header {
+    background: var(--surface2);
+    padding: 0.7rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .week-num { font-family: var(--mono); font-size: 11px; color: var(--accent); min-width: 60px; }
+  .week-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .week-body { padding: 0.8rem 1.1rem; background: var(--surface); }
+  .week-body ul { padding-left: 1.2rem; }
+  .week-body li { font-size: 13px; color: var(--text2); margin-bottom: 0.2rem; }
+
+  /* SEPARATOR TITLE */
+  .sep { display: flex; align-items: center; gap: 1rem; margin: 2rem 0 1.2rem; }
+  .sep::before, .sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .sep span { font-family: var(--mono); font-size: 11px; color: var(--text3); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* PRINT */
+  @media print {
+    body { background: white; color: black; }
+    .nav-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav-bar">
+  <a href="#analysis">Teacher Pattern</a>
+  <a href="#final-topics">Final Topics</a>
+  <a href="#tcp">TCP Deep Dive</a>
+  <a href="#ip">IP & Network Layer</a>
+  <a href="#congestion">Congestion Control</a>
+  <a href="#gbn-sr">GBN / SR</a>
+  <a href="#strategy">Exam Strategy</a>
+  <a href="#mock">Mock Questions</a>
+  <a href="#formulas">Formula Sheet</a>
+</nav>
+
+<div class="main-header">
+  <div class="tag">Computer Communications & Networks — Dr. Nauman Mazhar — UCP</div>
+  <h1>Final Exam Master Preparation Guide</h1>
+  <p>Deep analysis of teacher pattern + complete topic coverage + predicted questions + formula reference</p>
+</div>
+
+<!-- ============================================================ -->
+<div id="analysis" class="section">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>Teacher Pattern Analysis — From Midterm Paper Evidence</h2>
+  </div>
+
+  <div class="alert alert-danger">
+    <div class="alert-title">🎯 Root cause of your low marks — identified from midterm paper</div>
+    <p>After reading the midterm paper images carefully, the problem is NOT that you don't know the material — it's that the teacher asks questions in an <strong>applied, scenario-based style</strong> that requires understanding <em>why</em> something works, not just memorizing <em>what</em> it is. His questions use unfamiliar scenarios (Lunar Rover, Yahoo web server) to test the same underlying concepts you studied. If you only memorize, you fail. If you understand the mechanism, you can answer any scenario.</p>
+  </div>
+
+  <div class="sep"><span>pattern breakdown</span></div>
+
+  <div class="card">
+    <div class="card-title">▸ PATTERN 1: Question Structure — Always 5 Questions, Mixed Types</div>
+    <p>From the midterm: Q1 = MCQs + T/F + Fill-in-blanks (15 pts, CLO-1). Q2 = Short descriptive answers (15 pts, CLO-1). Q3 = Numerical calculation problem (10 pts). Q4 = Multi-part applied problem (10 pts). Q5 = Conceptual + applied combined (10 pts).</p>
+    <p style="margin-top:0.5rem; color: var(--warning);">The final exam will follow this exact same pattern for CLO-2, CLO-3 topics.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">▸ PATTERN 2: MCQs Test Conceptual Traps, Not Simple Recall</div>
+    <ul>
+      <li>From midterm Q1: "In DNS, Type NS message provides IP address of authoritative name server" → <strong>FALSE</strong> (NS gives hostname, NOT IP — that's Type A). This tests the difference between NS and A records.</li>
+      <li>"With persistent connections, a single TCP segment can carry two separate HTTP request messages" → <strong>TRUE</strong>. This is a subtle point almost nobody remembers from lectures.</li>
+      <li>"Copper cable is more immune to electromagnetic noise than fiber optic" → <strong>FALSE</strong>. Classic trap for students who confuse the two.</li>
+      <li>"Routing is performed at Transport Layer" → <strong>FALSE</strong>. Network layer. But the question is phrased to trip up those who don't read carefully.</li>
+      <li><strong>Lesson:</strong> Every MCQ in this course has exactly one "trap word." Find it first before choosing your answer.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">▸ PATTERN 3: Numerical Problems Use Exact Same Formula Structure as Practice Problems in Slides</div>
+    <p>The Lunar Rover question in Q3 is structurally IDENTICAL to Practice Problem 2 in Week 4 slides. Same formula: Tx delay + Propagation delay + (processing + queuing) × number of routers. He just changed the scenario (Moon → Earth instead of Host A → Host B). For the final, expect the same approach applied to:</p>
+    <ul>
+      <li>TCP RTT estimation and Timeout calculation (slides have a practice problem — same structure)</li>
+      <li>TCP Congestion window graph analysis</li>
+      <li>IP fragmentation calculation</li>
+      <li>Slow start / ssthreshold transitions</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">▸ PATTERN 4: "Draw a Diagram" + "Explain" Always Appears (Short Answer Q2)</div>
+    <p>Midterm Q2: "Describe P2P advantages/disadvantages" + "Draw Enterprise access network with data rates". The diagrams he asks for are ALWAYS shown in the lecture slides. He wants you to reproduce them from memory and label the components correctly. For the final:</p>
+    <ul>
+      <li>TCP 3-way handshake diagram</li>
+      <li>TCP connection close (4-way) diagram</li>
+      <li>GBN vs Selective Repeat sender/receiver windows</li>
+      <li>TCP congestion window graph (Slow Start, CA, Fast Recovery)</li>
+      <li>IP fragmentation example</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">▸ PATTERN 5: DNS and Application-layer Questions Always Ask for Actual Record Values</div>
+    <p>In midterm Q5, he gave a table of DNS RRs and asked: "determine hostname & IP for auth DNS servers", "determine mail server hostname & IP", "show final RRs returned to client." This requires knowing EXACTLY which record type (A, NS, MX, CNAME) maps to which type of lookup. For the final, a similar DNS question is very likely again since Assignment 3 also covers it AND it maps to Week 10-12 topics from the outline.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">▸ PATTERN 6: "Compute the Checksum" appears as 1 sub-question in numerical section</div>
+    <p>UDP checksum appeared in midterm Q4b. For TCP, he may ask header field identification in a Hex dump OR TCP checksum computation OR RTT/timeout computation. These are always worth 5 marks each (sub-part), so they must be answered completely with all steps shown.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">▸ PATTERN 7: "Examine the behavior" — Requires Identifying Phases, Not Just Naming Them</div>
+    <p>Assignment 3 Q4 asks to "examine TCP Reno behavior in a graph" with 6 sub-parts. This WILL appear in the final. He won't ask "what is Slow Start?" — he'll show a graph and ask "identify intervals when SS is operating and explain WHY it is needed here." The difference: you must identify specific round numbers from the graph AND explain the mechanism.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div id="final-topics" class="section">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>Final Term Topics — Complete Coverage Map</h2>
+  </div>
+
+  <div class="alert alert-info">
+    <div class="alert-title">What is in the Final (from teacher's own note)</div>
+    <p>Final term covers: Weeks 6 onwards (some slides not uploaded). Assignment 3 is final. Assignment 4 is coming. Week 7 slides 23+ are final. The course outline shows Weeks 10, 11, 12 (TCP, Congestion Control, Network Layer/IP) are the core final topics.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="week-block">
+      <div class="week-header"><span class="week-num">Week 7 (23+)</span><span class="week-title">GBN & Selective Repeat</span></div>
+      <div class="week-body"><ul>
+        <li>Pipelined protocols concept</li>
+        <li>Go-Back-N: cumulative ACK, window, timer</li>
+        <li>Selective Repeat: individual ACK, buffering</li>
+        <li>Key difference table</li>
+        <li>Window size constraint (2^k - 1 for GBN, 2^k/2 for SR)</li>
+      </ul></div>
+    </div>
+    <div class="week-block">
+      <div class="week-header"><span class="week-num">Week 10</span><span class="week-title">TCP Segment & Connection</span></div>
+      <div class="week-body"><ul>
+        <li>TCP header fields (all 9+ fields)</li>
+        <li>Sequence numbers (byte-stream, not segment)</li>
+        <li>Acknowledgement numbers (next expected byte)</li>
+        <li>RTT estimation: EstimatedRTT formula</li>
+        <li>Timeout interval: DevRTT formula</li>
+        <li>3-way handshake + connection teardown</li>
+      </ul></div>
+    </div>
+    <div class="week-block">
+      <div class="week-header"><span class="week-num">Week 11</span><span class="week-title">TCP Reliable + Flow + Congestion</span></div>
+      <div class="week-body"><ul>
+        <li>Fast retransmit (triple duplicate ACK)</li>
+        <li>TCP receiver events & ACK generation rules</li>
+        <li>Flow control: rwnd, receive window formula</li>
+        <li>Slow Start, Congestion Avoidance, Fast Recovery</li>
+        <li>TCP Reno vs TCP Tahoe</li>
+        <li>cwnd, ssthreshold transitions</li>
+        <li>AIMD behavior</li>
+      </ul></div>
+    </div>
+    <div class="week-block">
+      <div class="week-header"><span class="week-num">Week 12</span><span class="week-title">Network Layer & IP</span></div>
+      <div class="week-body"><ul>
+        <li>Forwarding vs Routing distinction</li>
+        <li>Datagram vs Virtual Circuit networks</li>
+        <li>Router architecture (input/output ports)</li>
+        <li>IP datagram format (all header fields)</li>
+        <li>IP fragmentation & reassembly</li>
+        <li>Longest prefix matching</li>
+      </ul></div>
+    </div>
+    <div class="week-block">
+      <div class="week-header"><span class="week-num">Weeks 13-16</span><span class="week-title">Not uploaded — from outline only</span></div>
+      <div class="week-body"><ul>
+        <li>DHCP, NAT, ICMP</li>
+        <li>IPv4 addressing, CIDR, Subnetting</li>
+        <li>IPv6, transition strategies</li>
+        <li>Link state (Dijkstra) routing</li>
+        <li>Distance vector (Bellman-Ford) routing</li>
+        <li>ARP, Ethernet, MAC addresses</li>
+      </ul></div>
+    </div>
+    <div class="week-block">
+      <div class="week-header"><span class="week-num">Assignment 3</span><span class="week-title">Final CLO-3 Focus</span></div>
+      <div class="week-body"><ul>
+        <li>TCP vs UDP header comparison</li>
+        <li>RTT computation (both samples)</li>
+        <li>Sequence/ACK number tracking</li>
+        <li>TCP Reno graph analysis</li>
+        <li>Slow Start with packet drop scenario</li>
+        <li>Throughput calculation after SS</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div id="tcp" class="section">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>TCP Deep Dive — Everything You Must Know</h2>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">📋 TCP Header Fields — Memorize All of These</div>
+    <table>
+      <tr><th>Field</th><th>Size</th><th>Purpose — What the teacher asks about</th></tr>
+      <tr><td><strong>Source Port</strong></td><td>16 bit</td><td>Identifies sender application; used for demultiplexing</td></tr>
+      <tr><td><strong>Destination Port</strong></td><td>16 bit</td><td>Identifies receiver application; used for demultiplexing</td></tr>
+      <tr><td><strong>Sequence Number</strong></td><td>32 bit</td><td>Byte-stream number of FIRST data byte in this segment (NOT segment number)</td></tr>
+      <tr><td><strong>Acknowledgement Number</strong></td><td>32 bit</td><td>Seq# of NEXT byte expected from the other side (cumulative ACK)</td></tr>
+      <tr><td><strong>Header Length</strong></td><td>4 bit</td><td>Header length in 32-bit words; typical = 5 (20 bytes)</td></tr>
+      <tr><td><strong>Flags (6 bits)</strong></td><td>6 bit</td><td>SYN=setup, FIN=teardown, ACK=ack valid, PSH=push, URG=urgent, RST=reset</td></tr>
+      <tr><td><strong>Receive Window</strong></td><td>16 bit</td><td>Flow control — how many bytes receiver is willing to accept (rwnd)</td></tr>
+      <tr><td><strong>Checksum</strong></td><td>16 bit</td><td>Error detection over entire TCP segment</td></tr>
+      <tr><td><strong>Urgent Pointer</strong></td><td>16 bit</td><td>Used with URG flag; points to end of urgent data</td></tr>
+    </table>
+    <p style="margin-top:0.6rem; font-size:13px; color: var(--warning);">Compare with UDP: UDP has only 4 fields (src port, dest port, length, checksum). TCP's additional fields = Seq#, ACK#, Header length, Flags, Receive Window, Urgent Pointer → these provide reliable delivery, flow control, connection management.</p>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🔢 Sequence & Acknowledgement Numbers — The Most Commonly Failed Topic</div>
+    <ul>
+      <li>TCP assigns a sequence number to EVERY BYTE, not every segment</li>
+      <li>Seq# in segment header = byte-stream number of the FIRST byte of data in that segment</li>
+      <li>ACK# = sequence number of the NEXT byte Host B expects from Host A</li>
+      <li>If Host A sends 500 KB file with MSS=1000 bytes: segment 1 Seq#=0, segment 2 Seq#=1000, segment 3 Seq#=2000 etc.</li>
+      <li>ISN (Initial Sequence Number) is chosen randomly at connection setup</li>
+    </ul>
+    <div class="formula">Example (from Assignment 3 Q3b): ISN=200, Seg1=20 bytes, Seg2=40 bytes, Seg3=15 bytes
+Seg1: Seq=200, ACK=? (whatever server ISN+1 is)
+Seg2: Seq=220 (200+20), Seg3: Seq=260 (220+40)
+After Seg1: receiver sends ACK=220 (next expected)
+After Seg2: receiver sends ACK=260
+After Seg3: receiver sends ACK=275</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">⏱️ RTT Estimation & Timeout — The Calculation Question</div>
+    <p>These formulas appear EVERY time (both Assignment 3 and the practice problem in Week 10 slides):</p>
+    <div class="formula">EstimatedRTT = (1-α) × EstimatedRTT + α × SampleRTT   [α = 0.125 typically]
+DevRTT = (1-β) × DevRTT + β × |SampleRTT - EstimatedRTT|   [β = 0.25 typically]
+TimeoutInterval = EstimatedRTT + 4 × DevRTT</div>
+    <p style="font-size:13px; color: var(--warning);">Order of calculation: (1) compute new DevRTT first, (2) then compute new EstimatedRTT, (3) then compute TimeoutInterval. Students who reverse the order lose all marks.</p>
+    <div class="formula">Example (Assignment 3 Q2): Initial EstRTT=103ms, DevRTT=6ms, α=0.125, β=0.25
+--- After SampleRTT = 110ms ---
+DevRTT = (0.75)(6) + (0.25)|110-103| = 4.5 + 1.75 = 6.25ms
+EstRTT = (0.875)(103) + (0.125)(110) = 90.125 + 13.75 = 103.875ms
+Timeout = 103.875 + 4(6.25) = 103.875 + 25 = 128.875ms
+
+--- After SampleRTT = 180ms ---
+DevRTT = (0.75)(6.25) + (0.25)|180-103.875| = 4.6875 + 19.03 = 23.72ms
+EstRTT = (0.875)(103.875) + (0.125)(180) = 90.89 + 22.5 = 113.39ms
+Timeout = 113.39 + 4(23.72) = 113.39 + 94.88 = 208.27ms</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🤝 TCP 3-Way Handshake — Must Be Able to Draw This</div>
+    <ul>
+      <li><strong>Step 1 (Client → Server):</strong> SYN segment, SYN flag=1, client chooses ISN (e.g. ISN_c), no data</li>
+      <li><strong>Step 2 (Server → Client):</strong> SYN-ACK segment, SYN=1, ACK=1, server chooses ISN_s, ACK# = ISN_c + 1</li>
+      <li><strong>Step 3 (Client → Server):</strong> ACK segment, ACK=1, SYN=0, ACK# = ISN_s + 1, MAY contain data</li>
+    </ul>
+    <p style="font-size:13px; color: var(--text2); margin-top:0.5rem;">Connection close is 4-way: Client FIN → Server ACK → Server FIN → Client ACK (then wait)</p>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">📦 TCP Flow Control</div>
+    <ul>
+      <li>Receiver advertises free buffer space using the <strong>rwnd (Receive Window)</strong> field in TCP header</li>
+      <li>Formula: <code>RcvWindow = RcvBuffer - [LastByteRcvd - LastByteRead]</code></li>
+      <li>Sender constraint: <code>LastByteSent - LastByteAcked ≤ min(cwnd, rwnd)</code></li>
+      <li>This guarantees receiver buffer will not overflow</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div id="congestion" class="section">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>TCP Congestion Control — The Most Likely Final Exam Topic</h2>
+  </div>
+
+  <div class="alert alert-warning">
+    <div class="alert-title">⚠️ Assignment 3 Q4 and Q5 are almost certainly in the final exam</div>
+    <p>The entire Assignment 3 is CLO-3 (final). Q4 asks to analyze a TCP Reno graph with 6 sub-questions. Q5 asks to draw the cwnd graph and calculate time in SS phase. Expect very similar questions in the final exam.</p>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">📊 Three Phases of TCP Congestion Control</div>
+    <table>
+      <tr><th>Phase</th><th>When does it start?</th><th>How does cwnd grow?</th><th>When does it end?</th></tr>
+      <tr>
+        <td><strong>Slow Start (SS)</strong></td>
+        <td>Connection begins, OR after timeout</td>
+        <td>Exponential: cwnd doubles every RTT (add 1 MSS per ACK)</td>
+        <td>When cwnd reaches ssthreshold, OR loss event occurs</td>
+      </tr>
+      <tr>
+        <td><strong>Congestion Avoidance (CA)</strong></td>
+        <td>When cwnd ≥ ssthreshold</td>
+        <td>Linear: cwnd += 1 MSS per RTT (add MSS/cwnd per ACK)</td>
+        <td>When loss event occurs</td>
+      </tr>
+      <tr>
+        <td><strong>Fast Recovery (TCP Reno)</strong></td>
+        <td>After triple duplicate ACK</td>
+        <td>Linear (CA) from cwnd/2</td>
+        <td>When timeout or new ACK received</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🔄 TCP Reno vs TCP Tahoe — Key Difference</div>
+    <div class="grid-2">
+      <div class="card" style="margin-bottom:0; border-color: rgba(59,130,246,0.4);">
+        <div class="card-title">TCP Tahoe</div>
+        <ul>
+          <li>On timeout: cwnd = 1 MSS, SS from start</li>
+          <li>On 3 dup ACKs: cwnd = 1 MSS, SS from start</li>
+          <li>Treats both events the same (aggressive)</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0; border-color: rgba(167,139,250,0.4);">
+        <div class="card-title">TCP Reno (more common)</div>
+        <ul>
+          <li>On timeout: cwnd = 1 MSS, SS from start</li>
+          <li>On 3 dup ACKs: cwnd = cwnd/2, then CA (Fast Recovery)</li>
+          <li>3 dup ACKs = network can still deliver some pkts → less severe</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">📈 Reading a TCP Reno Congestion Window Graph — Step by Step</div>
+    <p style="margin-bottom:0.6rem; font-size:13px;">This is the exact graph in Assignment 3 Q4. Here is how to analyze it systematically:</p>
+    <ul>
+      <li><strong>Step 1 — Find Slow Start intervals:</strong> Look for exponential growth (1→2→4→8 doubling pattern). Slow Start starts at cwnd=1 MSS and runs until either ssthreshold is hit OR loss occurs.</li>
+      <li><strong>Step 2 — Find CA intervals:</strong> Look for linear growth (+1 MSS per RTT). These come after ssthreshold is reached.</li>
+      <li><strong>Step 3 — Find timeout events:</strong> cwnd drops suddenly to 1 MSS. ssthreshold is set to half of cwnd at time of loss.</li>
+      <li><strong>Step 4 — Find triple dup ACK events:</strong> cwnd drops to HALF (not to 1). Then continues linear growth. This is Fast Recovery.</li>
+      <li><strong>Step 5 — Identify ssthreshold values:</strong> New ssthreshold = cwnd/2 at time of loss. It can change multiple times.</li>
+    </ul>
+    <div class="formula">For Assignment 3 Q4 graph analysis (approximate, based on the graph shown):
+Rounds 1-6: Slow Start (cwnd: 1,2,4,8,10,11 — exponential then slows near ssthresh)
+Around Round 7: Loss event by timeout (cwnd drops to 1, ssthresh = cwnd/2 ≈ 6-7)
+Rounds 8-14: SS again from 1, CA after ssthresh
+Round 14 or so: Triple dup ACK (cwnd halved, fast recovery → CA)
+Note: Look at the ACTUAL graph image — identify every drop point precisely.</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">📐 Slow Start Analysis — Assignment 3 Q5 Type</div>
+    <p style="margin-bottom:0.5rem; font-size:13px;">Setup: rwnd = 17 KB, MSS = 1 KB, RTT = 10 ms, packet drop (3 dup ACK) at cwnd = 16 KB</p>
+    <div class="formula">SS Phase progression (cwnd in KB):
+RTT 1: cwnd = 1 KB    (send 1 segment)
+RTT 2: cwnd = 2 KB
+RTT 3: cwnd = 4 KB
+RTT 4: cwnd = 8 KB
+RTT 5: cwnd = 16 KB → DROP HERE (triple dup ACK)
+
+After drop: ssthreshold = 16/2 = 8 KB, cwnd = 8 KB (Reno: halved, not reset to 1)
+Fast Recovery → CA phase:
+RTT 6: cwnd = 9 KB (8 + 1)
+RTT 7: cwnd = 10 KB
+RTT 8: cwnd = 11 KB
+...continues until cwnd = 17 KB (rwnd)
+RTT 14: cwnd = 17 KB → can send full rwnd
+
+Time in SS phase = 5 RTTs = 5 × 10ms = 50ms
+Time from drop to full window = (17-8) RTTs = 9 RTTs = 90ms
+Average throughput during recovery = total data / total time</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🔁 Fast Retransmit — Key Mechanism</div>
+    <ul>
+      <li>If sender receives <strong>3 duplicate ACKs</strong> for same data → retransmit unACKed segment with smallest seq# immediately</li>
+      <li>Does NOT wait for timeout (timeout is too slow)</li>
+      <li>Duplicate ACK = receiver got out-of-order segment, sends ACK for highest in-order byte it has</li>
+      <li>3 dup ACKs = "implicit NAK" for the missing segment</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div id="gbn-sr" class="section">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>Go-Back-N and Selective Repeat</h2>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">📊 GBN vs SR Comparison Table</div>
+    <table>
+      <tr><th>Property</th><th>Go-Back-N (GBN)</th><th>Selective Repeat (SR)</th></tr>
+      <tr><td>Max window size</td><td>N ≤ 2^k - 1</td><td>N ≤ 2^k / 2</td></tr>
+      <tr><td>ACK type</td><td>Cumulative (ACKs all up to n)</td><td>Individual (ACKs each pkt)</td></tr>
+      <tr><td>Timer</td><td>One timer for oldest unACKed pkt</td><td>Separate timer per unACKed pkt</td></tr>
+      <tr><td>On timeout</td><td>Retransmit pkt n AND all higher in window</td><td>Retransmit only the unACKed pkt</td></tr>
+      <tr><td>Out-of-order pkts</td><td>DISCARD (no receiver buffer)</td><td>BUFFER for in-order delivery</td></tr>
+      <tr><td>Receiver buffer</td><td>Not needed</td><td>Required (window size N)</td></tr>
+    </table>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">⚠️ SR Dilemma — Understand This for MCQs / T/F Questions</div>
+    <ul>
+      <li>If you use k bits for seq numbers, you have 2^k seq numbers (0 to 2^k-1)</li>
+      <li>For SR: window size N must be ≤ 2^k / 2. Why? If N > 2^k/2, the receiver cannot distinguish between a new packet and a retransmitted duplicate.</li>
+      <li>For GBN: window size N must be ≤ 2^k - 1. The receiver doesn't buffer, so one reserved seq# is enough.</li>
+      <li>Example: k=3 bits → 8 seq numbers. GBN max window = 7. SR max window = 4.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div id="ip" class="section">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>IP and Network Layer</h2>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">📋 IP Datagram Header Fields — Know All of These</div>
+    <table>
+      <tr><th>Field</th><th>Size</th><th>Key fact the teacher tests</th></tr>
+      <tr><td>Version</td><td>4 bit</td><td>4 for IPv4, 6 for IPv6</td></tr>
+      <tr><td>Header Length</td><td>4 bit</td><td>In 32-bit words; min value = 5 (20 bytes, no options)</td></tr>
+      <tr><td>TOS</td><td>8 bit</td><td>Type of service; marks packet priority</td></tr>
+      <tr><td>Total Length</td><td>16 bit</td><td>Entire datagram (header + data) in bytes; max 65,535</td></tr>
+      <tr><td>Identification</td><td>16 bit</td><td>Uniquely identifies datagram; used in fragmentation</td></tr>
+      <tr><td>Flags</td><td>3 bit</td><td>Bit 0: reserved; Bit 1: Don't Fragment; Bit 2: More (0=last fragment)</td></tr>
+      <tr><td>Fragment Offset</td><td>13 bit</td><td>Where this fragment belongs in original datagram; in 8-byte units</td></tr>
+      <tr><td>TTL</td><td>8 bit</td><td>Max hops; decremented by each router; packet dropped when TTL=0</td></tr>
+      <tr><td>Protocol</td><td>8 bit</td><td>Upper layer: TCP=6, UDP=17; used for demultiplexing at destination</td></tr>
+      <tr><td>Header Checksum</td><td>16 bit</td><td>Error detection on IP header ONLY (not data)</td></tr>
+      <tr><td>Source/Dest IP</td><td>32 bit each</td><td>Set by source; don't change (except with NAT)</td></tr>
+    </table>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">✂️ IP Fragmentation — The Calculation You Must Know</div>
+    <p style="margin-bottom:0.5rem; font-size:13px;">When a datagram is larger than link MTU, it is fragmented. All fragments except the last have More flag = 1. Last fragment has More flag = 0. Offset is in 8-byte units.</p>
+    <div class="formula">Example from slides: 4000 byte datagram, MTU = 1500, ID = 777
+IP header = 20 bytes. Data payload = 4000 - 20 = 3980 bytes.
+Each fragment can hold: 1500 - 20 = 1480 bytes of data
+(1480 must be multiple of 8 for fragmentation offset — ✓ 1480/8 = 185)
+
+Fragment 1: Length=1500, Offset=0,   More=1, ID=777, Data=1480 bytes
+Fragment 2: Length=1500, Offset=185, More=1, ID=777, Data=1480 bytes  (1480/8=185)
+Fragment 3: Length=1040, Offset=370, More=0, ID=777, Data=1020 bytes  (2960/8=370)
+Check: 1480 + 1480 + 1020 = 3980 = original payload ✓</div>
+    <p style="font-size:13px; color: var(--warning); margin-top:0.5rem;">Trap: Offset is computed as (cumulative data bytes before this fragment) / 8, NOT total length / 8.</p>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🔀 Forwarding vs Routing — Conceptual Question</div>
+    <ul>
+      <li><strong>Forwarding:</strong> Moving a packet from input port to correct output port at a SINGLE router. Uses forwarding table. Fast, done in hardware.</li>
+      <li><strong>Routing:</strong> Determining the end-to-end PATH through the network. Runs routing algorithms (Dijkstra, Bellman-Ford). Builds routing tables → populates forwarding tables.</li>
+      <li>Analogy: Routing = planning your trip. Forwarding = making a turn at a single intersection.</li>
+    </ul>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🔍 Longest Prefix Matching</div>
+    <ul>
+      <li>When router looks up destination IP in forwarding table, it matches the longest prefix that matches the destination address</li>
+      <li>Example: dest addr 11001000 00010111 00011000 10101010 matches both prefix "11001000 00010111 00011000" (26 bits) and "11001000 00010111 000110" (22 bits). Router uses the 26-bit match (longest).</li>
+    </ul>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🌐 Additional Final Topics (Weeks 13-16, from course outline)</div>
+    <div class="grid-2" style="margin-top:0.6rem;">
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title">DHCP (Dynamic Host Config)</div>
+        <ul>
+          <li>Auto IP address allocation</li>
+          <li>4 messages: Discover, Offer, Request, ACK</li>
+          <li>Provides: IP, subnet mask, default GW, DNS server</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title">NAT (Network Address Translation)</div>
+        <ul>
+          <li>Maps private IPs to single public IP</li>
+          <li>Uses port numbers to distinguish internal hosts</li>
+          <li>NAT table: (private IP:port) ↔ (public IP:port)</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title">ICMP</div>
+        <ul>
+          <li>Error reporting for IP (not data transport)</li>
+          <li>Used by ping (echo request/reply) and traceroute</li>
+          <li>TTL exceeded → ICMP Time Exceeded message</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title">IPv6</div>
+        <ul>
+          <li>128-bit addresses (vs 32-bit IPv4)</li>
+          <li>No fragmentation by routers</li>
+          <li>No checksum in header</li>
+          <li>Transition: tunneling, dual stack</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div id="strategy" class="section">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>Exam Strategy — How to Get Maximum Marks</h2>
+  </div>
+
+  <div class="alert alert-success">
+    <div class="alert-title">✅ Why your previous strategy failed and what to do differently</div>
+    <p>From what you described — studying the material but still getting low marks — the issue is almost certainly one of these three: (1) Not knowing the exact order of steps in numerical problems, (2) Not understanding the tricky wording in MCQs/T/F, (3) Not being able to reproduce diagrams from memory. Here is the fix for each.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">For MCQs / T/F / Fill-in-blanks</div>
+      <ul>
+        <li>Always ask: "What is the <em>trap</em> word in this question?"</li>
+        <li>False friends: NS record gives HOSTNAME not IP. TTL is hop count not time in seconds for IP (it IS in seconds for DNS cache). Routing is at Network layer, not Transport.</li>
+        <li>Watch for: "always", "never", "only" — these make statements likely false</li>
+        <li>For fill-in-blanks: review exact numbers (TCP=6, UDP=17, DNS port=53, HTTP=80)</li>
+        <li>Practice from the midterm MCQs provided — they reveal his exact style</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">For Numerical Problems (Q3)</div>
+      <ul>
+        <li>Always draw the network diagram first (links, data rates, distances)</li>
+        <li>Show every formula before substituting numbers</li>
+        <li>For delay: compute Tx delay, Prop delay, and router delays SEPARATELY, then add</li>
+        <li>For multiple packets: (n-1) × Tx_delay at source + full delay for last packet</li>
+        <li>Convert units early: KB → bits, km → m, kbps → bps</li>
+        <li>Show final answer with units clearly</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">For Short Answer (Q2)</div>
+      <ul>
+        <li>Keep answers structured: definition + components + diagram if asked</li>
+        <li>For "describe X": always include why X exists (the problem it solves)</li>
+        <li>For diagrams: draw boxes with labels and data rates/connections</li>
+        <li>His ideal answer matches exactly the bullet points in his slides — use his terminology</li>
+        <li>3–5 bullet points per sub-question is usually enough</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">For Applied/Design Questions (Q4, Q5)</div>
+      <ul>
+        <li>For HTTP delay: draw a timing diagram with RTTs shown explicitly</li>
+        <li>For DNS: write the RR type, name, and value — all three in the correct format</li>
+        <li>For TCP graph analysis: identify EXACT round numbers where transitions happen</li>
+        <li>For cwnd problems: draw the graph yourself as you solve — it helps and shows effort</li>
+        <li>For RTT calculation: always do DevRTT BEFORE EstimatedRTT</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="border-color: var(--warning);">
+    <div class="card-title" style="color: var(--warning);">⏰ Time Management in Exam (assuming 2-hour paper)</div>
+    <ul>
+      <li>Q1 MCQs/T/F: 20 minutes maximum. Don't overthink — if you don't know, move on.</li>
+      <li>Q2 Short answers: 25 minutes. Write quickly with clear structure.</li>
+      <li>Q3 Numerical: 25 minutes. Show ALL steps even if answer is wrong — partial marks are given.</li>
+      <li>Q4 and Q5: 30 minutes each. These carry the most conceptual weight.</li>
+      <li>Last 10 minutes: Review Q1 and fill anything blank.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div id="mock" class="section">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>Predicted Final Exam Questions — Based on Teacher Pattern</h2>
+  </div>
+
+  <div class="alert alert-danger">
+    <div class="alert-title">🎯 High-confidence predictions based on pattern analysis</div>
+    <p>These questions are predicted based on: (1) Assignment 3 topics (CLO-3), (2) Teacher's established question style from midterm, (3) Topics emphasized in slides with practice problems.</p>
+  </div>
+
+  <div class="sep"><span>predicted Q1 — MCQs / T/F</span></div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">MCQ — TCP Congestion Control</div>
+    <p>In TCP Reno, when 3 duplicate ACKs are received, the sender: (a) sets cwnd = 1 MSS (b) sets cwnd = cwnd/2 and enters CA (c) sets cwnd = ssthreshold (d) waits for timeout</p>
+    <p style="color: var(--success); font-size:13px; margin-top:0.4rem;">Answer: (b). TCP Reno halves cwnd and enters Fast Recovery/CA. TCP Tahoe would do (a).</p>
+  </div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">T/F — TCP Header</div>
+    <p>The Sequence Number field in TCP header identifies the segment number of the TCP segment being sent. (T/F)</p>
+    <p style="color: var(--success); font-size:13px; margin-top:0.4rem;">Answer: FALSE. Seq# is the byte-stream number of the FIRST byte in the segment, not the segment number.</p>
+  </div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">T/F — IP Fragmentation</div>
+    <p>IP datagrams are reassembled at every intermediate router before being forwarded. (T/F)</p>
+    <p style="color: var(--success); font-size:13px; margin-top:0.4rem;">Answer: FALSE. Reassembly happens ONLY at the final destination host, not at intermediate routers.</p>
+  </div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">Fill in blank — IP Protocol Field</div>
+    <p>In an IP datagram, the Protocol field value _____ indicates that the payload is a TCP segment.</p>
+    <p style="color: var(--success); font-size:13px; margin-top:0.4rem;">Answer: 6 (TCP=6, UDP=17)</p>
+  </div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">MCQ — GBN vs SR</div>
+    <p>In Go-Back-N, when a packet is lost, the receiver: (a) buffers out-of-order packets (b) discards out-of-order packets and sends duplicate ACK (c) sends NACK for the lost packet (d) waits for retransmission silently</p>
+    <p style="color: var(--success); font-size:13px; margin-top:0.4rem;">Answer: (b). GBN receiver discards out-of-order packets (no buffering) and resends ACK for last in-order packet.</p>
+  </div>
+
+  <div class="sep"><span>predicted Q2 — short answers</span></div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">Short Answer (5 pts)</div>
+    <p>Draw the TCP segment structure showing all header fields. For each field, state its size in bits and its primary purpose.</p>
+    <p style="color: var(--text2); font-size:13px; margin-top:0.4rem;">Approach: Draw the header diagram (src/dest port, seq#, ACK#, header len, flags, window, checksum, urgent pointer). Label each field with size. This directly matches Week 10 slides.</p>
+  </div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">Short Answer (5 pts)</div>
+    <p>Explain the difference between Go-Back-N and Selective Repeat protocols. Draw sender and receiver window diagrams for each.</p>
+    <p style="color: var(--text2); font-size:13px; margin-top:0.4rem;">Approach: Use the comparison table above. Draw the sliding window for GBN (one window at sender, no window at receiver) and SR (window at both). Mention window size constraint formulas.</p>
+  </div>
+
+  <div class="sep"><span>predicted Q3 — numerical problem</span></div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">Numerical (10 pts) — RTT + Timeout Calculation</div>
+    <p>Given two measured SampleRTT values as 95 ms and 150 ms. Initial EstimatedRTT = 90 ms, DevRTT = 8 ms, α = 0.125, β = 0.25. Compute the TCP Timeout Interval after each sample.</p>
+    <p style="color: var(--text2); font-size:13px; margin-top:0.4rem;">This is EXACTLY the type of question in Assignment 3 Q2. Do DevRTT first, then EstRTT, then Timeout. Show all steps.</p>
+  </div>
+
+  <div class="sep"><span>predicted Q4 — applied multi-part</span></div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">Applied Question (10 pts) — IP Fragmentation</div>
+    <p>A datagram of 3500 bytes (including 20 bytes IP header) arrives at a router with outgoing link MTU of 1000 bytes. Determine the number of fragments, and for each fragment state: Length, Identification, Offset, and More flag value.</p>
+    <p style="color: var(--text2); font-size:13px; margin-top:0.4rem;">Use the fragmentation formula. Data = 3480 bytes. Each fragment payload = 980 bytes (multiple of 8). Fragment count = ceil(3480/980) = 4 fragments. Calculate offset for each (0, 122, 245, 368 → 980/8=122).</p>
+  </div>
+
+  <div class="sep"><span>predicted Q5 — TCP congestion graph</span></div>
+
+  <div class="mock-q">
+    <div class="mock-q-label">Graph Analysis (10 pts) — TCP Reno Behavior</div>
+    <p>[A graph will be shown with cwnd vs rounds.] Identify: (a) Slow Start intervals, (b) Congestion Avoidance intervals, (c) Fast Recovery intervals, (d) Timeout events, (e) Triple dup ACK events, (f) All ssthreshold values.</p>
+    <p style="color: var(--text2); font-size:13px; margin-top:0.4rem;">This is directly from Assignment 3 Q4. Study the graph in the assignment. Know: exponential growth = SS, linear growth = CA, drop to 1 = timeout, drop to half = 3 dup ACK. ssthreshold = value where SS ends or half cwnd at loss.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div id="formulas" class="section">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2>Complete Formula & Quick Reference Sheet</h2>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">📐 Delay Formulas (From Midterm — Also in Final)</div>
+    <div class="formula">Transmission Delay = L / R          (L = packet size in bits, R = link rate in bps)
+Propagation Delay = d / s          (d = distance in meters, s = propagation speed ~3×10^8 m/s)
+Total End-to-End Delay = Tx_delay(all links) + Prop_delay(all links) + Processing_delay + Queuing_delay
+
+For N packets sent back-to-back:
+Total delay = (N-1) × L/R_first_link + delay_for_last_packet
+
+Throughput = Min(R1, R2, ..., Rn) = bottleneck link rate
+Average Throughput = file_size / total_transfer_time</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">⏱️ TCP RTT & Timeout Formulas</div>
+    <div class="formula">EstimatedRTT = (1 - α) × EstimatedRTT + α × SampleRTT      [α = 0.125]
+DevRTT = (1 - β) × DevRTT + β × |SampleRTT - EstimatedRTT|   [β = 0.25]
+TimeoutInterval = EstimatedRTT + 4 × DevRTT
+ORDER: Compute DevRTT first → then EstimatedRTT → then Timeout</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🔢 TCP Congestion Control Key Values</div>
+    <div class="formula">Initial: cwnd = 1 MSS, ssthreshold = large value (e.g. 64 KB)
+
+Slow Start: cwnd doubles each RTT (add 1 MSS per ACK received)
+Congestion Avoidance: cwnd += 1 MSS per RTT
+
+On Timeout (both Reno and Tahoe):
+  ssthreshold = cwnd / 2
+  cwnd = 1 MSS
+  → restart Slow Start
+
+On Triple Dup ACK (TCP Reno):
+  ssthreshold = cwnd / 2
+  cwnd = cwnd / 2
+  → enter Fast Recovery (linear growth = CA)
+
+On Triple Dup ACK (TCP Tahoe):
+  ssthreshold = cwnd / 2
+  cwnd = 1 MSS
+  → restart Slow Start
+
+TCP Send Rate ≈ cwnd / RTT  (bytes/sec)
+Average Throughput (simplified) ≈ 0.75 × W / RTT  (W = window size at loss)</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">✂️ IP Fragmentation Formulas</div>
+    <div class="formula">Data per fragment (not last) = MTU - 20 bytes (header)   [must be multiple of 8]
+Fragment Offset = (cumulative bytes before this fragment) / 8
+More flag = 1 for all fragments except last (last = 0)
+All fragments have same Identification number as original datagram
+
+Reassembly: happens only at final destination</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🪟 Window Size Constraints</div>
+    <div class="formula">Go-Back-N:     N ≤ 2^k - 1    (k = number of bits in seq# field)
+Selective Repeat: N ≤ 2^k / 2
+
+TCP Flow Control: LastByteSent - LastByteAcked ≤ min(cwnd, rwnd)
+TCP RcvWindow = RcvBuffer - [LastByteRcvd - LastByteRead]</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🌐 Key Port Numbers & Protocol Values</div>
+    <div class="formula">HTTP: port 80       HTTPS: port 443      DNS: port 53 (UDP)
+SMTP: port 25       FTP: port 21         Telnet: port 23
+SSH: port 22        Echo: port 7
+
+IP Protocol field: TCP = 6, UDP = 17, ICMP = 1
+DNS record types: A (hostname→IP), NS (domain→nameserver), MX (domain→mailserver), CNAME (alias→canonical)
+Well-known ports: 0-1023 | Registered: 1024-49151 | Ephemeral: 49152-65535</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">📡 HTTP Delay Formulas</div>
+    <div class="formula">Non-persistent HTTP (serial): 2 RTT + Tx_time per object
+Non-persistent HTTP (parallel): 2 RTT + Tx_time (all objects load in parallel)
+Persistent HTTP (serial within server): 
+  - 1 RTT for TCP handshake to server
+  - 1 RTT + Tx_time for each object (no new TCP for each)
+  - For objects on DIFFERENT servers: add 1 RTT (new TCP connection) per new server
+
+General formula for persistent HTTP with N objects across M servers:
+Total = M × (1 RTT for TCP setup) + N × (1 RTT + Tx_time per object)</div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">🔑 Important MCQ/T/F Facts to Memorize</div>
+    <ul>
+      <li>NS record in DNS → gives HOSTNAME of nameserver (NOT IP address). Type A gives IP address.</li>
+      <li>Routing at NETWORK layer. Transport layer provides process-to-process delivery.</li>
+      <li>Circuit switching has dedicated path. Packet switching does NOT.</li>
+      <li>IP fragmentation is done by ROUTERS but reassembly is done only at DESTINATION HOST.</li>
+      <li>UDP does NOT provide reliability, flow control, or congestion control.</li>
+      <li>TCP is full-duplex (data flows both directions simultaneously on same connection).</li>
+      <li>In GBN, receiver DISCARDS out-of-order segments (no buffering). In SR, receiver BUFFERS them.</li>
+      <li>TTL in IP header is decremented by 1 at each ROUTER (not host).</li>
+      <li>The "More" flag in IP fragmentation: 1 means more fragments follow; 0 means this is the LAST fragment.</li>
+      <li>TCP sends ACK using cumulative acknowledgement — ACK# = next expected byte.</li>
+      <li>3 duplicate ACKs trigger fast retransmit WITHOUT waiting for timeout.</li>
+      <li>TCP Reno on 3-dup-ACK: cwnd = cwnd/2. TCP Tahoe: cwnd = 1 MSS regardless.</li>
+      <li>ssthreshold is set to cwnd/2 BOTH on timeout AND on triple dup ACK.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center;">
+  <p style="font-family: var(--mono); font-size: 12px; color: var(--text3);">CCN Final Exam Guide — Dr. Nauman Mazhar, UCP — Compiled from lecture slides (Weeks 1, 2, 4, 5, 7, 10, 11, 12), midterm paper analysis, and assignments 1-3</p>
+</div>
+
+</body>
+</html>

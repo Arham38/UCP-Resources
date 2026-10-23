@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Mart | Operations ERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Local Override for Dashboard Layout */
+        body { background-color: #f3f4f6; overflow: hidden; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-cube"></i> GM <span>OPS</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li onclick="switchOpsTab('dashboard')" class="active-menu">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </li>
+                <li onclick="switchOpsTab('fulfillment')">
+                    <i class="fa-solid fa-truck-fast"></i> Fulfillment (Web)
+                </li>
+                <li onclick="switchOpsTab('pos')">
+                    <i class="fa-solid fa-cash-register"></i> POS Terminal
+                </li>
+                <li onclick="switchOpsTab('inventory')">
+                    <i class="fa-solid fa-boxes-stacked"></i> Inventory & Inbound
+                </li>
+                <li onclick="switchOpsTab('incidents')">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Incident Log
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout(); return false;"><i class="fa-solid fa-power-off"></i> Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="top-bar">
+                <h2>Operations Console</h2>
+                <div class="user-profile">
+                    <span><i class="fa-solid fa-bell"></i></span>
+                    <div class="avatar">OP</div>
+                    <span>Operator: <strong>Jane Doe</strong></span>
+                </div>
+            </header>
+
+            <div id="dashboard-view" class="ops-view active-view">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Pending Orders</h3>
+                        <p class="stat-num" id="stat-pending">0</p>
+                        <i class="fa-solid fa-clock stat-icon"></i>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Low Stock Items</h3>
+                        <p class="stat-num" id="stat-stock">0</p>
+                        <i class="fa-solid fa-arrow-trend-down stat-icon warning"></i>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Incidents</h3>
+                        <p class="stat-num" id="stat-incidents">0</p>
+                        <i class="fa-solid fa-circle-exclamation stat-icon danger"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fulfillment-view" class="ops-view hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Order Management Queue</h3>
+                        <button class="btn-refresh" onclick="loadOpsOrders()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ops-order-table">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="pos-view" class="ops-view hidden">
+                <div class="pos-container">
+                    <div class="pos-products" id="pos-grid">
+                        </div>
+                    
+                    <div class="pos-cart">
+                        <h3>Current Transaction</h3>
+                        <div class="pos-items" id="pos-cart-list">
+                            </div>
+                        <div class="pos-total">
+                            <span>Total Due:</span>
+                            <span id="pos-total-amount">$0.00</span>
+                        </div>
+                        <button class="btn-pos-pay" onclick="processPOSPayment()">Complete Sale</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="inventory-view" class="ops-view hidden">
+                <div class="panel">
+                    <h3>Inventory Management</h3>
+                    <p>Process #6 (Inbound Logistics) & #7 (Inventory Control)</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Current Stock</th>
+                                <th>Price</th>
+                                <th>Inbound Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="incidents-view" class="ops-view hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Ticket Management</h3>
+                        <button class="btn-refresh" onclick="loadOpsTickets()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                    </div>
+                    
+                    <!-- Report New Ticket -->
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <h4 style="margin-bottom: 15px; color: #0f172a;">Report Internal Issue</h4>
+                        <div class="form-row" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <select id="inc-type" class="modern-input" style="flex: 1; min-width: 200px;">
+                                <option value="IT">IT System Failure (Proc #13)</option>
+                                <option value="Facilities">Facility Maintenance (Proc #14)</option>
+                                <option value="Loss">Loss Prevention/Theft (Proc #17)</option>
+                                <option value="Support">Customer Support</option>
+                                <option value="Return">Return Request</option>
+                            </select>
+                            <input type="text" id="inc-desc" class="modern-input" placeholder="Describe incident..." style="flex: 2; min-width: 250px;">
+                            <button onclick="submitInternalTicket()" class="btn-primary">
+                                <i class="fa-solid fa-plus"></i> Create Ticket
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;">
+                        <input type="text" id="ticket-search" class="modern-input" placeholder="Search tickets..." style="flex: 1; min-width: 200px;" onkeyup="filterTickets()">
+                        <select id="ticket-status-filter" class="modern-input" style="width: 150px;" onchange="filterTickets()">
+                            <option value="">All Status</option>
+                            <option value="Open">Open</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                        <select id="ticket-type-filter" class="modern-input" style="width: 150px;" onchange="filterTickets()">
+                            <option value="">All Types</option>
+                            <option value="IT">IT</option>
+                            <option value="Facilities">Facilities</option>
+                            <option value="Loss">Loss</option>
+                            <option value="Support">Support</option>
+                            <option value="Return">Return</option>
+                        </select>
+                    </div>
+
+                    <!-- Tickets Table -->
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Date Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ops-ticket-list">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                        <i class="fa-solid fa-spinner fa-spin"></i> Loading tickets...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="toast" class="toast"><i class="fa-solid fa-check-circle"></i> <span>Action Successful</span></div>
+
+    <script src="app.js"></script>
+    <script>
+        // Initialize Operations Dashboard
+        loadOpsStats();
+        loadOpsOrders(); 
+        loadInventory();
+        loadOpsTickets();
+    </script>
+</body>
+</html>
