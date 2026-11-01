@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docker Fundamentals: The Deg Kitchen</title>
+<style>
+:root{
+  --bg:#faf7f2;--surface:#ffffff;--surface2:#f3eee5;--ink:#2a2420;--muted:#6f655c;--line:#e3dbcf;
+  --accent:#c2410c;--accent-soft:#fde7d6;--rice:#f6ead2;--rice-ink:#6b5a3a;
+  --ok:#15803d;--ok-soft:#dcfce7;--warn:#b45309;--warn-soft:#fef3c7;--bad:#b91c1c;--bad-soft:#fee2e2;
+  --info:#1d4ed8;--info-soft:#dbeafe;--flame:#ea580c;--dum:#2563eb;
+  --mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#171412;--surface:#211d1a;--surface2:#2a2521;--ink:#f1ebe4;--muted:#a89e94;--line:#3a332d;
+  --accent:#fb923c;--accent-soft:#3b2416;--rice:#3a3226;--rice-ink:#e8d9b8;
+  --ok:#4ade80;--ok-soft:#14321f;--warn:#fbbf24;--warn-soft:#3a2c10;--bad:#f87171;--bad-soft:#3b1717;--info:#93c5fd;--info-soft:#172544;--flame:#fb923c;--dum:#60a5fa;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6}
+.wrap{max-width:1000px;margin:0 auto;padding:32px 16px 80px}
+.kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{font-size:34px;line-height:1.2;margin:6px 0 10px}
+h2{font-size:26px;margin:0 0 6px}
+h3{font-size:17px;margin:22px 0 8px}
+p{margin:0 0 12px}
+.lead{font-size:17px;color:var(--muted);max-width:740px}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 8px;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5}
+nav.toc a{text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);padding:5px 11px;border-radius:999px;font-size:13px}
+nav.toc a:hover{border-color:var(--accent)}
+section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;margin:22px 0;scroll-margin-top:70px}
+.num{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);margin-bottom:4px}
+.analogy{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);border-radius:12px;padding:12px 14px;margin:12px 0 16px}
+.analogy b{color:var(--accent)}
+.analogy .ic{font-size:20px;line-height:1.3}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0 4px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600}
+code{font-family:var(--mono);font-size:13px}
+.sim{border:1px dashed var(--line);border-radius:14px;padding:16px;margin:14px 0;background:var(--surface2)}
+.sim-title{font-weight:600;font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:600;background:var(--accent);color:#fff;padding:2px 8px;border-radius:999px;letter-spacing:.04em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+.row .lbl{font-size:13px;color:var(--muted);min-width:130px}
+button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 12px;border-radius:8px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+button.go{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button.sm{padding:3px 8px;font-size:12px}
+input[type=range]{width:220px;accent-color:var(--accent)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.card h4{margin:0 0 8px;font-size:14px}
+.card.okc{border-color:var(--ok);background:var(--ok-soft)}
+.card.badc{border-color:var(--bad);background:var(--bad-soft)}
+.layer{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:7px 10px;border-radius:8px;margin:4px 0;font-family:var(--mono);font-size:12px;border:1px solid var(--line);background:var(--surface)}
+.layer small{font-family:var(--sans);font-size:11px;font-weight:600}
+.s-cached{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.s-build{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.s-pull{background:var(--info-soft);color:var(--info);border-color:transparent}
+.s-plate{border-style:dashed;color:var(--muted)}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat .k{font-size:12px;color:var(--muted)}
+.stat .v{font-size:22px;font-weight:600}
+.msg{font-size:14px;color:var(--muted);margin-top:10px;min-height:22px}
+.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+.term{background:#1c1917;color:#e7e5e4;border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto;position:relative;margin:8px 0;white-space:pre}
+.term .c{color:#a8a29e}.term .p{color:#fb923c}
+.copy{position:absolute;top:8px;right:8px;font-size:11px;padding:3px 8px;background:#292524;color:#e7e5e4;border-color:#44403c}
+.hands{border-left:3px solid var(--accent);padding-left:14px;margin-top:18px}
+.hands h3{margin-top:0}
+.bar{height:22px;border-radius:6px;background:var(--line);overflow:hidden;margin:4px 0 10px;position:relative}
+.bar > div{height:100%;transition:width .4s}
+.bar span{position:absolute;left:8px;top:1px;font-size:12px;font-weight:600;color:var(--ink)}
+.file{font-family:var(--mono);font-size:12px;padding:5px 8px;border-radius:6px;background:var(--surface);border:1px solid var(--line);margin:4px 0;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.file.ghost{opacity:.4;text-decoration:line-through}
+.file.new{border-color:var(--warn);background:var(--warn-soft);color:var(--warn)}
+.pill{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+.p-run{background:var(--ok-soft);color:var(--ok)}.p-stop{background:var(--bad-soft);color:var(--bad)}.p-warn{background:var(--warn-soft);color:var(--warn)}
+.log{background:#1c1917;color:#d6d3d1;border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:12px;line-height:1.7;min-height:70px;max-height:200px;overflow:auto}
+.log .e{color:#fca5a5}.log .o{color:#86efac}.log .c{color:#fb923c}.log .m{color:#a8a29e}
+.chip{display:inline-flex;flex-direction:column;align-items:center;padding:6px 10px;border-radius:8px;background:var(--accent-soft);margin:2px}
+.chip b{font-family:var(--mono);font-size:13px;color:var(--accent)}
+.chip i{font-style:normal;font-size:11px;color:var(--muted)}
+.sep{font-family:var(--mono);font-size:18px;color:var(--muted)}
+svg text{font-family:var(--sans)}
+.nd rect{fill:var(--surface);stroke:var(--line);stroke-width:1.2}
+.nd.t rect{fill:var(--ok-soft);stroke:var(--ok)}
+.nd.pp rect{fill:var(--accent-soft);stroke:var(--accent)}
+.nd text{fill:var(--ink);font-size:14px;font-weight:600}
+.nd text.s{fill:var(--muted);font-size:11px;font-weight:400}
+.ed{stroke:var(--muted);stroke-width:1.5;fill:none}
+.boxdash{fill:none;stroke:var(--muted);stroke-dasharray:5 5}
+.lab{fill:var(--muted);font-size:13px;font-weight:600}
+.off{opacity:.15}
+.nd,.ed{transition:opacity .3s}
+.summary td:first-child{font-weight:600;white-space:nowrap}
+.q{margin:14px 0}
+.q .opts{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.q .opts button{text-align:left}
+.q .opts button.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.q .opts button.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.q .why{font-size:13px;color:var(--muted);margin-top:6px;display:none}
+.stepnav{display:flex;align-items:center;gap:8px;margin-top:12px}
+.stepnav span{margin-left:auto;font-size:13px;color:var(--muted)}
+.api{display:inline-block;font-family:var(--mono);font-size:12px;padding:3px 10px;border-radius:8px;background:var(--info-soft);color:var(--info);margin-top:6px}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+@media print{nav.toc{position:static}.sim button,.copy{display:none}section{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">DevOps Fundamentals · Docker</div>
+  <h1>Docker, cooked in a deg</h1>
+  <p class="lead">Every Docker concept for this lecture, explained with one analogy: a catering kitchen that cooks biryani in <b>degs</b>. Read the idea, play with the simulation, then try the commands.</p>
+</header>
+<nav class="toc">
+  <a href="#map">Analogy</a><a href="#containerization">1 Containerization</a><a href="#docker">2 Docker</a><a href="#arch">3 Architecture</a><a href="#image">4 Image &amp; Container</a><a href="#base">5 Base image</a><a href="#registry">6 Registry</a><a href="#layers">7 Layers</a><a href="#network">8 Networking</a><a href="#volumes">9 Volumes</a><a href="#lifecycle">10 Lifecycle</a><a href="#quiz">Quiz</a>
+</nav>
+
+<!-- ================= MAP ================= -->
+<section id="map">
+  <h2>The deg kitchen</h2>
+  <p>Keep this table in mind. Every concept on this page maps to one line of it.</p>
+  <table class="summary">
+    <tr><th>Docker</th><th>Deg kitchen</th></tr>
+    <tr><td>Container</td><td>A deg being served: food, masala and everything needed, in one pot</td></tr>
+    <tr><td>Virtual machine</td><td>Building a whole new kitchen (own stove, gas line, staff) for every single deg</td></tr>
+    <tr><td>Dockerfile</td><td>The written recipe</td></tr>
+    <tr><td>Image</td><td>A sealed, ready deg. Nobody changes it.</td></tr>
+    <tr><td>Base image</td><td>Ready base rice bought from the market. You don't grow your own rice.</td></tr>
+    <tr><td>Registry (Docker Hub)</td><td>The wholesale market where ready degs and base rice are stocked</td></tr>
+    <tr><td>Layer</td><td>One <i>teh</i> inside the deg: rice, masala, rice, garnish</td></tr>
+    <tr><td>Writable layer</td><td>The serving plate. Extra raita goes on the plate, never into the deg.</td></tr>
+    <tr><td>docker CLI</td><td>The order slip you write</td></tr>
+    <tr><td>dockerd</td><td>The head chef who reads the slip and runs the kitchen</td></tr>
+    <tr><td>containerd / runc</td><td>The supervisor who manages degs on the stove / the cook who lights the flame</td></tr>
+    <tr><td>Network</td><td>The kitchen where degs are cooked together</td></tr>
+    <tr><td>Port mapping (<code>-p</code>)</td><td>The serving window guests take food from</td></tr>
+    <tr><td>Volume</td><td>The yakhni (stock) pateela kept in the store room, outside any deg</td></tr>
+    <tr><td>Lifecycle</td><td>Deg filled → on the flame → on dum → flame off → washed</td></tr>
+  </table>
+</section>
+
+<!-- ================= 1 CONTAINERIZATION ================= -->
+<section id="containerization">
+  <span class="num">Concept 1</span>
+  <h2>What is containerization?</h2>
+  <p><b>Containerization</b> packages an application together with <b>everything it needs to run</b>: code, runtime (Node, Python), libraries and settings. The package, a <b>container</b>, runs the same way on any machine.</p>
+  <p>It solves the classic problem: <i>"It works on my machine!"</i> The app breaks on the server because the server has a different Node version or a missing library.</p>
+  <div class="analogy"><span class="ic">🍲</span><div>Send only the <b>recipe</b> to another city and the biryani tastes different: their masala, their rice, their stove. Send the <b>whole cooked deg</b> instead, and every guest gets exactly the same taste.</div></div>
+
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> Ship the app to three kitchens</div>
+    <p style="font-size:14px;color:var(--muted);margin:0 0 10px">The app needs <b>Node 20</b> and <b>library v2</b>.</p>
+    <div class="row"><span class="lbl">What do you send?</span>
+      <button class="ship on" data-v="recipe">Only the code (recipe)</button><button class="ship" data-v="deg">A container (whole deg)</button>
+      <button class="go" id="deployBtn">Deploy</button></div>
+    <div class="grid3" id="kitchens"></div>
+    <div class="msg" id="shipMsg">Choose what to send, then press Deploy.</div>
+  </div>
+
+  <h3>Container vs Virtual Machine</h3>
+  <p>A VM virtualizes a <b>whole computer</b> with its own operating system. A container only isolates a <b>process</b> and <b>shares the host's kernel</b>. On Linux this uses <b>namespaces</b> (what a process can see) and <b>cgroups</b> (how much CPU/RAM it can use).</p>
+  <div class="analogy"><span class="ic">🍲</span><div>A VM is building a <b>new kitchen for every deg</b>: its own stove, gas line and staff. Containers are <b>many degs on one big shared stove</b>. The stove is the kernel.</div></div>
+  <svg viewBox="0 0 680 300" width="100%" role="img" aria-label="VM stack vs container stack">
+    <text class="lab" x="180" y="22" text-anchor="middle">Virtual machines</text>
+    <text class="lab" x="500" y="22" text-anchor="middle">Containers</text>
+    <g id="vmStack"></g><g id="ctStack"></g>
+  </svg>
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> Fit apps on an 8 GB laptop</div>
+    <div class="row"><span class="lbl">Number of apps</span><input type="range" id="nApps" min="1" max="8" value="2"><b id="nAppsV"></b></div>
+    <div class="grid2">
+      <div><div style="font-size:13px;font-weight:600">VMs: RAM</div><div class="bar"><div id="vmRam"></div><span id="vmRamT"></span></div>
+        <div style="font-size:13px;font-weight:600">VMs: start time</div><div class="bar"><div id="vmBoot" style="background:var(--warn)"></div><span id="vmBootT"></span></div></div>
+      <div><div style="font-size:13px;font-weight:600">Containers: RAM</div><div class="bar"><div id="ctRam"></div><span id="ctRamT"></span></div>
+        <div style="font-size:13px;font-weight:600">Containers: start time</div><div class="bar"><div id="ctBoot" style="background:var(--ok)"></div><span id="ctBootT"></span></div></div>
+    </div>
+    <div class="msg" id="fitMsg"></div>
+    <p style="font-size:12px;color:var(--muted);margin:0">Numbers are illustrative: about 1.5 GB and 45 s per VM, about 0.1 GB and 1 s per container.</p>
+  </div>
+  <table>
+    <tr><th></th><th>Virtual Machine</th><th>Container</th></tr>
+    <tr><td><b>OS</b></td><td>Full guest OS each</td><td>Shares host kernel</td></tr>
+    <tr><td><b>Size</b></td><td>GBs</td><td>MBs</td></tr>
+    <tr><td><b>Start</b></td><td>Minutes</td><td>Seconds</td></tr>
+    <tr><td><b>Isolation</b></td><td>Stronger (hardware level)</td><td>Process level</td></tr>
+    <tr><td><b>Deg kitchen</b></td><td>New kitchen per deg</td><td>Many degs, one stove</td></tr>
+  </table>
+</section>
+
+<!-- ================= 2 DOCKER ================= -->
+<section id="docker">
+  <span class="num">Concept 2</span>
+  <h2>Introduction to Docker</h2>
+  <p><b>Docker</b> is an open-source platform (2013) that makes containers easy to <b>build</b>, <b>ship</b> and <b>run</b>. Containers existed before (LXC); Docker made them simple for developers.</p>
+  <div class="analogy"><span class="ic">🍲</span><div><b>Build</b>: cook the deg from the recipe. <b>Ship</b>: send the sealed deg to the market. <b>Run</b>: any kitchen picks it up, opens it and serves.</div></div>
+  <svg viewBox="0 0 680 170" width="100%" role="img" aria-label="Build ship run pipeline">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" style="stroke:var(--muted)" stroke-width="1.5"/></marker></defs>
+    <g class="nd"><rect x="20" y="40" width="130" height="60" rx="10"/><text x="85" y="66" text-anchor="middle">Dockerfile</text><text class="s" x="85" y="86" text-anchor="middle">the recipe</text></g>
+    <g class="nd pp"><rect x="195" y="40" width="130" height="60" rx="10"/><text x="260" y="66" text-anchor="middle">Image</text><text class="s" x="260" y="86" text-anchor="middle">sealed deg</text></g>
+    <g class="nd t"><rect x="370" y="40" width="130" height="60" rx="10"/><text x="435" y="66" text-anchor="middle">Registry</text><text class="s" x="435" y="86" text-anchor="middle">the market</text></g>
+    <g class="nd pp"><rect x="545" y="40" width="120" height="60" rx="10"/><text x="605" y="66" text-anchor="middle">Container</text><text class="s" x="605" y="86" text-anchor="middle">deg being served</text></g>
+    <line class="ed" x1="150" y1="70" x2="191" y2="70" marker-end="url(#ar)"/><line class="ed" x1="325" y1="70" x2="366" y2="70" marker-end="url(#ar)"/><line class="ed" x1="500" y1="70" x2="541" y2="70" marker-end="url(#ar)"/>
+    <text class="lab" x="172" y="130" text-anchor="middle">docker build</text><text class="lab" x="346" y="130" text-anchor="middle">docker push</text><text class="lab" x="522" y="130" text-anchor="middle">docker pull + run</text>
+    <text x="172" y="152" text-anchor="middle" style="fill:var(--accent);font-weight:700">BUILD</text><text x="346" y="152" text-anchor="middle" style="fill:var(--accent);font-weight:700">SHIP</text><text x="522" y="152" text-anchor="middle" style="fill:var(--accent);font-weight:700">RUN</text>
+  </svg>
+  <div class="hands"><h3>Hands-on: check your installation</h3>
+  <div class="term"><button class="copy">Copy</button><span class="c"># open Docker Desktop first and wait for "Engine running"</span>
+<span class="p">$</span> docker --version
+<span class="p">$</span> docker version
+<span class="p">$</span> docker run hello-world</div></div>
+</section>
+
+<!-- ================= 3 ARCHITECTURE ================= -->
+<section id="arch">
+  <span class="num">Concept 3</span>
+  <h2>Docker architecture: Engine &amp; CLI</h2>
+  <p>Docker uses a <b>client-server</b> design. The <b>CLI</b> only sends requests. The <b>daemon</b> (<code>dockerd</code>) does the real work. <b>Docker Engine</b> = dockerd + REST API + CLI.</p>
+  <table>
+    <tr><th>Component</th><th>Job</th><th>Deg kitchen</th></tr>
+    <tr><td><b>docker CLI</b></td><td>Turns your command into a request</td><td>Order slip</td></tr>
+    <tr><td><b>REST API</b></td><td>The format CLI and daemon talk in</td><td>The standard order format</td></tr>
+    <tr><td><b>dockerd</b></td><td>Manages images, containers, networks, volumes</td><td>Head chef</td></tr>
+    <tr><td><b>containerd</b></td><td>Manages each container's life (start, stop, pause)</td><td>Supervisor watching the degs</td></tr>
+    <tr><td><b>runc</b></td><td>Asks the kernel to create the container, then exits</td><td>Cook who lights the flame and walks away</td></tr>
+    <tr><td><b>Registry</b></td><td>Stores images</td><td>Wholesale market</td></tr>
+  </table>
+  <p><b>On Windows:</b> containers need a Linux kernel. Docker Desktop runs dockerd inside a light Linux VM using <b>WSL2</b>. Run <code>docker version</code>: Client says <code>windows</code>, Server says <code>linux</code>.</p>
+
+  <div class="sim">
+    <div class="sim-title"><span class="tag">CASE STUDY</span> Results day: Ahmad runs one command</div>
+    <div id="aWho" style="font-size:13px;color:var(--muted)"></div>
+    <div id="aTtl" style="font-size:16px;font-weight:600;margin:0 0 8px"></div>
+    <svg viewBox="0 0 680 360" width="100%" role="img" aria-label="Docker architecture with active parts highlighted">
+      <rect class="boxdash" x="30" y="40" width="180" height="120" rx="12"/><text class="lab" x="120" y="62" text-anchor="middle">Client</text>
+      <g class="nd" id="a_cli"><rect x="45" y="80" width="150" height="56" rx="10"/><text x="120" y="102" text-anchor="middle">docker CLI</text><text class="s" x="120" y="122" text-anchor="middle">order slip</text></g>
+      <rect class="boxdash" x="250" y="40" width="250" height="300" rx="12"/><text class="lab" x="375" y="62" text-anchor="middle">Docker host (WSL2 VM)</text>
+      <g class="nd t" id="a_dockerd"><rect x="270" y="80" width="210" height="56" rx="10"/><text x="375" y="102" text-anchor="middle">dockerd</text><text class="s" x="375" y="122" text-anchor="middle">head chef · REST API</text></g>
+      <g class="nd t" id="a_containerd"><rect x="270" y="156" width="210" height="46" rx="10"/><text x="375" y="176" text-anchor="middle">containerd</text><text class="s" x="375" y="193" text-anchor="middle">supervisor</text></g>
+      <g class="nd t" id="a_runc"><rect x="270" y="222" width="210" height="46" rx="10"/><text x="375" y="242" text-anchor="middle">runc</text><text class="s" x="375" y="259" text-anchor="middle">lights the flame</text></g>
+      <g class="nd pp" id="a_images"><rect x="270" y="284" width="100" height="42" rx="10"/><text x="320" y="310" text-anchor="middle">Images</text></g>
+      <g class="nd pp" id="a_ctrs"><rect x="380" y="284" width="100" height="42" rx="10"/><text x="430" y="310" text-anchor="middle">Containers</text></g>
+      <g class="nd" id="a_reg"><rect x="540" y="80" width="120" height="56" rx="10"/><text x="600" y="102" text-anchor="middle">Registry</text><text class="s" x="600" y="122" text-anchor="middle">Docker Hub · market</text></g>
+      <line class="ed" id="e_cli" x1="195" y1="108" x2="266" y2="108" marker-start="url(#ar)" marker-end="url(#ar)"/>
+      <line class="ed" id="e_reg" x1="482" y1="108" x2="536" y2="108" marker-start="url(#ar)" marker-end="url(#ar)"/>
+      <line class="ed" id="e_dc" x1="375" y1="136" x2="375" y2="152" marker-end="url(#ar)"/>
+      <line class="ed" id="e_cr" x1="375" y1="202" x2="375" y2="218" marker-end="url(#ar)"/>
+      <line class="ed" id="e_rc" x1="430" y1="268" x2="430" y2="280" marker-end="url(#ar)"/>
+    </svg>
+    <div id="aApi"></div>
+    <div class="log" id="aTerm" style="margin-top:8px"></div>
+    <p id="aNar" style="font-size:14px;margin:10px 0 0"></p>
+    <p id="aDeg" style="font-size:13px;color:var(--accent);margin:4px 0 0"></p>
+    <div class="stepnav"><button id="aBack">← Back</button><button class="go" id="aNext">Next →</button><button id="aReset">Reset</button><span id="aCnt"></span></div>
+  </div>
+</section>
+
+<!-- ================= 4 IMAGE & CONTAINER ================= -->
+<section id="image">
+  <span class="num">Concept 4</span>
+  <h2>Docker Image &amp; Docker Container</h2>
+  <p><b>Image:</b> a read-only template containing the app, its runtime, libraries and the start command. It never changes.</p>
+  <p><b>Container:</b> a running instance of an image. Docker adds a thin <b>writable layer</b> on top. One image can create many containers. (OOP: image = class, container = object.)</p>
+  <div class="analogy"><span class="ic">🍲</span><div>The image is the <b>sealed master deg</b>. Each container is a <b>serving counter</b> served from it, with <b>its own plate</b>. Ten counters, one deg.</div></div>
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> One image, many containers</div>
+    <div class="row"><button class="go" id="icRun">docker run -d -p … student-portal:1.0</button><button id="icReset">Reset</button></div>
+    <div class="grid2" style="grid-template-columns:minmax(200px,260px) 1fr">
+      <div class="card" style="border-color:var(--accent)"><h4>Image: student-portal:1.0</h4>
+        <div class="layer">app code</div><div class="layer">npm packages</div><div class="layer">node:20-alpine</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px">Read-only · sealed deg · stays unchanged</div></div>
+      <div id="icList" class="grid3"></div>
+    </div>
+    <div class="msg" id="icMsg"></div>
+  </div>
+  <div class="hands"><h3>Hands-on</h3>
+  <div class="term"><button class="copy">Copy</button><span class="c"># one image, two containers on different ports</span>
+<span class="p">$</span> docker run -d -p 8080:80 --name web1 nginx
+<span class="p">$</span> docker run -d -p 8081:80 --name web2 nginx
+<span class="p">$</span> docker images
+<span class="p">$</span> docker ps</div></div>
+</section>
+
+<!-- ================= 5 BASE IMAGE ================= -->
+<section id="base">
+  <span class="num">Concept 5</span>
+  <h2>Base image</h2>
+  <p>The image you start from, written in the first line of the Dockerfile: <code>FROM node:20-alpine</code>. It gives you an OS and a runtime, so you only add your app on top. <b>Alpine</b> variants are tiny; <b>slim</b> variants are small; plain tags are big.</p>
+  <div class="analogy"><span class="ic">🍲</span><div>You don't grow your own rice. You buy <b>ready base rice</b> from the market and put your masala and garnish on top. Choose fine rice and the whole deg is lighter.</div></div>
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> Pick a base, see the final image size</div>
+    <div class="row" id="baseBtns"></div>
+    <div class="grid2">
+      <div id="baseDeg" style="display:flex;justify-content:center"></div>
+      <div>
+        <div class="term" id="baseDf" style="white-space:pre"></div>
+        <div class="stat"><div class="k">Final image size (approx.)</div><div class="v" id="baseSize"></div></div>
+        <div class="bar" style="margin-top:10px"><div id="baseBar" style="background:var(--accent)"></div></div>
+        <div class="msg" id="baseMsg"></div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin:0">Sizes are approximate and change with each release. Check real ones with <code>docker images</code>.</p>
+  </div>
+</section>
+
+<!-- ================= 6 REGISTRY ================= -->
+<section id="registry">
+  <span class="num">Concept 6</span>
+  <h2>Docker Registry</h2>
+  <p>A <b>registry</b> stores and shares images. <b>Docker Hub</b> is the default public one. Others: GitHub Container Registry (<code>ghcr.io</code>), AWS ECR, or a private one. A <b>repository</b> holds all versions of one image; a <b>tag</b> is a version.</p>
+  <p>When you run an image, <code>dockerd</code> first checks your <b>local images</b>. Only if it is missing does it <b>download</b> it from the registry.</p>
+  <div class="analogy"><span class="ic">🍲</span><div>The head chef first checks the <b>pantry</b>. Rice is there? Use it. Not there? Send someone to the <b>market</b>. Market closed (no internet) and pantry empty? No biryani today.</div></div>
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> Pantry first, then market</div>
+    <div class="row"><span class="lbl">Image</span><span id="regBtns" style="display:flex;gap:6px;flex-wrap:wrap"></span></div>
+    <div class="row"><span class="lbl">Internet</span><button class="inet on" data-v="on">On</button><button class="inet" data-v="off">Off</button></div>
+    <div class="row"><button class="go" id="regRun">docker run</button><button id="regReset">Empty pantry</button></div>
+    <div style="font-size:13px;color:var(--muted);margin:4px 0">What Docker reads from the name:</div>
+    <div id="regName" style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:10px"></div>
+    <div class="grid2">
+      <div class="card"><h4>Pantry (local images)</h4><div id="pantry"></div></div>
+      <div class="card"><h4>Download</h4><div class="bar"><div id="regBar" style="background:var(--info);width:0"></div></div><div class="log" id="regLog"></div></div>
+    </div>
+  </div>
+  <div class="hands"><h3>Hands-on</h3>
+  <div class="term"><button class="copy">Copy</button><span class="c"># pull, list, then share your own image</span>
+<span class="p">$</span> docker pull nginx
+<span class="p">$</span> docker images
+<span class="p">$</span> docker login
+<span class="p">$</span> docker tag student-portal:1.0 yourusername/student-portal:1.0
+<span class="p">$</span> docker push yourusername/student-portal:1.0</div></div>
+</section>
+
+<!-- ================= 7 LAYERS ================= -->
+<section id="layers">
+  <span class="num">Concept 7</span>
+  <h2>Layered filesystem</h2>
+  <p>An image is a <b>stack of read-only layers</b>. Each Dockerfile instruction (<code>FROM</code>, <code>COPY</code>, <code>RUN</code>) adds one layer. Layers give three benefits: <b>caching</b>, <b>sharing</b> and <b>copy-on-write</b>.</p>
+  <div class="analogy"><span class="ic">🍲</span><div>A deg is built in <b>tehein</b>: base rice, masala, more rice, garnish. If only the garnish changes, you don't cook the whole deg again. Two degs can share the same base rice. Raita goes on your plate, never into the deg.</div></div>
+
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> Build cache: which tehein get cooked again?</div>
+    <div class="row"><span class="lbl">Dockerfile order</span><button class="ord on" data-v="good">Smart order</button><button class="ord" data-v="bad">Bad order</button></div>
+    <div class="row"><span class="lbl">What changed?</span><button class="chg on" data-v="first">First build</button><button class="chg" data-v="code">Edited app code</button><button class="chg" data-v="pkg">Edited package.json</button><button class="chg" data-v="none">Nothing</button></div>
+    <div class="grid2">
+      <div id="degBox" style="display:flex;justify-content:center"></div>
+      <div><div id="layerList"></div>
+        <div class="grid2" style="grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+          <div class="stat"><div class="k">Build time</div><div class="v" id="bTime"></div></div>
+          <div class="stat"><div class="k">Layers cooked</div><div class="v" id="bCount"></div></div></div></div>
+    </div>
+    <div class="row" style="margin-top:10px;font-size:12px;color:var(--muted);gap:14px"><span><span class="pill s-pull">PULLED</span> from market</span><span><span class="pill s-build">COOKED</span> built again</span><span><span class="pill s-cached">CACHED</span> reused</span></div>
+    <div class="msg" id="bMsg"></div>
+  </div>
+  <p><b>Rule:</b> when a layer changes, it and <b>every layer above it</b> rebuild. Put what changes rarely (packages) first and your code last.</p>
+
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> Layer sharing: disk space</div>
+    <p style="font-size:14px;color:var(--muted);margin:0 0 10px">All three images start <code>FROM node:20-alpine</code>. Sizes are illustrative.</p>
+    <div class="row" id="shareBtns"></div>
+    <div style="font-size:13px;color:var(--muted)">Without sharing</div><div class="bar"><div id="barNo" style="background:var(--bad)"></div></div>
+    <div style="font-size:13px;color:var(--muted)">With Docker layers</div><div class="bar"><div id="barYes" style="background:var(--ok)"></div></div>
+    <div class="msg" id="shMsg"></div>
+  </div>
+
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> Copy-on-write: deg vs plate</div>
+    <div class="row"><button data-a="read">Read menu.txt</button><button data-a="edit">Edit menu.txt</button><button data-a="create">Create order.log</button><button data-a="del">Delete recipe.js</button><button class="go" data-a="rm">docker rm + run new</button></div>
+    <div class="grid3">
+      <div class="card"><h4>Image layers (read-only deg)</h4><div id="cowImg"></div></div>
+      <div class="card"><h4>Writable layer (plate)</h4><div id="cowPlate"></div></div>
+      <div class="card"><h4>What the container sees</h4><div id="cowView"></div></div>
+    </div>
+    <div class="msg" id="cowMsg"></div>
+  </div>
+  <div class="hands"><h3>Hands-on</h3>
+  <div class="term"><button class="copy">Copy</button><span class="c"># every layer of an image</span>
+<span class="p">$</span> docker history node:20-alpine
+<span class="c"># build twice: the second shows CACHED</span>
+<span class="p">$</span> docker build -t my-backend .
+<span class="p">$</span> docker build -t my-backend .
+<span class="c"># disk usage</span>
+<span class="p">$</span> docker system df</div></div>
+</section>
+
+<!-- ================= 8 NETWORK ================= -->
+<section id="network">
+  <span class="num">Concept 8</span>
+  <h2>Networking</h2>
+  <p>Networking answers two questions: <b>how do containers talk to each other</b> and <b>how does the outside world reach them</b>.</p>
+  <table>
+    <tr><th>Idea</th><th>Docker</th><th>Deg kitchen</th></tr>
+    <tr><td>User-defined bridge</td><td>Containers find each other by <b>name</b> (built-in DNS)</td><td>Same kitchen: "pass the mongo deg"</td></tr>
+    <tr><td>Default bridge</td><td>Connected, but names don't work</td><td>Degs with no name tags</td></tr>
+    <tr><td>Port mapping</td><td><code>-p HOST:CONTAINER</code></td><td>Serving window</td></tr>
+  </table>
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> MERN kitchen: send a request</div>
+    <div class="row"><span class="lbl">Network</span><button class="net on" data-v="custom">mern-net (user-defined)</button><button class="net" data-v="default">default bridge</button></div>
+    <div class="row"><span class="lbl">Serving windows</span><button class="port on" data-v="p3000">-p 3000:80 (frontend)</button><button class="port on" data-v="p5000">-p 5000:5000 (backend)</button></div>
+    <div class="row"><span class="lbl">Send request</span><button class="go" data-t="b2f">Browser → frontend</button><button class="go" data-t="b2b">Browser → backend API</button><button class="go" data-t="k2m">backend → mongo</button><button class="go" data-t="b2m">Browser → mongo</button></div>
+    <svg id="netSvg" viewBox="0 0 640 300" width="100%" role="img" aria-label="Browser outside, three containers inside a network"></svg>
+    <div class="msg" id="netMsg">Pick a request to send.</div>
+  </div>
+  <p><b>Key MERN point:</b> React runs in the <b>browser</b>, outside the kitchen, so it calls <code>http://localhost:5000</code>, not <code>http://backend:5000</code>. Only the backend can use the name <code>mongo</code>.</p>
+  <div class="hands"><h3>Hands-on</h3>
+  <div class="term"><button class="copy">Copy</button><span class="p">$</span> docker network create mern-net
+<span class="p">$</span> docker run -d --name mongo --network mern-net mongo:7
+<span class="p">$</span> docker run -d --name backend --network mern-net -p 5000:5000 my-backend
+<span class="p">$</span> docker run -d --name frontend --network mern-net -p 3000:80 my-frontend
+<span class="p">$</span> docker network inspect mern-net</div></div>
+</section>
+
+<!-- ================= 9 VOLUMES ================= -->
+<section id="volumes">
+  <span class="num">Concept 9</span>
+  <h2>Volumes</h2>
+  <p>The writable layer dies with the container. A <b>volume</b> stores data <b>outside</b> the container so it survives <code>docker rm</code>.</p>
+  <div class="analogy"><span class="ic">🍲</span><div>After the event the deg is washed and anything inside is gone. The smart cook keeps the <b>yakhni pateela</b> in the store room. Tomorrow's new deg uses the same yakhni.</div></div>
+  <table>
+    <tr><th>Type</th><th>Where data lives</th><th>Use for</th><th>Flag</th></tr>
+    <tr><td><b>None</b></td><td>Inside the container</td><td>Temporary data</td><td>(no <code>-v</code>)</td></tr>
+    <tr><td><b>Named volume</b></td><td>Storage managed by Docker</td><td>Databases</td><td><code>-v mongo-data:/data/db</code></td></tr>
+    <tr><td><b>Bind mount</b></td><td>A folder on your PC</td><td>Live coding</td><td><code>-v C:\mern\db:/data/db</code></td></tr>
+  </table>
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> Will the students survive?</div>
+    <div class="row"><span class="lbl">Storage type</span><button class="vm on" data-v="none">No volume</button><button class="vm" data-v="named">Named volume</button><button class="vm" data-v="bind">Bind mount</button></div>
+    <div class="row"><span class="lbl">Actions</span><button data-v2="add">Add a student</button><button data-v2="rm">docker rm -f mongo</button><button class="go" data-v2="run">docker run mongo</button><button data-v2="reset">Reset</button></div>
+    <div class="grid2"><div class="card" id="vCtr"></div><div class="card" id="vStore"></div></div>
+    <div class="log" id="vLog" style="margin-top:12px"></div>
+    <div class="msg" id="vMsg"></div>
+  </div>
+  <div class="hands"><h3>Hands-on</h3>
+  <div class="term"><button class="copy">Copy</button><span class="p">$</span> docker volume create mongo-data
+<span class="p">$</span> docker run -d --name mongo --network mern-net -v mongo-data:/data/db mongo:7
+<span class="c"># add students from your app, then:</span>
+<span class="p">$</span> docker rm -f mongo
+<span class="p">$</span> docker run -d --name mongo --network mern-net -v mongo-data:/data/db mongo:7
+<span class="p">$</span> docker volume ls
+<span class="c"># docker rm never deletes a volume; remove it explicitly</span>
+<span class="p">$</span> docker volume rm mongo-data</div></div>
+</section>
+
+<!-- ================= 10 LIFECYCLE ================= -->
+<section id="lifecycle">
+  <span class="num">Concept 10</span>
+  <h2>Container lifecycle</h2>
+  <p>A container moves through states: <b>Created → Running → Paused → Exited → Removed</b>. <code>docker run</code> = create + start. A container keeps running only while its main process (<code>CMD</code>) runs.</p>
+  <div class="analogy"><span class="ic">🍲</span><div><b>Created</b>: deg filled, stove off. <b>Running</b>: on the flame, serving. <b>Paused</b>: on <i>dum</i>, everything frozen in place. <b>Exited</b>: flame off, deg still in the kitchen. <b>Removed</b>: deg washed.</div></div>
+  <div class="sim">
+    <div class="sim-title"><span class="tag">SIMULATION</span> Drive the deg through its life</div>
+    <div class="grid2" style="grid-template-columns:minmax(220px,280px) 1fr">
+      <div style="text-align:center"><svg id="lcDeg" viewBox="0 0 240 230" width="240" role="img" aria-label="Deg state"></svg><div id="lcState" style="font-weight:700;font-size:18px"></div></div>
+      <div>
+        <div class="row" id="lcBtns"></div>
+        <div class="log" id="lcLog"></div>
+        <div class="msg" id="lcMsg"></div>
+      </div>
+    </div>
+  </div>
+  <table>
+    <tr><th>Command</th><th>Effect</th><th>Deg kitchen</th></tr>
+    <tr><td><code>docker stop</code></td><td>SIGTERM, then SIGKILL after 10 s</td><td>Ask the cook to turn off the flame properly</td></tr>
+    <tr><td><code>docker kill</code></td><td>SIGKILL immediately</td><td>Cut the gas supply</td></tr>
+    <tr><td><code>docker pause</code></td><td>Freezes the process</td><td>Put the deg on dum</td></tr>
+    <tr><td><code>docker rm</code></td><td>Deletes container + writable layer (image safe)</td><td>Wash the deg</td></tr>
+  </table>
+  <div class="hands"><h3>Hands-on</h3>
+  <div class="term"><button class="copy">Copy</button><span class="p">$</span> docker run -d -p 8080:80 --name web nginx
+<span class="p">$</span> docker pause web
+<span class="p">$</span> docker unpause web
+<span class="p">$</span> docker stop web
+<span class="p">$</span> docker ps -a
+<span class="p">$</span> docker start web
+<span class="p">$</span> docker rm -f web</div></div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section id="quiz">
+  <h2>Summary</h2>
+  <table class="summary">
+    <tr><th>Concept</th><th>One line</th><th>Deg kitchen</th></tr>
+    <tr><td>Containerization</td><td>App + everything it needs, runs the same everywhere</td><td>Ship the whole deg, not the recipe</td></tr>
+    <tr><td>Docker</td><td>Build, ship, run containers</td><td>Cook, send to market, serve</td></tr>
+    <tr><td>Architecture</td><td>CLI → REST API → dockerd → containerd → runc</td><td>Slip → head chef → supervisor → cook</td></tr>
+    <tr><td>Image / Container</td><td>Read-only template / running instance</td><td>Sealed deg / deg being served</td></tr>
+    <tr><td>Base image</td><td>Starting point in <code>FROM</code></td><td>Ready base rice</td></tr>
+    <tr><td>Registry</td><td>Where images are stored and shared</td><td>The market</td></tr>
+    <tr><td>Layers</td><td>Read-only stack, cached and shared</td><td>Tehein</td></tr>
+    <tr><td>Networking</td><td>Names inside, <code>-p</code> for outside</td><td>Kitchen + serving window</td></tr>
+    <tr><td>Volumes</td><td>Data outside the container</td><td>Yakhni pateela</td></tr>
+    <tr><td>Lifecycle</td><td>Created → Running → Paused → Exited → Removed</td><td>Filled → flame → dum → off → washed</td></tr>
+  </table>
+  <h2 style="margin-top:26px">Quick quiz</h2>
+  <div id="quizBox"></div>
+  <div class="msg" id="qScore"></div>
+</section>
+
+<footer>DevOps Fundamentals · University of Central Punjab</footer>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function group(sel,cb){$$(sel).forEach(b=>b.addEventListener('click',()=>{$$(sel).forEach(x=>x.classList.toggle('on',x===b));cb(b.dataset.v)}))}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+$$('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const t=b.parentElement.innerText.split('\n').filter(l=>l.trim().startsWith('$')).map(l=>l.replace(/^\s*\$\s?/,'')).join('\n');
+  try{navigator.clipboard.writeText(t);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)}catch(e){}
+}));
+
+/* ===== deg drawing ===== */
+function degSVG(layers,id,caption){
+  const top=64,bottom=214,h=(bottom-top)/layers.length;
+  const fill={pull:'--info-soft',build:'--warn-soft',cached:'--ok-soft',idle:'--rice',app:'--accent-soft'};
+  const ink={pull:'--info',build:'--warn',cached:'--ok',idle:'--rice-ink',app:'--accent'};
+  let rects='';
+  layers.forEach((l,i)=>{const hh=l.w?(bottom-top)*l.w:h;const y=(layers.slice(0,i).reduce((a,x)=>a+(x.w?(bottom-top)*x.w:h),0));const yy=bottom-y-hh;
+    rects+=`<rect x="0" y="${yy}" width="260" height="${hh}" fill="${css(fill[l.state])}" stroke="${css('--line')}"/>`+(hh>14?`<text x="130" y="${yy+hh/2}" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="600" fill="${css(ink[l.state])}">${l.short}</text>`:'');});
+  return `<svg viewBox="0 0 260 240" width="260" role="img" aria-label="Deg with layers">
+  <defs><clipPath id="${id}"><path d="M28 62 L232 62 Q236 200 130 216 Q24 200 28 62 Z"/></clipPath></defs>
+  <ellipse cx="14" cy="96" rx="10" ry="16" fill="none" stroke="${css('--muted')}" stroke-width="3"/><ellipse cx="246" cy="96" rx="10" ry="16" fill="none" stroke="${css('--muted')}" stroke-width="3"/>
+  <g clip-path="url(#${id})">${rects}</g>
+  <path d="M28 62 L232 62 Q236 200 130 216 Q24 200 28 62 Z" fill="none" stroke="${css('--muted')}" stroke-width="3"/>
+  <rect x="18" y="52" width="224" height="12" rx="6" fill="${css('--surface')}" stroke="${css('--muted')}" stroke-width="3"/>
+  <text x="130" y="236" text-anchor="middle" font-size="12" fill="${css('--muted')}">${caption||'Image = layered deg'}</text></svg>`;
+}
+
+/* ===== 1 containerization: ship ===== */
+const KIT=[{n:'Your laptop',node:20,lib:'v2'},{n:'Test server',node:16,lib:'v1'},{n:'Production',node:18,lib:'v2'}];
+let shipMode='recipe',deployed=false;
+group('.ship',v=>{shipMode=v;deployed=false;renderShip()});
+$('#deployBtn').addEventListener('click',()=>{deployed=true;renderShip()});
+function renderShip(){
+  let fails=0;
+  $('#kitchens').innerHTML=KIT.map(k=>{
+    const ok=shipMode==='deg'||(k.node===20&&k.lib==='v2');if(!ok)fails++;
+    const env=shipMode==='deg'?`Kitchen: Node ${k.node}, lib ${k.lib}<br><b>Deg brings: Node 20, lib v2</b>`:`Kitchen: Node ${k.node}, lib ${k.lib}`;
+    const res=!deployed?'<span class="pill p-warn">waiting</span>':ok?'<span class="pill p-run">App runs</span>':`<span class="pill p-stop">Crash: ${k.node!==20?'Node '+k.node+' too old':'lib '+k.lib+' missing feature'}</span>`;
+    return `<div class="card ${deployed?(ok?'okc':'badc'):''}"><h4>${k.n}</h4><div style="font-size:13px;color:var(--muted);margin-bottom:8px">${env}</div>${res}</div>`}).join('');
+  const m=$('#shipMsg');
+  if(!deployed){m.textContent='Choose what to send, then press Deploy.';m.className='msg';return}
+  m.textContent=shipMode==='recipe'?`Works on my machine, fails in ${fails} kitchens. Each kitchen cooked the recipe with its own ingredients.`:'Same taste everywhere. The container carried its own Node and libraries, so the kitchen\'s setup did not matter.';
+  m.className='msg '+(shipMode==='recipe'?'bad':'ok');
+}
+renderShip();
+
+/* ===== 1 VM vs container stacks + fit sim ===== */
+function stackSVG(x,isVM){
+  const r=(y,w,h,t,c,xx)=>`<g class="nd ${c||''}"><rect x="${xx}" y="${y}" width="${w}" height="${h}" rx="6"/><text x="${xx+w/2}" y="${y+h/2+5}" text-anchor="middle" style="font-size:13px">${t}</text></g>`;
+  let s='';[0,1,2].forEach(i=>{const xx=x+i*98;
+    s+=r(isVM?40:86,84,32,'App '+'ABC'[i],'pp',xx)+r(isVM?78:124,84,26,'Libs','',xx);if(isVM)s+=r(110,84,36,'Guest OS','',xx).replace('class="nd ','class="nd vmos ');});
+  s+=r(isVM?152:156,280,34,isVM?'Hypervisor':'Docker Engine','t',x)+r(192,280,34,isVM?'Host OS':'Host OS (shared kernel)','',x)+r(232,280,34,'Hardware','',x);
+  s+=`<text class="lab" x="${x+140}" y="290" text-anchor="middle" style="font-weight:400">${isVM?'New kitchen per deg: GBs, minutes':'Many degs, one stove: MBs, seconds'}</text>`;return s;
+}
+$('#vmStack').innerHTML=stackSVG(40,true);$('#ctStack').innerHTML=stackSVG(360,false);
+$$('.vmos rect').forEach(r=>{r.style.fill='var(--bad-soft)';r.style.stroke='var(--bad)'});
+function renderFit(){
+  const n=+$('#nApps').value;$('#nAppsV').textContent=n;
+  const vr=n*1.5,cr=0.3+n*0.1,cap=8;
+  const set=(id,val,max,txt,col)=>{const e=$('#'+id);e.style.width=Math.min(100,val/max*100)+'%';if(col)e.style.background=col;$('#'+id+'T').textContent=txt};
+  set('vmRam',vr,cap,vr.toFixed(1)+' GB of 8 GB',vr>cap?css('--bad'):css('--warn'));
+  set('ctRam',cr,cap,cr.toFixed(1)+' GB of 8 GB',css('--ok'));
+  set('vmBoot',45,60,'~45 s');set('ctBoot',1,60,'~1 s');
+  const m=$('#fitMsg');
+  if(vr>cap){m.textContent=`${n} VMs need ${vr.toFixed(1)} GB: they don't fit on the laptop. ${n} containers use only ${cr.toFixed(1)} GB.`;m.className='msg bad'}
+  else{m.textContent=`${n} VMs need ${vr.toFixed(1)} GB; ${n} containers need ${cr.toFixed(1)} GB. Push the slider up.`;m.className='msg'}
+}
+$('#nApps').addEventListener('input',renderFit);renderFit();
+
+/* ===== 3 architecture case study ===== */
+const AN=['a_cli','a_dockerd','a_containerd','a_runc','a_images','a_ctrs','a_reg','e_cli','e_reg','e_dc','e_cr','e_rc'];
+const AS=[
+{w:'9:50 AM',t:'Scenario',a:AN,api:'',tm:['$ _'],n:'UCP results go live at 10:00. Ahmad (DevOps intern) must start the result portal (an nginx web server) on the lab server. He types one command. Press Next to see what happens behind it.',d:'One order slip. Let\'s follow it through the kitchen.'},
+{w:'9:51 AM',t:'Step 1: CLI reads the command',a:['a_cli'],api:'',tm:['$ docker run -d -p 8080:80 --name result-portal nginx'],n:'The CLI understands: image = nginx, port 8080→80, name = result-portal, -d = run in background. But the CLI cannot create a container itself. It is only a client.',d:'The order slip is written. Writing a slip does not cook anything.'},
+{w:'9:51 AM',t:'Step 2: request goes to dockerd',a:['a_cli','e_cli','a_dockerd'],api:'POST /containers/create',tm:['$ docker run -d -p 8080:80 --name result-portal nginx'],n:'The CLI turns the command into an HTTP request (REST API) and sends it to dockerd. On Windows, dockerd lives inside the WSL2 Linux VM.',d:'The slip reaches the head chef in the standard order format.'},
+{w:'9:51 AM',t:'Step 3: dockerd checks local images',a:['a_dockerd','a_images'],api:'',tm:["Unable to find image 'nginx:latest' locally"],n:'dockerd checks its local image store first. This server is new, so nginx is not there.',d:'The head chef checks the pantry. No nginx rice here.'},
+{w:'9:52 AM',t:'Step 4: pull from the registry',a:['a_dockerd','e_reg','a_reg','a_images'],api:'POST /images/create?fromImage=nginx&tag=latest',tm:['latest: Pulling from library/nginx','a2318d6c47ec: Pull complete','e0e4b5d8b4f1: Pull complete','Status: Downloaded newer image for nginx:latest'],n:'dockerd downloads nginx layer by layer from Docker Hub and stores it locally. Next time this step is skipped.',d:'Someone is sent to the market and the rice is stocked in the pantry.'},
+{w:'9:52 AM',t:'Step 5: dockerd hands over to containerd',a:['a_dockerd','e_dc','a_containerd','a_images'],api:'POST /containers/{id}/start',tm:['Creating container result-portal ...'],n:'dockerd prepares the full container config (image, port, name) and hands it to containerd, which manages the container\'s whole life.',d:'The head chef gives the deg to the supervisor who watches the stoves.'},
+{w:'9:52 AM',t:'Step 6: runc creates the container',a:['a_containerd','e_cr','a_runc'],api:'',tm:['Starting container result-portal ...'],n:'runc asks the Linux kernel for namespaces (own processes, network, filesystem) and cgroups (CPU/RAM limits), starts nginx, then exits. containerd keeps watching.',d:'The cook lights the flame under the deg and walks away.'},
+{w:'9:53 AM',t:'Step 7: container is running',a:['a_runc','e_rc','a_ctrs','a_dockerd','e_cli','a_cli'],api:'',tm:['4f2a9c71b8e0d3a6c5f1...','$ docker ps','CONTAINER ID  IMAGE  STATUS        PORTS                 NAMES','4f2a9c71b8e0  nginx  Up 5 seconds  0.0.0.0:8080->80/tcp  result-portal'],n:'The container ID travels back to the CLI. Students open the server on port 8080 and see their results. One command, two minutes.',d:'The deg is on the flame and the serving window is open.'},
+{w:'2:00 PM',t:'Twist: the daemon is off',a:['a_cli','e_cli'],api:'',tm:['$ docker ps','error during connect: ... The system cannot find the file specified.'],n:'Ahmad closed Docker Desktop, so dockerd stopped. The CLI is still installed, but nobody answers. Proof that the CLI is only a client. Fix: open Docker Desktop.',d:'Order slips with no head chef in the kitchen go nowhere.'},
+{w:'Lesson',t:'Who did what',a:AN,api:'',tm:['docker CLI  = order slip','REST API    = order format','dockerd     = head chef','Registry    = market','containerd  = supervisor','runc        = cook who lights the flame'],n:'Six parts work behind one command, each with its own job. This is separation of concerns.',d:'One slip, a whole kitchen at work.'}
+];
+let ai=0;
+function renderArch(){const s=AS[ai];
+  AN.forEach(id=>document.getElementById(id).classList.toggle('off',!s.a.includes(id)));
+  $('#aWho').textContent=s.w;$('#aTtl').textContent=s.t;
+  $('#aApi').innerHTML=s.api?`<span class="api">REST API: ${esc(s.api)}</span>`:'';
+  $('#aTerm').innerHTML=s.tm.map(l=>`<div class="${l.startsWith('$')?'c':l.startsWith('error')?'e':'o'}">${esc(l)}</div>`).join('');
+  $('#aNar').textContent=s.n;$('#aDeg').textContent='🍲 '+s.d;$('#aCnt').textContent=ai+' / '+(AS.length-1);}
+$('#aNext').onclick=()=>{ai=Math.min(AS.length-1,ai+1);renderArch()};$('#aBack').onclick=()=>{ai=Math.max(0,ai-1);renderArch()};$('#aReset').onclick=()=>{ai=0;renderArch()};
+renderArch();
+
+/* ===== 4 image -> containers ===== */
+let ics=[],icn=0;
+function hex(){return Math.random().toString(16).slice(2,8)}
+$('#icRun').onclick=()=>{if(ics.length>=6){$('#icMsg').textContent='Enough counters for today. Remove one first.';return}icn++;ics.push({n:'portal'+icn,id:hex(),port:2999+icn,st:'Running',plate:0});renderIC('Counter portal'+icn+' opened from the same sealed deg.')};
+$('#icReset').onclick=()=>{ics=[];icn=0;renderIC('')};
+function icAct(i,a){const c=ics[i];if(a==='rm'){ics.splice(i,1);renderIC(c.n+' removed: its plate is washed. The image did not change.');return}
+  if(a==='stop'){c.st=c.st==='Running'?'Exited':'Running';renderIC(c.n+(c.st==='Running'?' started again.':' stopped. Still exists; docker start brings it back.'));return}
+  if(a==='write'){c.plate++;renderIC('Data written to '+c.n+'\'s own plate. Other containers do not see it.')}}
+function renderIC(m){
+  $('#icList').innerHTML=ics.length?ics.map((c,i)=>`<div class="card" style="${c.st==='Exited'?'opacity:.55':''}"><h4 style="display:flex;justify-content:space-between">${c.n}<span class="pill ${c.st==='Running'?'p-run':'p-stop'}">${c.st}</span></h4>
+  <div style="font-size:12px;color:var(--muted)">ID ${c.id} · localhost:${c.port}</div><div class="layer s-plate" style="margin:6px 0">plate: ${c.plate} change${c.plate===1?'':'s'}</div>
+  <div class="row" style="margin:0"><button class="sm" onclick="icAct(${i},'write')">write</button><button class="sm" onclick="icAct(${i},'stop')">${c.st==='Running'?'stop':'start'}</button><button class="sm" onclick="icAct(${i},'rm')">rm</button></div></div>`).join(''):'<div style="font-size:13px;color:var(--muted)">No containers yet. Press docker run.</div>';
+  $('#icMsg').textContent=(m?m+' ':'')+`1 image → ${ics.length} container${ics.length===1?'':'s'}.`;
+}
+renderIC('');
+
+/* ===== 5 base image ===== */
+const BASES=[{t:'node:20',s:1100,note:'Full Debian + Node + build tools. Big.'},{t:'node:20-slim',s:200,note:'Debian without extras. Good middle ground.'},{t:'node:20-alpine',s:130,note:'Alpine Linux + Node. Small and popular.'},{t:'python:3.12-slim',s:125,note:'For Python apps, not Node.'},{t:'nginx:alpine',s:50,note:'Web server only. Perfect for React build files.'},{t:'ubuntu',s:78,note:'Plain OS. You must install everything yourself.'}];
+let bsel=2;const APP=60;
+$('#baseBtns').innerHTML=BASES.map((b,i)=>`<button class="bs ${i===bsel?'on':''}" data-i="${i}">${b.t}</button>`).join('');
+$$('.bs').forEach(b=>b.addEventListener('click',()=>{bsel=+b.dataset.i;$$('.bs').forEach(x=>x.classList.toggle('on',x===b));renderBase()}));
+function renderBase(){const b=BASES[bsel],tot=b.s+APP;
+  $('#baseDeg').innerHTML=degSVG([{short:'base rice: '+b.t,state:'idle',w:Math.max(.25,b.s/tot)},{short:'your app',state:'app',w:Math.max(.2,APP/tot)}],'baseclip','Your image = base + your layers');
+  $('#baseDf').innerHTML=`<span class="c"># Dockerfile</span>\n<span class="p">FROM</span> ${b.t}\n<span class="p">COPY</span> . /app\n<span class="p">CMD</span> ["..."]`;
+  $('#baseSize').textContent='~'+(tot>=1000?(tot/1000).toFixed(1)+' GB':tot+' MB');
+  $('#baseBar').style.width=(tot/(1100+APP)*100)+'%';$('#baseMsg').textContent=b.note;}
+renderBase();
+
+/* ===== 6 registry ===== */
+const RIMGS=['nginx','mongo:7','node:20-alpine','ghcr.io/salah/student-portal:1.0'];
+let rsel=0,inet='on',pantry=new Set(['node:20-alpine']),rbusy=false;
+$('#regBtns').innerHTML=RIMGS.map((n,i)=>`<button class="ri ${i===0?'on':''}" data-i="${i}">${n}</button>`).join('');
+$$('.ri').forEach(b=>b.addEventListener('click',()=>{if(rbusy)return;rsel=+b.dataset.i;$$('.ri').forEach(x=>x.classList.toggle('on',x===b));renderReg()}));
+group('.inet',v=>{inet=v});
+function parseName(n){let reg='docker.io',rest=n;const p=n.split('/');if(p.length>1&&p[0].includes('.')){reg=p[0];rest=p.slice(1).join('/')}
+  let tag='latest';const ci=rest.lastIndexOf(':');if(ci>-1){tag=rest.slice(ci+1);rest=rest.slice(0,ci)}
+  let ns='library',repo=rest;if(rest.includes('/')){ns=rest.split('/')[0];repo=rest.split('/').slice(1).join('/')}return{reg,ns,repo,tag}}
+function full(n){const p=parseName(n);return `${p.repo}:${p.tag}`.replace(/^/,p.ns==='library'&&p.reg==='docker.io'?'':p.reg+'/'+p.ns+'/')}
+function renderReg(){const p=parseName(RIMGS[rsel]);
+  $('#regName').innerHTML=`<span class="chip"><b>${p.reg}</b><i>registry${p.reg==='docker.io'?' (default)':''}</i></span><span class="sep">/</span><span class="chip"><b>${p.ns}</b><i>${p.ns==='library'?'official images':'user / org'}</i></span><span class="sep">/</span><span class="chip"><b>${p.repo}</b><i>repository</i></span><span class="sep">:</span><span class="chip"><b>${p.tag}</b><i>tag${p.tag==='latest'&&!RIMGS[rsel].includes(':')?' (default)':''}</i></span>`;
+  $('#pantry').innerHTML=pantry.size?[...pantry].map(n=>`<div class="file"><span>${n}</span><span class="pill p-run">local</span></div>`).join(''):'<div style="font-size:13px;color:var(--muted)">Empty pantry</div>';}
+function rlog(t,c){const l=$('#regLog');l.innerHTML+=`<div class="${c}">${esc(t)}</div>`;l.scrollTop=1e6}
+$('#regReset').onclick=()=>{if(rbusy)return;pantry=new Set();$('#regLog').innerHTML='';$('#regBar').style.width='0';renderReg()};
+$('#regRun').onclick=()=>{if(rbusy)return;const n=RIMGS[rsel],p=parseName(n),key=full(n);$('#regLog').innerHTML='';$('#regBar').style.width='0';
+  rlog('$ docker run '+n,'c');rlog('Checking pantry (local images)...','m');
+  if(pantry.has(key)){rlog('Found locally. No download needed, internet not used.','o');rlog('Container started.','o');$('#regBar').style.width='100%';return}
+  rlog(`Unable to find image '${key}' locally`,'m');
+  if(inet==='off'){rlog(`Error: dial tcp: lookup ${p.reg==='docker.io'?'registry-1.docker.io':p.reg}: no such host`,'e');rlog('Pantry empty and market unreachable. No container.','e');return}
+  rlog('Going to the market: '+p.reg,'m');rbusy=true;let k=0;const L=3;
+  const iv=setInterval(()=>{k++;$('#regBar').style.width=(k/L*100)+'%';rlog(hex()+hex()+': Pull complete','o');
+    if(k===L){clearInterval(iv);rlog('Status: Downloaded newer image for '+key,'o');rlog('Container started.','o');pantry.add(key);rbusy=false;renderReg()}},600);};
+renderReg();
+
+/* ===== 7 layers: cache ===== */
+const ORD={
+ good:[{t:'FROM node:20-alpine',short:'base rice (ready-made)',d:[],s:20},{t:'WORKDIR /app',short:'deg on the stove',d:[],s:0.1},{t:'COPY package*.json ./',short:'masala list',d:['pkg'],s:0.2},{t:'RUN npm install',short:'cooked masala (slow)',d:[],s:40},{t:'COPY . .',short:'garnish = your code',d:['pkg','code'],s:0.5}],
+ bad:[{t:'FROM node:20-alpine',short:'base rice (ready-made)',d:[],s:20},{t:'WORKDIR /app',short:'deg on the stove',d:[],s:0.1},{t:'COPY . .',short:'garnish = your code',d:['pkg','code'],s:0.5},{t:'RUN npm install',short:'cooked masala (slow)',d:[],s:40}]};
+const BMSG={good:{first:'First build: base pulled from the market, every teh cooked once.',code:'Only the code layer rebuilt. npm install came from cache. Under a second.',pkg:'package.json changed, so that layer and everything above it rebuilt. Correct: dependencies really changed.',none:'Nothing changed. Every layer reused.'},
+ bad:{first:'First build: base pulled from the market, every teh cooked once.',code:'One line of code changed, but COPY . . sits below npm install, so npm install ran again: 40 s wasted every build.',pkg:'package.json changed, so everything above it rebuilt.',none:'Nothing changed. Every layer reused.'}};
+let ord='good',chg='first';
+function renderBuild(){const L=ORD[ord];let idx=L.length;
+  if(chg==='first')idx=0;else if(chg!=='none'){const k=L.findIndex(l=>l.d.includes(chg));idx=k<0?L.length:k}
+  let t=0,n=0;const st=L.map((l,i)=>{if(i>=idx){t+=l.s;n++;return(chg==='first'&&i===0)?'pull':'build'}return'cached'});
+  $('#degBox').innerHTML=degSVG(L.map((l,i)=>({short:l.short,state:st[i]})),'degclip');
+  const tag={pull:'PULLED',build:'COOKED',cached:'CACHED'};
+  let h='<div class="layer s-plate"><span>container writable layer (plate)</span><small>added at docker run</small></div>';
+  for(let i=L.length-1;i>=0;i--)h+=`<div class="layer s-${st[i]}"><span>${L[i].t}</span><small>${tag[st[i]]}</small></div>`;
+  $('#layerList').innerHTML=h;$('#bTime').textContent='~'+(t<1?t.toFixed(1):Math.round(t))+' s';$('#bCount').textContent=n+' / '+L.length;$('#bMsg').textContent=BMSG[ord][chg];}
+group('.ord',v=>{ord=v;renderBuild()});group('.chg',v=>{chg=v;renderBuild()});
+
+/* ===== 7 sharing ===== */
+const IMGS=[{n:'frontend',own:180},{n:'backend',own:60},{n:'admin-panel',own:150}];const BASE=130;const built=new Set();
+$('#shareBtns').innerHTML=IMGS.map(i=>`<button data-i="${i.n}">Build ${i.n}</button>`).join('');
+$$('#shareBtns button').forEach(b=>b.addEventListener('click',()=>{const n=b.dataset.i;built.has(n)?built.delete(n):built.add(n);b.classList.toggle('on',built.has(n));renderShare()}));
+function renderShare(){const sel=IMGS.filter(i=>built.has(i.n));const no=sel.reduce((a,i)=>a+BASE+i.own,0);const yes=sel.length?BASE+sel.reduce((a,i)=>a+i.own,0):0;const max=IMGS.reduce((a,i)=>a+BASE+i.own,0);
+  $('#barNo').style.width=(no/max*100)+'%';$('#barYes').style.width=(yes/max*100)+'%';
+  $('#shMsg').textContent=sel.length?`Without sharing: ${no} MB. With layers: ${yes} MB. Saved ${no-yes} MB: the base rice (${BASE} MB) is stored once for ${sel.length} image${sel.length>1?'s':''}.`:'Click a Build button.';}
+renderShare();
+
+/* ===== 7 copy on write ===== */
+const IMGFILES={'menu.txt':'Chicken biryani','recipe.js':'app code','nginx.conf':'server config'};let plate={};
+function renderCow(){$('#cowImg').innerHTML=Object.keys(IMGFILES).map(f=>`<div class="file"><span>${f}</span><span style="color:var(--muted)">${IMGFILES[f]}</span></div>`).join('');
+  const pk=Object.keys(plate);$('#cowPlate').innerHTML=pk.length?pk.map(f=>`<div class="file new"><span>${f}</span><span>${plate[f]===null?'deleted (hidden)':plate[f]}</span></div>`).join(''):'<div style="font-size:13px;color:var(--muted)">Empty plate</div>';
+  $('#cowView').innerHTML=[...new Set([...Object.keys(IMGFILES),...pk])].map(f=>plate[f]===null?`<div class="file ghost"><span>${f}</span><span>gone</span></div>`:`<div class="file"><span>${f}</span><span style="color:var(--muted)">${f in plate?plate[f]:IMGFILES[f]}</span></div>`).join('');}
+const COW={read:()=>['menu.txt'in plate?'Read from the plate (your copy).':'Read straight from the image. No copy: reading is free.','ok'],
+ edit:()=>{plate['menu.txt']='Beef biryani';return['menu.txt was copied up to the plate, then changed. The image still says Chicken biryani.','ok']},
+ create:()=>{plate['order.log']='3 plates served';return['New files are always written on the plate.','ok']},
+ del:()=>{plate['recipe.js']=null;return['Hidden by a marker on the plate. It still exists in the image.','ok']},
+ rm:()=>{plate={};return['Container removed: plate washed, every change gone. A new container sees the original image.','bad']}};
+$$('[data-a]').forEach(b=>b.addEventListener('click',()=>{const[m,c]=COW[b.dataset.a]();$('#cowMsg').textContent=m;$('#cowMsg').className='msg '+c;renderCow()}));renderCow();
+
+/* ===== 8 networking ===== */
+let net='custom',ports={p3000:true,p5000:true},anim=null;
+group('.net',v=>{net=v;drawNet()});
+$$('.port').forEach(b=>b.addEventListener('click',()=>{ports[b.dataset.v]=!ports[b.dataset.v];b.classList.toggle('on',ports[b.dataset.v]);drawNet()}));
+const PATHS={b2f:[[130,140],[176,140],[200,140]],b2b:[[130,155],[176,215],[395,215],[395,172]],k2m:[[450,140],[480,140]],b2m:[[130,170],[176,262],[535,262],[535,172]]};
+function drawNet(extra=''){
+  const box=(x,y,w,h,t,s,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="${css(c?'--accent-soft':'--surface')}" stroke="${css(c?'--accent':'--line')}" stroke-width="1.2"/><text x="${x+w/2}" y="${y+h/2-8}" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="${css('--ink')}">${t}</text><text x="${x+w/2}" y="${y+h/2+11}" text-anchor="middle" dominant-baseline="central" font-size="11" fill="${css('--muted')}">${s}</text>`;
+  const door=(y,on,l)=>`<rect x="170" y="${y-14}" width="12" height="28" rx="3" fill="${css(on?'--ok':'--line')}"/><text x="188" y="${y-18}" font-size="10" fill="${css(on?'--ok':'--muted')}">${l}</text>`;
+  $('#netSvg').innerHTML=`<rect x="176" y="20" width="444" height="270" rx="16" fill="none" stroke="${css('--muted')}" stroke-dasharray="5 5"/>
+  <text x="604" y="40" text-anchor="end" font-size="13" font-weight="600" fill="${css('--muted')}">Your PC (Docker host)</text>
+  <rect x="190" y="60" width="416" height="160" rx="14" fill="${css(net==='custom'?'--ok-soft':'--surface2')}" stroke="${css(net==='custom'?'--ok':'--line')}"/>
+  <text x="596" y="80" text-anchor="end" font-size="12" font-weight="600" fill="${css(net==='custom'?'--ok':'--muted')}">${net==='custom'?'mern-net kitchen: names work':'default bridge: no name tags'}</text>
+  ${box(20,110,110,64,'Browser','guest outside',false)}${box(200,108,110,64,'frontend','nginx :80',true)}${box(340,108,110,64,'backend','express :5000',true)}${box(480,108,110,64,'mongo','db :27017',true)}
+  ${door(140,ports.p3000,'3000')}${door(215,ports.p5000,'5000')}${door(262,false,'no window')}${extra}`;}
+function polyLen(p){let L=0;for(let i=1;i<p.length;i++)L+=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);return L}
+function pointAt(p,d){for(let i=1;i<p.length;i++){const s=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);if(d<=s){const r=d/s;return[p[i-1][0]+(p[i][0]-p[i-1][0])*r,p[i-1][1]+(p[i][1]-p[i-1][1])*r]}d-=s}return p[p.length-1]}
+function send(key){let ok,msg,sf=1;
+  if(key==='b2f'){ok=ports.p3000;msg=ok?'200 OK. The guest came through serving window 3000 and nginx served the React app.':'Failed: no serving window. Run the frontend with -p 3000:80.';sf=.6}
+  if(key==='b2b'){ok=ports.p5000;msg=ok?'200 OK. React (in the browser) called http://localhost:5000 through window 5000.':'Failed: backend has no serving window. Add -p 5000:5000.';sf=.2}
+  if(key==='k2m'){ok=net==='custom';msg=ok?'Connected. Backend used mongodb://mongo:27017; the kitchen found the deg by name.':'Failed: getaddrinfo ENOTFOUND mongo. Names don\'t work on the default bridge. Use a user-defined network.';sf=.5}
+  if(key==='b2m'){ok=false;msg='Blocked, and that is good. Mongo has no serving window, so nobody outside can reach your database.';sf=.12}
+  const p=PATHS[key],L=polyLen(p),end=ok?L:L*sf;let t0=null;if(anim)cancelAnimationFrame(anim);
+  const line=`<polyline points="${p.map(q=>q.join(',')).join(' ')}" fill="none" stroke="${css('--muted')}" stroke-width="2" stroke-dasharray="4 4"/>`;
+  function frame(ts){if(!t0)t0=ts;const d=Math.min(end,(ts-t0)/1100*L);const[x,y]=pointAt(p,d);let mk='';
+    if(d>=end)mk=ok?`<circle cx="${x}" cy="${y}" r="9" fill="${css('--ok')}"/>`:`<g stroke="${css('--bad')}" stroke-width="3"><line x1="${x-7}" y1="${y-7}" x2="${x+7}" y2="${y+7}"/><line x1="${x+7}" y1="${y-7}" x2="${x-7}" y2="${y+7}"/></g>`;
+    drawNet(line+`<circle cx="${x}" cy="${y}" r="6" fill="${css(d>=end&&!ok?'--bad':'--accent')}"/>`+mk);
+    if(d<end)anim=requestAnimationFrame(frame);else{$('#netMsg').textContent=msg;$('#netMsg').className='msg '+(ok?'ok':'bad')}}
+  $('#netMsg').textContent='Sending...';$('#netMsg').className='msg';anim=requestAnimationFrame(frame);}
+$$('[data-t]').forEach(b=>b.addEventListener('click',()=>send(b.dataset.t)));drawNet();
+
+/* ===== 9 volumes ===== */
+const NAMES=['Ali Raza','Ayesha Khan','Hamza Tariq','Fatima Noor','Usman Ali','Zainab Iqbal','Bilal Ahmed','Sana Javed'];
+let vm='none',running=true,ctrData=[],store=[],vlog=[],ni=0;
+const FLAG={none:'',named:' -v mongo-data:/data/db',bind:' -v C:\\mern\\db:/data/db'};
+function vLog(t,c){vlog.push({t,c})}
+function vReset(){running=true;ctrData=[];store=[];vlog=[];ni=0;vLog('$ docker run -d --name mongo'+FLAG[vm]+' mongo:7','c');vLog('mongo started','o');renderVol('')}
+group('.vm',v=>{vm=v;vReset()});
+$$('[data-v2]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.v2;let m='',c='';
+  if(a==='reset'){vReset();return}
+  if(a==='add'){if(!running){vLog('POST /students  ->  MongoServerError: connection refused','e');m='The mongo deg is not running. Run it first.';c='bad'}
+    else{const s=NAMES[ni++%NAMES.length];(vm==='none'?ctrData:store).push(s);vLog('POST /students  ->  201 Created ('+s+')','o');m='Saved '+(vm==='none'?'inside the container.':vm==='named'?'in the mongo-data volume.':'in C:\\mern\\db on your PC.')}}
+  if(a==='rm'){if(!running){vLog('$ docker rm -f mongo','c');vLog('Error: No such container: mongo','e');m='Already removed.';c='bad'}
+    else{running=false;vLog('$ docker rm -f mongo','c');vLog('mongo','o');if(vm==='none'){const lost=ctrData.length;ctrData=[];m=lost?`The deg was washed. ${lost} record${lost>1?'s':''} lost forever.`:'Container removed.';c=lost?'bad':''}else{m='Container removed, but the data is outside it. Nothing lost.';c='ok'}}}
+  if(a==='run'){if(running){vLog('$ docker run -d --name mongo'+FLAG[vm]+' mongo:7','c');vLog('Error: Conflict. The container name "/mongo" is already in use','e');m='mongo is already running. Remove it first.';c='bad'}
+    else{running=true;vLog('$ docker run -d --name mongo'+FLAG[vm]+' mongo:7','c');vLog('mongo started','o');if(vm==='none'){ctrData=[];m='Fresh container, empty database.';c='bad'}else{m=`Fresh container, same ${vm==='named'?'volume':'folder'}: ${store.length} student${store.length===1?'':'s'} back.`;c='ok'}}}
+  renderVol(m,c)}));
+function vlist(a){return a.length?a.map(s=>`<div class="file"><span>${s}</span></div>`).join(''):'<div style="font-size:13px;color:var(--muted)">No records</div>'}
+function renderVol(m,c){const seen=vm==='none'?ctrData:store;
+  $('#vCtr').innerHTML=`<h4 style="display:flex;justify-content:space-between;align-items:center">Container: mongo (the deg)<span class="pill ${running?'p-run':'p-stop'}">${running?'Running':'Removed'}</span></h4>`+(running?`<div style="font-size:12px;color:var(--muted);margin-bottom:6px">Database sees:</div>${vlist(seen)}`:'<div style="font-size:13px;color:var(--muted)">No container. The deg has been washed.</div>');
+  const title={none:'No volume',named:'Volume: mongo-data (yakhni pateela)',bind:'Bind mount: C:\\mern\\db'}[vm];
+  $('#vStore').innerHTML=`<h4>${title}</h4>`+(vm==='none'?'<div style="font-size:13px;color:var(--muted)">Nothing outside the container. Data lives in its writable layer and dies with it.</div>':`<div style="font-size:12px;color:var(--muted);margin-bottom:6px">${vm==='named'?'Managed by Docker. Survives docker rm.':'A real folder on your PC. Survives docker rm.'}</div>${vlist(store)}`);
+  $('#vLog').innerHTML=vlog.slice(-9).map(l=>`<div class="${l.c}">${esc(l.t)}</div>`).join('');
+  $('#vMsg').textContent=m||'Add students, remove the container, then run it again.';$('#vMsg').className='msg '+(c||'');}
+vReset();
+
+/* ===== 10 lifecycle ===== */
+const LC=[['create','docker create --name web nginx'],['run','docker run -d --name web nginx'],['start','docker start web'],['pause','docker pause web'],['unpause','docker unpause web'],['stop','docker stop web'],['kill','docker kill web'],['restart','docker restart web'],['rm','docker rm web'],['rmf','docker rm -f web']];
+const TR={create:{none:'Created'},run:{none:'Running'},start:{Created:'Running',Exited:'Running'},pause:{Running:'Paused'},unpause:{Paused:'Running'},stop:{Running:'Exited',Paused:'Exited'},kill:{Running:'Exited',Paused:'Exited'},restart:{Running:'Running',Exited:'Running',Created:'Running'},rm:{Created:'none',Exited:'none'},rmf:{Created:'none',Running:'none',Paused:'none',Exited:'none'}};
+const LOK={create:'Deg filled, stove off. Filesystem ready, process not started.',run:'run = create + start in one command. Deg on the flame.',start:'Flame lit. The app is running.',pause:'Deg on dum: the process is frozen in memory and uses no CPU.',unpause:'Back on the flame, exactly where it stopped.',stop:'Asked the cook to turn off the flame properly (SIGTERM, 10 s, then SIGKILL). The deg stays in the kitchen.',kill:'Gas cut at once (SIGKILL). The deg stays in the kitchen.',restart:'stop + start.',rm:'Deg washed: container and its writable layer deleted. The image is safe.',rmf:'Force: put out the flame and washed the deg in one go.'};
+let lst='none',lever=false,llog=[];
+$('#lcBtns').innerHTML=LC.map(c=>`<button class="sm" data-lc="${c[0]}">${c[1].replace(' --name web nginx','').replace(' -d','').replace(' web','')}</button>`).join('');
+$$('[data-lc]').forEach(b=>b.addEventListener('click',()=>lcDo(b.dataset.lc)));
+function lcErr(c){if(lst==='none')return'Error: No such container: web';if(c==='create'||c==='run')return'Error: Conflict. The container name "/web" is already in use';if(c==='rm'&&(lst==='Running'||lst==='Paused'))return'Error: cannot remove a running container. Stop it first or use rm -f';if(c==='unpause')return'Error: container is not paused';if(c==='pause')return'Error: container is not running';if(lst==='Created'&&(c==='stop'||c==='kill'))return'Error: container is not running';return'No change in this state'}
+function lcDo(c){const txt=LC.find(x=>x[0]===c)[1];llog.push({t:'$ '+txt,k:'c'});const nx=TR[c][lst];const m=$('#lcMsg');
+  if(nx!==undefined){lst=nx;lever=true;llog.push({t:(c==='create'||c==='run')?hex()+hex():'web',k:'o'});m.textContent=LOK[c];m.className='msg'}
+  else{llog.push({t:lcErr(c),k:'e'});m.textContent='That command does not work in this state.';m.className='msg bad'}renderLC()}
+function renderLC(){const s=lst==='none'?(lever?'Removed':'No container'):lst;
+  const fl={Running:`<path d="M95 222 Q105 196 120 222 Q135 194 145 222 Z" fill="${css('--flame')}"/>`,Paused:`<path d="M105 222 Q120 206 135 222 Z" fill="${css('--dum')}"/><text x="120" y="20" text-anchor="middle" font-size="12" fill="${css('--dum')}">on dum</text>`}[lst]||'';
+  const washed=lst==='none';const food=washed?'':`<g clip-path="url(#lcclip)"><rect x="0" y="${lst==='Exited'?120:90}" width="240" height="140" fill="${css(lst==='Exited'?'--line':'--rice')}"/>${lst==='Running'?`<path d="M80 40 q10 -14 0 -26 M120 40 q10 -14 0 -26 M160 40 q10 -14 0 -26" stroke="${css('--muted')}" fill="none" stroke-width="2"/>`:''}</g>`;
+  $('#lcDeg').innerHTML=`<defs><clipPath id="lcclip"><path d="M28 52 L212 52 Q216 180 120 196 Q24 180 28 52 Z"/></clipPath></defs>${food}
+   <path d="M28 52 L212 52 Q216 180 120 196 Q24 180 28 52 Z" fill="none" stroke="${css(washed?'--line':'--muted')}" stroke-width="3" ${washed?'stroke-dasharray="6 6"':''}/>
+   <rect x="18" y="44" width="204" height="10" rx="5" fill="${css('--surface')}" stroke="${css(washed?'--line':'--muted')}" stroke-width="3"/>${fl}
+   ${washed?`<text x="120" y="130" text-anchor="middle" font-size="13" fill="${css('--muted')}">${lever?'washed':'no deg yet'}</text>`:''}`;
+  $('#lcState').textContent=s;$('#lcState').style.color=css({Running:'--ok',Paused:'--dum',Exited:'--bad',Created:'--warn'}[lst]||'--muted');
+  $('#lcLog').innerHTML=llog.length?llog.slice(-8).map(l=>`<div class="${l.k}">${esc(l.t)}</div>`).join(''):'<div class="m">No container. Start with create or run.</div>';
+  $$('[data-lc]').forEach(b=>b.disabled=false);}
+renderLC();
+
+/* ===== quiz ===== */
+const QZ=[
+ {q:'What problem does containerization mainly solve?',o:['Slow internet','"It works on my machine" differences between environments','Writing less code','Making the UI prettier'],a:1,w:'The container carries its own runtime and libraries, like shipping the whole deg instead of only the recipe.'},
+ {q:'Why do containers start faster than VMs?',o:['They use more RAM','They share the host kernel instead of booting a full OS','They run in the cloud only','They skip the CPU'],a:1,w:'Many degs on one stove: no new kitchen to build.'},
+ {q:'Docker Desktop is closed. You run docker ps. What happens?',o:['It works normally','Error: the CLI cannot reach dockerd','Containers are deleted','Docker Hub opens'],a:1,w:'The CLI is only the order slip. Without the head chef (dockerd) nothing happens.'},
+ {q:'Which component actually asks the kernel to create the container?',o:['docker CLI','Docker Hub','runc','The browser'],a:2,w:'runc lights the flame and exits; containerd keeps watching.'},
+ {q:'What does "nginx" expand to when you run it?',o:['nginx.com/nginx','docker.io/library/nginx:latest','localhost/nginx','ghcr.io/nginx:1'],a:1,w:'Default registry docker.io, official namespace library, default tag latest.'},
+ {q:'An image is already local and the internet is off. docker run?',o:['Fails','Works: no download needed','Downloads anyway','Deletes the image'],a:1,w:'Pantry first. The market is only needed when the pantry is empty.'},
+ {q:'You changed one line in app.js (well-ordered Dockerfile). What rebuilds?',o:['Every layer','Only the COPY . . code layer','Only FROM','Nothing'],a:1,w:'Only the changed layer and those above it.'},
+ {q:'Backend connecting to MongoDB on mern-net should use:',o:['mongodb://localhost:27017','mongodb://mongo:27017','mongodb://172.17.0.1','It cannot connect'],a:1,w:'User-defined networks give built-in DNS: degs called by name.'},
+ {q:'After docker rm -f mongo, where is the data safe?',o:['Nowhere','In a named volume or bind mount','Only in the image','On Docker Hub'],a:1,w:'The yakhni pateela sits in the store room, outside the deg.'},
+ {q:'What is the difference between docker stop and docker kill?',o:['No difference','stop sends SIGTERM first (graceful), kill sends SIGKILL at once','kill deletes the container','stop deletes the image'],a:1,w:'Ask the cook to turn off the flame vs cutting the gas.'}
+];
+let score=0,answered=0;
+$('#quizBox').innerHTML=QZ.map((x,i)=>`<div class="q" data-q="${i}"><b>${i+1}. ${esc(x.q)}</b><div class="opts">${x.o.map((o,j)=>`<button data-j="${j}">${esc(o)}</button>`).join('')}</div><div class="why">${esc(x.w)}</div></div>`).join('');
+$$('.q').forEach(qd=>{const i=+qd.dataset.q;qd.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  if(qd.dataset.done)return;qd.dataset.done=1;answered++;const j=+b.dataset.j;
+  if(j===QZ[i].a){b.classList.add('right');score++}else{b.classList.add('wrong');qd.querySelectorAll('button')[QZ[i].a].classList.add('right')}
+  qd.querySelector('.why').style.display='block';
+  $('#qScore').textContent=`Score: ${score} / ${answered}`+(answered===QZ.length?(score===QZ.length?' Perfect!':' Review the sections and try again.'):'');}))});
+
+renderBuild();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{renderBuild();drawNet();renderBase();renderLC();renderFit()});
+</script>
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab: Docker on Windows from Scratch</title>
+<style>
+:root{
+  --bg:#f7f8fb;--surface:#ffffff;--surface2:#eef1f6;--ink:#1f2430;--muted:#5f6878;--line:#dde2ea;
+  --accent:#1d63ed;--accent-soft:#e3ecfd;--ok:#15803d;--ok-soft:#dcfce7;--warn:#b45309;--warn-soft:#fef3c7;
+  --bad:#b91c1c;--bad-soft:#fee2e2;
+  --mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#12151b;--surface:#1b1f27;--surface2:#232834;--ink:#eef1f6;--muted:#9aa3b2;--line:#323947;
+  --accent:#6ea0ff;--accent-soft:#1c2a47;--ok:#4ade80;--ok-soft:#14321f;--warn:#fbbf24;--warn-soft:#3a2c10;
+  --bad:#f87171;--bad-soft:#3b1717;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6}
+.wrap{max-width:920px;margin:0 auto;padding:32px 16px 80px}
+.kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{font-size:32px;line-height:1.2;margin:6px 0 10px}
+h2{font-size:24px;margin:0 0 8px}
+p{margin:0 0 10px}
+.lead{font-size:17px;color:var(--muted)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.meta span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0}
+nav.toc a{text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);padding:4px 11px;border-radius:999px;font-size:13px}
+nav.toc a:hover{border-color:var(--accent)}
+section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;margin:20px 0;scroll-margin-top:70px}
+.part{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em;text-transform:uppercase}
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:18px 0;border-top:1px solid var(--line)}
+.step:first-of-type{border-top:none}
+.n{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.step.done .n{background:var(--ok)}
+.step h3{margin:6px 0 6px;font-size:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.step h3 label{font-size:12px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:4px;cursor:pointer}
+.step ol,.step ul{margin:4px 0 10px;padding-left:22px}
+.step li{margin:3px 0}
+.code{position:relative;margin:8px 0}
+.code .fn{font-family:var(--mono);font-size:12px;background:var(--surface2);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:4px 10px;display:inline-block;color:var(--muted)}
+pre{margin:0;background:#151922;color:#e6e9ef;border-radius:0 10px 10px 10px;padding:12px 14px;font-family:var(--mono);font-size:13px;line-height:1.6;overflow-x:auto}
+.code.ps pre{border-radius:10px}
+pre .cm{color:#8b93a3}
+.copy{position:absolute;top:8px;right:8px;font:inherit;font-size:11px;padding:3px 9px;border-radius:6px;background:#262c38;color:#e6e9ef;border:1px solid #3a4252;cursor:pointer}
+.code .fn ~ .copy{top:32px}
+.where{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin:4px 0 2px}
+.w-admin{background:var(--bad-soft);color:var(--bad)}
+.w-ps{background:var(--accent-soft);color:var(--accent)}
+.w-ub{background:var(--warn-soft);color:var(--warn)}
+.w-in{background:var(--ok-soft);color:var(--ok)}
+.out{background:var(--surface2);border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:12px;white-space:pre;overflow-x:auto;color:var(--muted);margin:6px 0}
+.check{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:8px 12px;font-size:14px;margin:8px 0}
+.warn{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:8px 12px;font-size:14px;margin:8px 0}
+.key{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:8px 12px;font-size:14px;margin:8px 0}
+.key b{color:var(--accent)}
+.or{font-size:13px;font-weight:700;color:var(--muted);margin:10px 0 2px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:6px 0}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600}
+code{font-family:var(--mono);font-size:13px;background:var(--surface2);padding:1px 5px;border-radius:4px}
+kbd{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
+.tree{font-family:var(--mono);font-size:13px;white-space:pre;background:var(--surface2);border-radius:10px;padding:10px 14px;margin:8px 0}
+.progress{position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5}
+.pbar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.pbar div{height:100%;background:var(--ok);width:0;transition:width .3s}
+.ptext{font-size:13px;color:var(--muted);margin-top:4px}
+svg text{font-family:var(--sans)}
+.nd rect{fill:var(--surface);stroke:var(--line);stroke-width:1.2}
+.nd.a rect{fill:var(--accent-soft);stroke:var(--accent)}
+.nd.g rect{fill:var(--ok-soft);stroke:var(--ok)}
+.nd.w rect{fill:var(--warn-soft);stroke:var(--warn)}
+.nd text{fill:var(--ink);font-size:14px;font-weight:600}
+.nd text.s{fill:var(--muted);font-size:11px;font-weight:400}
+.ed{stroke:var(--muted);stroke-width:1.5;fill:none}
+.lab{fill:var(--accent);font-size:12px;font-weight:700}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+@media print{.copy,.progress{display:none}section{break-inside:avoid}}
+@media (max-width:560px){.step{grid-template-columns:1fr}.n{width:34px;height:34px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">DevOps Fundamentals · Lab</div>
+  <h1>Docker on Windows from scratch: install, build and run a frontend container</h1>
+  <p class="lead">Start with a Windows PC that has nothing installed. By the end you will have WSL2, Ubuntu and Docker Desktop working, and your own website running inside a container.</p>
+  <div class="meta"><span>⏱ Part 1: 40 to 60 min (downloads + restarts)</span><span>⏱ Part 2: 30 min</span><span>⏱ Part 3 (bonus): 20 min</span><span>🌐 Internet required</span><span>🔑 Administrator rights required</span></div>
+  <nav class="toc"><a href="#p1">Part 1: Install</a><a href="#p2">Part 2: Frontend container</a><a href="#p3">Part 3: React (bonus)</a><a href="#trouble">Troubleshooting</a><a href="#cheat">Cheat sheet</a></nav>
+</header>
+
+<div class="progress"><div class="pbar"><div id="pfill"></div></div><div class="ptext" id="ptext"></div></div>
+
+<section>
+  <h2>What we are installing, and why</h2>
+  <p>Containers need a <b>Linux kernel</b>. Windows does not have one, so we add one with <b>WSL2</b>. Docker Desktop then runs the Docker Engine on top of it.</p>
+  <svg viewBox="0 0 680 300" width="100%" role="img" aria-label="Layers: hardware with virtualization, Windows, WSL2 Linux kernel, Docker Desktop engine, your containers">
+    <g class="nd g"><rect x="120" y="14" width="440" height="44" rx="8"/><text x="340" y="41" text-anchor="middle">Your containers (website)</text></g>
+    <g class="nd a"><rect x="120" y="66" width="440" height="44" rx="8"/><text x="340" y="86" text-anchor="middle">Docker Desktop (Docker Engine + CLI)</text><text class="s" x="340" y="102" text-anchor="middle">Step 6 to 8</text></g>
+    <g class="nd w"><rect x="120" y="118" width="215" height="54" rx="8"/><text x="227" y="140" text-anchor="middle">WSL2 (Linux kernel)</text><text class="s" x="227" y="158" text-anchor="middle">Step 3 to 4</text></g>
+    <g class="nd w"><rect x="345" y="118" width="215" height="54" rx="8"/><text x="452" y="140" text-anchor="middle">Ubuntu distribution</text><text class="s" x="452" y="158" text-anchor="middle">Step 5</text></g>
+    <g class="nd"><rect x="120" y="180" width="440" height="44" rx="8"/><text x="340" y="200" text-anchor="middle">Windows 10 / 11 (64-bit)</text><text class="s" x="340" y="216" text-anchor="middle">Step 1</text></g>
+    <g class="nd"><rect x="120" y="232" width="440" height="44" rx="8"/><text x="340" y="252" text-anchor="middle">Hardware: CPU virtualization enabled</text><text class="s" x="340" y="268" text-anchor="middle">Step 2</text></g>
+    <text x="580" y="41" style="fill:var(--muted);font-size:12px">Part 2</text>
+    <text x="580" y="92" style="fill:var(--muted);font-size:12px">Part 1</text>
+    <text x="580" y="150" style="fill:var(--muted);font-size:12px">Part 1</text>
+    <text x="580" y="206" style="fill:var(--muted);font-size:12px">check</text>
+    <text x="580" y="258" style="fill:var(--muted);font-size:12px">check</text>
+  </svg>
+  <p style="font-size:13px;color:var(--muted)">Each command block is marked with where to run it:
+    <span class="where w-admin">PowerShell (Administrator)</span>
+    <span class="where w-ps">PowerShell</span>
+    <span class="where w-ub">Ubuntu terminal</span>
+    <span class="where w-in">Inside a container</span></p>
+</section>
+
+<!-- ================= PART 1 ================= -->
+<section id="p1">
+  <div class="part">Part 1</div>
+  <h2>Install WSL2, Ubuntu and Docker Desktop</h2>
+
+  <div class="step" data-s="1"><div class="n">1</div><div>
+    <h3>Check your Windows version and RAM <label><input type="checkbox"> done</label></h3>
+    <p>Press <kbd>Win</kbd> + <kbd>R</kbd>, type <code>winver</code>, press <kbd>Enter</kbd>.</p>
+    <ul>
+      <li><b>Windows 11</b>, or <b>Windows 10 version 22H2</b> (build 19045) or newer</li>
+      <li><b>64-bit</b>: Settings → System → About → System type</li>
+      <li><b>RAM:</b> 4 GB minimum, 8 GB recommended (same About page)</li>
+    </ul>
+    <div class="warn">⚠ Older Windows 10? Run <b>Windows Update</b> first and install all updates.</div>
+  </div></div>
+
+  <div class="step" data-s="2"><div class="n">2</div><div>
+    <h3>Check that CPU virtualization is enabled <label><input type="checkbox"> done</label></h3>
+    <ol>
+      <li>Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> to open Task Manager</li>
+      <li>Go to <b>Performance</b> → <b>CPU</b></li>
+      <li>Bottom right: <b>Virtualization: Enabled</b></li>
+    </ol>
+    <div class="check">✔ Enabled: continue to step 3.</div>
+    <div class="warn">⚠ <b>Disabled:</b> restart the PC and open the BIOS/UEFI (usually <kbd>F2</kbd>, <kbd>F10</kbd>, <kbd>Del</kbd> or <kbd>Esc</kbd> while booting). Turn on <b>Intel VT-x</b> / <b>Intel Virtualization Technology</b> or <b>AMD SVM</b>. Save and exit. On lab PCs, ask the lab administrator.</div>
+  </div></div>
+
+  <div class="step" data-s="3"><div class="n">3</div><div>
+    <h3>Enable WSL and Virtual Machine Platform <label><input type="checkbox"> done</label></h3>
+    <p>Do <b>either</b> Option A (GUI) <b>or</b> Option B (command line). Both do the same thing.</p>
+    <div class="or">OPTION A: GUI</div>
+    <ol>
+      <li>Click Start and type <b>Turn Windows features on or off</b>, then open it</li>
+      <li>Tick <b>Virtual Machine Platform</b></li>
+      <li>Tick <b>Windows Subsystem for Linux</b></li>
+      <li>Click <b>OK</b>, wait, then click <b>Restart now</b></li>
+    </ol>
+    <div class="or">OPTION B: Command line</div>
+    <p>Click Start, type <b>PowerShell</b>, right-click it and choose <b>Run as administrator</b>.</p>
+    <span class="where w-admin">PowerShell (Administrator)</span>
+    <div class="code ps"><pre>dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart</pre></div>
+    <div class="out">The operation completed successfully.</div>
+    <p>Then <b>restart the computer</b>.</p>
+    <div class="key"><b>Why two features?</b> <i>Windows Subsystem for Linux</i> lets Windows run Linux programs. <i>Virtual Machine Platform</i> lets WSL2 run a real Linux kernel in a lightweight virtual machine.</div>
+  </div></div>
+
+  <div class="step" data-s="4"><div class="n">4</div><div>
+    <h3>Update WSL and make version 2 the default <label><input type="checkbox"> done</label></h3>
+    <p>After the restart, open PowerShell as Administrator again.</p>
+    <span class="where w-admin">PowerShell (Administrator)</span>
+    <div class="code ps"><pre>wsl --update
+wsl --set-default-version 2
+wsl --version</pre></div>
+    <div class="check">✔ <code>wsl --version</code> prints a WSL version and a kernel version.</div>
+    <div class="key"><b>WSL1 vs WSL2:</b> WSL1 translated Linux calls into Windows calls. WSL2 runs a <b>real Linux kernel</b>, which Docker needs.</div>
+  </div></div>
+
+  <div class="step" data-s="5"><div class="n">5</div><div>
+    <h3>Install a Linux distribution (Ubuntu) <label><input type="checkbox"> done</label></h3>
+    <span class="where w-admin">PowerShell (Administrator)</span>
+    <div class="code ps"><pre>wsl --list --online
+wsl --install -d Ubuntu</pre></div>
+    <p>An Ubuntu window opens. Create a <b>username</b> (lowercase, no spaces) and a <b>password</b>. While typing the password nothing appears on screen; that is normal.</p>
+    <div class="out">Installing, this may take a few minutes...
+Enter new UNIX username: ali
+New password:
+Retype new password:
+passwd: password updated successfully</div>
+    <p>Type <code>exit</code> to close Ubuntu. Then check in PowerShell:</p>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>wsl -l -v</pre></div>
+    <div class="out">  NAME      STATE           VERSION
+* Ubuntu    Stopped         2</div>
+    <div class="check">✔ Ubuntu is listed with <b>VERSION 2</b>.</div>
+    <div class="warn">⚠ Shows VERSION 1? Run <code>wsl --set-version Ubuntu 2</code></div>
+  </div></div>
+
+  <div class="step" data-s="6"><div class="n">6</div><div>
+    <h3>Download and install Docker Desktop <label><input type="checkbox"> done</label></h3>
+    <ol>
+      <li>Open <b>https://www.docker.com/products/docker-desktop/</b></li>
+      <li>Click <b>Download for Windows – AMD64</b>. Use the <b>ARM64</b> version only on ARM laptops (for example Snapdragon). The file is about 500 to 600 MB.</li>
+      <li>Run <b>Docker Desktop Installer.exe</b> and click <b>Yes</b> when Windows asks for permission</li>
+      <li>On the Configuration screen keep <b>Use WSL 2 instead of Hyper-V (recommended)</b> <b>ticked</b></li>
+      <li>Click <b>OK</b> and wait for the installation</li>
+      <li>Click <b>Close and restart</b> (or sign out and back in if asked)</li>
+    </ol>
+    <div class="warn">⚠ The installer adds the installing user to the <code>docker-users</code> group. If a different Windows account will use Docker, see "not allowed to use Docker" in Troubleshooting.</div>
+  </div></div>
+
+  <div class="step" data-s="7"><div class="n">7</div><div>
+    <h3>Start Docker Desktop and connect it to Ubuntu <label><input type="checkbox"> done</label></h3>
+    <ol>
+      <li>Open <b>Docker Desktop</b> from the Start menu</li>
+      <li><b>Accept</b> the service agreement</li>
+      <li>Sign-in and survey screens: you can click <b>Skip</b></li>
+      <li>Wait until the bottom-left shows <b>Engine running</b> (green) and the whale icon in the taskbar stops animating</li>
+      <li>Open <b>Settings</b> (gear icon) → <b>Resources</b> → <b>WSL integration</b></li>
+      <li>Switch on <b>Ubuntu</b>, then click <b>Apply &amp; restart</b></li>
+    </ol>
+    <div class="key"><b>What just happened?</b> Docker Desktop created its own small Linux system inside WSL2 and started the <b>Docker Engine</b> (<code>dockerd</code>) there. WSL integration also lets you use the <code>docker</code> command from Ubuntu.</div>
+  </div></div>
+
+  <div class="step" data-s="8"><div class="n">8</div><div>
+    <h3>Verify the installation <label><input type="checkbox"> done</label></h3>
+    <p>Open a <b>normal</b> PowerShell (not Administrator).</p>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>docker --version
+docker version
+docker run hello-world</pre></div>
+    <div class="out">Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+ 3. The Docker daemon created a new container from that image ...
+ 4. The Docker daemon streamed that output to the Docker client ...</div>
+    <div class="check">✔ <code>docker version</code> shows <b>Client</b> (OS/Arch: windows) <b>and</b> <b>Server</b> (OS/Arch: linux), and hello-world prints "Hello from Docker!"</div>
+    <p>Also check from Ubuntu:</p>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>wsl -d Ubuntu</pre></div>
+    <span class="where w-ub">Ubuntu terminal</span>
+    <div class="code ps"><pre>docker --version
+exit</pre></div>
+    <div class="key"><b>Read the hello-world output carefully.</b> It describes the Docker architecture: the <b>client</b> (CLI) talks to the <b>daemon</b>, the daemon pulls the image from the <b>registry</b> (Docker Hub), creates a <b>container</b> and sends the output back.</div>
+  </div></div>
+</section>
+
+<!-- ================= PART 2 ================= -->
+<section id="p2">
+  <div class="part">Part 2</div>
+  <h2>Build and run a frontend container</h2>
+  <svg viewBox="0 0 680 140" width="100%" role="img" aria-label="Files and Dockerfile are built into an image, the image runs as a container, the browser opens it on localhost 8080">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" style="stroke:var(--muted)" stroke-width="1.5"/></marker></defs>
+    <g class="nd"><rect x="10" y="30" width="140" height="64" rx="10"/><text x="80" y="56" text-anchor="middle">Your files</text><text class="s" x="80" y="76" text-anchor="middle">HTML + Dockerfile</text></g>
+    <g class="nd a"><rect x="190" y="30" width="130" height="64" rx="10"/><text x="255" y="56" text-anchor="middle">Image</text><text class="s" x="255" y="76" text-anchor="middle">my-frontend:1.0</text></g>
+    <g class="nd g"><rect x="360" y="30" width="140" height="64" rx="10"/><text x="430" y="56" text-anchor="middle">Container</text><text class="s" x="430" y="76" text-anchor="middle">nginx on port 80</text></g>
+    <g class="nd"><rect x="540" y="30" width="130" height="64" rx="10"/><text x="605" y="56" text-anchor="middle">Browser</text><text class="s" x="605" y="76" text-anchor="middle">localhost:8080</text></g>
+    <line class="ed" x1="150" y1="62" x2="186" y2="62" marker-end="url(#ar)"/><line class="ed" x1="320" y1="62" x2="356" y2="62" marker-end="url(#ar)"/><line class="ed" x1="536" y1="62" x2="502" y2="62" marker-end="url(#ar)"/>
+    <text class="lab" x="168" y="122" text-anchor="middle">docker build</text><text class="lab" x="338" y="122" text-anchor="middle">docker run</text><text class="lab" x="519" y="122" text-anchor="middle">-p 8080:80</text>
+  </svg>
+
+  <div class="step" data-s="9"><div class="n">9</div><div>
+    <h3>Create the project folder <label><input type="checkbox"> done</label></h3>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>mkdir C:\docker-lab\my-frontend
+cd C:\docker-lab\my-frontend
+code .</pre></div>
+    <p><code>code .</code> opens the folder in VS Code. No VS Code? Use Notepad and read the warning in step 11.</p>
+    <div class="tree">my-frontend/
+├── index.html
+├── style.css
+├── .dockerignore
+└── Dockerfile</div>
+  </div></div>
+
+  <div class="step" data-s="10"><div class="n">10</div><div>
+    <h3>Write the frontend <label><input type="checkbox"> done</label></h3>
+    <div class="code"><span class="fn">index.html</span><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;UCP Student Portal&lt;/title&gt;
+  &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="card"&gt;
+    &lt;h1&gt;UCP Student Portal&lt;/h1&gt;
+    &lt;p&gt;Version 1.0, served from a Docker container&lt;/p&gt;
+    &lt;ul id="list"&gt;&lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    const students = ["Ali Raza", "Ayesha Khan", "Hamza Tariq"];
+    document.getElementById("list").innerHTML =
+      students.map(s =&gt; "&lt;li&gt;" + s + "&lt;/li&gt;").join("");
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+    <div class="code"><span class="fn">style.css</span><pre>body {
+  font-family: Arial, sans-serif;
+  background: #f4f6fb;
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+}
+.card {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+h1 { color: #1d63ed; }</pre></div>
+  </div></div>
+
+  <div class="step" data-s="11"><div class="n">11</div><div>
+    <h3>Write the Dockerfile <label><input type="checkbox"> done</label></h3>
+    <p>Create a file named exactly <code>Dockerfile</code>: capital D, <b>no extension</b>.</p>
+    <div class="code"><span class="fn">Dockerfile</span><pre><span class="cm"># Base image: a small Linux (Alpine) with the nginx web server</span>
+FROM nginx:alpine
+
+<span class="cm"># Copy our website into the folder nginx serves</span>
+COPY . /usr/share/nginx/html
+
+<span class="cm"># nginx listens on port 80 inside the container</span>
+EXPOSE 80</pre></div>
+    <table>
+      <tr><th>Instruction</th><th>Meaning</th></tr>
+      <tr><td><code>FROM nginx:alpine</code></td><td>Start from the <b>base image</b> nginx (web server) on Alpine Linux</td></tr>
+      <tr><td><code>COPY . /usr/share/nginx/html</code></td><td>Copy all files in this folder into nginx's website folder. Creates a new <b>layer</b>.</td></tr>
+      <tr><td><code>EXPOSE 80</code></td><td>Documents that the app uses port 80. It does <b>not</b> open the port; <code>-p</code> does that.</td></tr>
+    </table>
+    <p>No <code>CMD</code> line is needed: the nginx base image already starts nginx.</p>
+    <p>Also create <code>.dockerignore</code> so these files are not copied into the image:</p>
+    <div class="code"><span class="fn">.dockerignore</span><pre>Dockerfile
+.dockerignore
+.git</pre></div>
+    <div class="warn">⚠ <b>Notepad users:</b> in Save As, choose <b>Save as type: All Files</b>, otherwise Windows saves <code>Dockerfile.txt</code>. Check the real names with <code>dir</code> in PowerShell.</div>
+  </div></div>
+
+  <div class="step" data-s="12"><div class="n">12</div><div>
+    <h3>Build the image <label><input type="checkbox"> done</label></h3>
+    <span class="where w-ps">PowerShell (inside C:\docker-lab\my-frontend)</span>
+    <div class="code ps"><pre>docker build -t my-frontend:1.0 .</pre></div>
+    <p><code>-t my-frontend:1.0</code> sets the image name and tag (version). The final <b>dot</b> is the <b>build context</b>: "use the files in this folder". Don't forget it.</p>
+    <div class="out">[+] Building 6.2s (7/7) FINISHED
+ =&gt; [internal] load build definition from Dockerfile
+ =&gt; [1/2] FROM docker.io/library/nginx:alpine      ← downloaded from Docker Hub
+ =&gt; [2/2] COPY . /usr/share/nginx/html
+ =&gt; naming to docker.io/library/my-frontend:1.0</div>
+    <div class="code ps"><pre>docker images
+docker history my-frontend:1.0</pre></div>
+    <div class="check">✔ <code>my-frontend</code> with tag <code>1.0</code> appears. <code>docker history</code> shows its layers, with your <code>COPY</code> layer on top.</div>
+  </div></div>
+
+  <div class="step" data-s="13"><div class="n">13</div><div>
+    <h3>Run the container <label><input type="checkbox"> done</label></h3>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>docker run -d -p 8080:80 --name frontend my-frontend:1.0</pre></div>
+    <table>
+      <tr><th>Flag</th><th>Meaning</th></tr>
+      <tr><td><code>-d</code></td><td>Detached: run in the background and keep the terminal free</td></tr>
+      <tr><td><code>-p 8080:80</code></td><td>Port mapping: <b>your PC's port 8080</b> → <b>container's port 80</b></td></tr>
+      <tr><td><code>--name frontend</code></td><td>A readable name instead of a random one</td></tr>
+      <tr><td><code>my-frontend:1.0</code></td><td>The image to create the container from</td></tr>
+    </table>
+    <div class="code ps"><pre>docker ps</pre></div>
+    <div class="out">CONTAINER ID   IMAGE             STATUS         PORTS                  NAMES
+4f2a9c71b8e0   my-frontend:1.0   Up 5 seconds   0.0.0.0:8080-&gt;80/tcp   frontend</div>
+    <p>If Windows Firewall shows a popup, click <b>Allow</b>.</p>
+  </div></div>
+
+  <div class="step" data-s="14"><div class="n">14</div><div>
+    <h3>Open it in the browser <label><input type="checkbox"> done</label></h3>
+    <p>Go to <b>http://localhost:8080</b></p>
+    <div class="check">✔ You see "UCP Student Portal, Version 1.0" with three students. Your first container is running. 🎉</div>
+    <p>You can also see it in Docker Desktop → <b>Containers</b>. Click the <b>8080:80</b> link there.</p>
+  </div></div>
+
+  <div class="step" data-s="15"><div class="n">15</div><div>
+    <h3>Look inside the container <label><input type="checkbox"> done</label></h3>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>docker logs frontend
+docker exec -it frontend sh</pre></div>
+    <p>The prompt changes to <code>/ #</code>. You are now <b>inside</b> the container:</p>
+    <span class="where w-in">Inside the container</span>
+    <div class="code ps"><pre>ls /usr/share/nginx/html
+cat /etc/os-release
+exit</pre></div>
+    <div class="key"><b>Your PC runs Windows, but inside the container it is Alpine Linux.</b> The container uses the Linux kernel provided by WSL2.</div>
+  </div></div>
+
+  <div class="step" data-s="16"><div class="n">16</div><div>
+    <h3>Change the code and release version 2.0 <label><input type="checkbox"> done</label></h3>
+    <p>In <code>index.html</code> change <code>Version 1.0</code> to <code>Version 2.0</code> and add a fourth student. Save, then:</p>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>docker build -t my-frontend:2.0 .
+docker rm -f frontend
+docker run -d -p 8080:80 --name frontend my-frontend:2.0</pre></div>
+    <p>Refresh the browser (<kbd>Ctrl</kbd> + <kbd>F5</kbd>): Version 2.0.</p>
+    <div class="key"><b>Layer caching:</b> in the build output, <code>FROM nginx:alpine</code> is <b>CACHED</b>. Docker did not download it again; only the changed <code>COPY</code> layer was rebuilt.</div>
+    <div class="warn">⚠ Editing a file does <b>not</b> change a running container. Images are read-only: build a new image, then run a new container from it.</div>
+  </div></div>
+
+  <div class="step" data-s="17"><div class="n">17</div><div>
+    <h3>One image, many containers <label><input type="checkbox"> done</label></h3>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>docker run -d -p 8081:80 --name frontend2 my-frontend:2.0
+docker run -d -p 8082:80 --name frontend3 my-frontend:2.0
+docker ps</pre></div>
+    <p>Open <b>localhost:8081</b> and <b>localhost:8082</b>. One image, three separate containers, each with its own ID and port.</p>
+  </div></div>
+
+  <div class="step" data-s="18"><div class="n">18</div><div>
+    <h3>Practice the container lifecycle <label><input type="checkbox"> done</label></h3>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>docker pause frontend2
+docker ps
+docker unpause frontend2
+docker stop frontend2
+docker ps -a
+docker start frontend2</pre></div>
+    <table>
+      <tr><th>State</th><th>How you get there</th><th>Shown in <code>docker ps -a</code></th></tr>
+      <tr><td>Running</td><td><code>docker run</code>, <code>start</code>, <code>unpause</code></td><td>Up …</td></tr>
+      <tr><td>Paused</td><td><code>docker pause</code></td><td>Up … (Paused)</td></tr>
+      <tr><td>Exited</td><td><code>docker stop</code>, <code>docker kill</code></td><td>Exited (0) …</td></tr>
+      <tr><td>Removed</td><td><code>docker rm</code></td><td>Not listed</td></tr>
+    </table>
+  </div></div>
+
+  <div class="step" data-s="19"><div class="n">19</div><div>
+    <h3>Clean up <label><input type="checkbox"> done</label></h3>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>docker rm -f frontend frontend2 frontend3
+docker ps -a
+docker images</pre></div>
+    <div class="check">✔ The containers are gone, but <code>my-frontend:1.0</code> and <code>2.0</code> are still listed. Removing a container never deletes its image.</div>
+  </div></div>
+</section>
+
+<!-- ================= PART 3 ================= -->
+<section id="p3">
+  <div class="part">Part 3 (bonus)</div>
+  <h2>React frontend with a multi-stage build</h2>
+  <p>A React app must first be <b>built</b> (<code>npm run build</code>) into plain HTML, CSS and JS. Stage 1 does this in a Node container. Stage 2 copies only the result into nginx. You still don't need Node.js on your PC.</p>
+  <svg viewBox="0 0 680 150" width="100%" role="img" aria-label="Stage 1 node builds the dist folder, stage 2 nginx serves it">
+    <rect x="10" y="20" width="300" height="110" rx="12" fill="none" style="stroke:var(--muted)" stroke-dasharray="5 5"/>
+    <text x="160" y="42" text-anchor="middle" style="fill:var(--muted);font-size:13px;font-weight:600">Stage 1: build (discarded)</text>
+    <g class="nd"><rect x="25" y="58" width="130" height="56" rx="8"/><text x="90" y="82" text-anchor="middle">node:20-alpine</text><text class="s" x="90" y="100" text-anchor="middle">npm install + build</text></g>
+    <g class="nd a"><rect x="170" y="58" width="125" height="56" rx="8"/><text x="232" y="82" text-anchor="middle">dist/</text><text class="s" x="232" y="100" text-anchor="middle">HTML, CSS, JS</text></g>
+    <rect x="370" y="20" width="300" height="110" rx="12" fill="none" style="stroke:var(--ok)"/>
+    <text x="520" y="42" text-anchor="middle" style="fill:var(--ok);font-size:13px;font-weight:600">Stage 2: final image</text>
+    <g class="nd g"><rect x="400" y="58" width="240" height="56" rx="8"/><text x="520" y="82" text-anchor="middle">nginx:alpine + dist/</text><text class="s" x="520" y="100" text-anchor="middle">small, no Node inside</text></g>
+    <line class="ed" x1="295" y1="86" x2="396" y2="86" marker-end="url(#ar)"/>
+    <text class="lab" x="345" y="78" text-anchor="middle">COPY --from</text>
+  </svg>
+
+  <div class="step" data-s="20"><div class="n">20</div><div>
+    <h3>Create the React project files <label><input type="checkbox"> done</label></h3>
+    <span class="where w-ps">PowerShell</span>
+    <div class="code ps"><pre>mkdir C:\docker-lab\react-frontend\src
+cd C:\docker-lab\react-frontend
+code .</pre></div>
+    <div class="tree">react-frontend/
+├── package.json
+├── vite.config.js
+├── index.html
+├── src/
+│   ├── main.jsx
+│   └── App.jsx
+├── .dockerignore
+└── Dockerfile</div>
+    <div class="code"><span class="fn">package.json</span><pre>{
+  "name": "my-react-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.0"
+  }
+}</pre></div>
+    <div class="code"><span class="fn">vite.config.js</span><pre>import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()]
+})</pre></div>
+    <div class="code"><span class="fn">index.html</span><pre>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;title&gt;UCP Student Portal&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="root"&gt;&lt;/div&gt;
+    &lt;script type="module" src="/src/main.jsx"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre></div>
+    <div class="code"><span class="fn">src/main.jsx</span><pre>import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+
+ReactDOM.createRoot(document.getElementById('root')).render(&lt;App /&gt;)</pre></div>
+    <div class="code"><span class="fn">src/App.jsx</span><pre>import { useState } from 'react'
+
+export default function App() {
+  const [count, setCount] = useState(0)
+  return (
+    &lt;div style={{ fontFamily: 'Arial', textAlign: 'center', marginTop: 60 }}&gt;
+      &lt;h1&gt;UCP Student Portal (React)&lt;/h1&gt;
+      &lt;p&gt;Built inside a Node container, served by nginx.&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;Clicked {count} times&lt;/button&gt;
+    &lt;/div&gt;
+  )
+}</pre></div>
+  </div></div>
+
+  <div class="step" data-s="21"><div class="n">21</div><div>
+    <h3>Write the multi-stage Dockerfile <label><input type="checkbox"> done</label></h3>
+    <div class="code"><span class="fn">Dockerfile</span><pre><span class="cm"># ---------- Stage 1: build the React app ----------</span>
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+<span class="cm"># ---------- Stage 2: serve the build with nginx ----------</span>
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80</pre></div>
+    <div class="code"><span class="fn">.dockerignore</span><pre>node_modules
+dist</pre></div>
+    <table>
+      <tr><th>Instruction</th><th>Meaning</th></tr>
+      <tr><td><code>AS builder</code></td><td>Names the first stage so the second stage can refer to it</td></tr>
+      <tr><td><code>COPY package*.json ./</code> before <code>COPY . .</code></td><td>Keeps the slow <code>npm install</code> layer <b>cached</b> when only your code changes</td></tr>
+      <tr><td><code>COPY --from=builder</code></td><td>Takes only the <code>dist</code> folder from stage 1; everything else in stage 1 is discarded</td></tr>
+    </table>
+  </div></div>
+
+  <div class="step" data-s="22"><div class="n">22</div><div>
+    <h3>Build, run and compare <label><input type="checkbox"> done</label></h3>
+    <span class="where w-ps">PowerShell (inside C:\docker-lab\react-frontend)</span>
+    <div class="code ps"><pre>docker build -t react-frontend:1.0 .
+docker run -d -p 3000:80 --name react-web react-frontend:1.0
+docker images</pre></div>
+    <p>Open <b>http://localhost:3000</b> and click the button.</p>
+    <div class="check">✔ <code>react-frontend</code> is much smaller than <code>node:20-alpine</code>, because Node.js and node_modules are not in the final image.</div>
+    <div class="warn">⚠ The first build needs internet: Docker pulls <code>node</code> and <code>nginx</code> from Docker Hub, and <code>npm install</code> downloads packages from the npm registry.</div>
+  </div></div>
+</section>
+
+<!-- ================= TROUBLESHOOTING ================= -->
+<section id="trouble">
+  <h2>Troubleshooting</h2>
+  <h3 style="margin-top:6px">Installation</h3>
+  <table>
+    <tr><th>Problem</th><th>Cause and fix</th></tr>
+    <tr><td>Error <code>0x80370102</code> or "virtualization not enabled"</td><td>CPU virtualization is off. Enable VT-x / SVM in BIOS (step 2).</td></tr>
+    <tr><td>Error <code>0x8007019e</code></td><td>The WSL feature is not enabled. Repeat step 3 and restart.</td></tr>
+    <tr><td>"WSL 2 requires an update to its kernel component"</td><td>Run <code>wsl --update</code> in PowerShell (Administrator).</td></tr>
+    <tr><td><code>wsl --install</code> only prints help text</td><td>WSL is already installed. Use <code>wsl --install -d Ubuntu</code>.</td></tr>
+    <tr><td>Docker Desktop stuck on "Engine starting"</td><td>Check step 2 and step 4 (<code>wsl --version</code>). Restart the PC. Then Docker Desktop → Troubleshoot (bug icon) → <b>Restart</b>.</td></tr>
+    <tr><td>"You are not allowed to use Docker, you must be in the docker-users group"</td><td>In PowerShell (Administrator): <code>net localgroup docker-users "YOUR-USERNAME" /add</code>, then sign out and back in.</td></tr>
+    <tr><td><code>docker: The term 'docker' is not recognized</code></td><td>Close and reopen PowerShell after installing. If it continues, restart the PC.</td></tr>
+  </table>
+  <h3>Building and running</h3>
+  <table>
+    <tr><th>Problem</th><th>Cause and fix</th></tr>
+    <tr><td><code>error during connect</code></td><td>Docker Desktop is closed or still starting. Open it and wait for <b>Engine running</b>.</td></tr>
+    <tr><td><code>failed to read dockerfile</code></td><td>The file is <code>Dockerfile.txt</code> or misspelled. Rename it to <code>Dockerfile</code>.</td></tr>
+    <tr><td><code>"docker build" requires exactly 1 argument</code></td><td>You forgot the final dot: <code>docker build -t my-frontend:1.0 .</code></td></tr>
+    <tr><td><code>port is already allocated</code></td><td>Port 8080 is in use. Use another one, for example <code>-p 8090:80</code>, and open <code>localhost:8090</code>.</td></tr>
+    <tr><td><code>container name "/frontend" is already in use</code></td><td>Remove the old container: <code>docker rm -f frontend</code></td></tr>
+    <tr><td>Page shows "Welcome to nginx!"</td><td>Your files were not copied. Check the <code>COPY</code> line and that <code>index.html</code> is in the same folder as the Dockerfile.</td></tr>
+    <tr><td>Changes don't appear</td><td>Build a new image and run a new container (step 16), then press <kbd>Ctrl</kbd> + <kbd>F5</kbd>.</td></tr>
+    <tr><td><code>npm ERR!</code> during React build</td><td>Usually a typo in <code>package.json</code> (missing comma or quote) or no internet.</td></tr>
+  </table>
+</section>
+
+<!-- ================= CHEAT SHEET ================= -->
+<section id="cheat">
+  <h2>Cheat sheet</h2>
+  <h3 style="margin-top:6px">WSL</h3>
+  <table>
+    <tr><th>Command</th><th>What it does</th></tr>
+    <tr><td><code>wsl --install -d Ubuntu</code></td><td>Install the Ubuntu distribution</td></tr>
+    <tr><td><code>wsl -l -v</code></td><td>List distributions and their WSL version</td></tr>
+    <tr><td><code>wsl --update</code></td><td>Update WSL and its Linux kernel</td></tr>
+    <tr><td><code>wsl -d Ubuntu</code></td><td>Open an Ubuntu terminal</td></tr>
+  </table>
+  <h3>Docker</h3>
+  <table>
+    <tr><th>Command</th><th>What it does</th></tr>
+    <tr><td><code>docker version</code></td><td>Show client and server (daemon) versions</td></tr>
+    <tr><td><code>docker build -t name:tag .</code></td><td>Build an image from the Dockerfile in this folder</td></tr>
+    <tr><td><code>docker images</code></td><td>List local images</td></tr>
+    <tr><td><code>docker history image</code></td><td>Show the layers of an image</td></tr>
+    <tr><td><code>docker run -d -p 8080:80 --name x image</code></td><td>Create and start a container</td></tr>
+    <tr><td><code>docker ps</code> / <code>docker ps -a</code></td><td>Running containers / all containers</td></tr>
+    <tr><td><code>docker logs x</code></td><td>Show a container's output</td></tr>
+    <tr><td><code>docker exec -it x sh</code></td><td>Open a shell inside a running container</td></tr>
+    <tr><td><code>docker stop x</code> / <code>docker start x</code></td><td>Stop / start a container</td></tr>
+    <tr><td><code>docker pause x</code> / <code>docker unpause x</code></td><td>Freeze / resume a container</td></tr>
+    <tr><td><code>docker rm -f x</code></td><td>Delete a container</td></tr>
+    <tr><td><code>docker rmi image</code></td><td>Delete an image</td></tr>
+  </table>
+  <p style="margin-top:12px"><b>Remember:</b> Files + Dockerfile → <code>docker build</code> → Image → <code>docker run</code> → Container → browser.</p>
+</section>
+
+<footer>DevOps Fundamentals · University of Central Punjab</footer>
+</div>
+
+<script>
+document.querySelectorAll('.code').forEach(c=>{
+  const b=document.createElement('button');b.className='copy';b.textContent='Copy';c.appendChild(b);
+  b.addEventListener('click',()=>{const t=c.querySelector('pre').innerText;
+    const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)};
+    try{navigator.clipboard.writeText(t).then(done,()=>fallback(t,done))}catch(e){fallback(t,done)}});
+});
+function fallback(t,done){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()}
+const steps=[...document.querySelectorAll('.step')];
+let saved={};try{saved=JSON.parse(localStorage.getItem('dockerLabWin')||'{}')}catch(e){}
+steps.forEach(s=>{const cb=s.querySelector('input[type=checkbox]');cb.checked=!!saved[s.dataset.s];
+  cb.addEventListener('change',()=>{saved[s.dataset.s]=cb.checked;try{localStorage.setItem('dockerLabWin',JSON.stringify(saved))}catch(e){}update()})});
+function partDone(a,b){return steps.filter(s=>+s.dataset.s>=a&&+s.dataset.s<=b).every(s=>s.querySelector('input').checked)}
+function update(){let d=0;steps.forEach(s=>{const on=s.querySelector('input').checked;s.classList.toggle('done',on);if(on)d++});
+  document.getElementById('pfill').style.width=(d/steps.length*100)+'%';
+  let extra='';
+  if(d===steps.length)extra=' · Lab complete! 🎉';
+  else if(partDone(9,19))extra=' · Part 2 complete! Try the bonus.';
+  else if(partDone(1,8))extra=' · Docker is installed. On to Part 2.';
+  document.getElementById('ptext').textContent=`Progress: ${d} of ${steps.length} steps done`+extra;}
+update();
+</script>
+</body>
+</html>
